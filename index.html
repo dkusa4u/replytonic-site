@@ -595,8 +595,6 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
         <div class="hist-toggle" onclick="toggleHist()"><span id="histArrow">▸</span> Recent Rewrites <span id="histCount" style="background:rgba(99,102,241,.14);padding:2px 8px;border-radius:100px;font-size:10px;color:var(--i4)"></span></div>
         <div class="hist-list" id="histList" style="display:none"></div>
       </div>
-
-      <div class="demo-note">🔵 <span><strong>Preview Mode</strong> — showing demo rewrites. Live AI via OpenAI GPT-4o + full language output activates on your deployed website.</span></div>
     </div>
 
     <!-- ===== MODE 2: REPLY GENERATOR ===== -->
@@ -657,7 +655,6 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
       </button>
 
       <div class="reply-cards" id="replyCards"></div>
-      <div class="demo-note" style="margin-top:16px">🔵 <span><strong>Preview Mode</strong> — reply suggestions are demos. Live contextual replies activate on your deployed site.</span></div>
     </div>
 
     <!-- ===== MODE 3: FOLLOW-UP ===== -->
@@ -699,7 +696,6 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
         <div class="versions-hdr">Your Follow-Up — 3 Options</div>
         <div class="versions-grid" id="fuVersionsGrid"></div>
       </div>
-      <div class="demo-note" style="margin-top:16px">🔵 <span><strong>Preview Mode</strong> — follow-up messages are demos. Context-aware AI activates on your deployed site.</span></div>
     </div>
 
     <!-- ===== MODE 4: BULK REWRITE ===== -->
@@ -735,7 +731,6 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
       </button>
 
       <div class="bulk-results" id="bulkResults"></div>
-      <div class="demo-note" style="margin-top:16px">🔵 <span><strong>Preview Mode</strong> — bulk processing is capped at 5 messages in demo. No limit on deployed site.</span></div>
     </div>
 
   </div><!-- end tool-card -->
@@ -1224,83 +1219,27 @@ function setBar(fillId,valId,score){
   val.style.color=getColor(score);
 }
 
-// ===== REWRITE DATA =====
-var rewriteData={
-  Professional:{
-    Shorter:["Thanks for reaching out. I'll review this and follow up shortly.","Happy to look into this — I'll be in touch.","Noted. I'll review and respond by EOD."],
-    Same:["I wanted to follow up on this matter to ensure we're moving in the right direction. I believe with clearer communication and collaboration, we can find an effective solution. Please let me know your thoughts at your earliest convenience.","Thank you for bringing this to my attention. I've reviewed the situation carefully and believe there are a few areas we could address together. I'd welcome the opportunity to discuss this further.","I appreciate your time and wanted to address this matter directly. I believe the most productive approach would be to schedule a brief conversation to align on expectations and next steps."],
-    Longer:["I wanted to follow up on this matter to ensure we're moving in the right direction. Having reviewed the situation from multiple angles, I believe with clearer communication and closer collaboration, we can arrive at an effective and sustainable solution. I'd love to connect at your earliest convenience to align on the best path forward.","Thank you for bringing this to my attention. I've taken time to review the situation carefully and I believe there are a few key areas we could work through together. I'd welcome the opportunity to discuss this further — perhaps a brief call this week to align on expectations and next steps?","I appreciate you sharing this with me, and I wanted to address it directly. I've given this some thought and I believe the most productive approach would be to schedule a brief conversation to get on the same page. I'm confident we can find a resolution that works well for everyone involved."]
-  },
-  Friendly:{
-    Shorter:["Hey! Happy to sort this — let's connect soon 😊","Hi! I think there's an easy fix here. Talk soon?","Hey, let's figure this out together!"],
-    Same:["Hey! Just wanted to circle back on this — I think if we work on it together we can find a really good solution. I'm totally open to your ideas! What do you think works best?","Hi there! I wanted to reach out because I think there's an easy fix here. Let's connect whenever works for you — I'm confident we can sort this out!","Hey, I've been thinking about this and I actually think it's very manageable if we approach it together. Would love to chat and figure out the best way forward!"],
-    Longer:["Hey! Just wanted to circle back on this — I genuinely think if we put our heads together we can find a really good solution. I love collaboration and I'm totally open to your ideas and perspective on this. What sounds like it might work best for you? I'm flexible on timing 😊","Hi there! I wanted to reach out because I think there's actually an easier fix here than it might seem. Let's connect whenever works for you — I'm confident we'll be able to sort this out in no time. I'm around most of the week if you'd like to grab a quick call?","Hey! I've been giving this some thought and honestly I think it's very manageable if we approach it together. I always find things work out better when we tackle them as a team. Would love to chat soon and figure out the best way forward — let me know what works for you!"]
-  },
-  Apologetic:{
-    Shorter:["I'm truly sorry for this — I want to make it right.","My sincere apologies. I take full responsibility.","I'm sorry — this was my mistake and I'll fix it."],
-    Same:["I sincerely apologize for the confusion and any inconvenience this may have caused. I take full responsibility and genuinely want to make this right. Please let me know what I can do.","I'm really sorry about this — you have every right to be frustrated, and I completely understand. I want you to know I take this seriously and I'm going to do everything I can to make it right.","I owe you a genuine apology for how this was handled. I could have communicated better, and I'm truly sorry for any stress this caused. I'd love the chance to make it right."],
-    Longer:["I sincerely apologize for the confusion and any inconvenience this may have caused. I want you to know that I take this situation very seriously and I accept full responsibility for what happened. It shouldn't have gone this way, and I genuinely want to make things right. Please let me know how I can help resolve this for you.","I'm really sorry about this — you have every right to feel frustrated, and I completely understand. I want you to know that I'm taking this seriously and I'm committed to doing everything in my power to make it right. If there's anything specific I can do to help, please don't hesitate to ask.","I owe you a genuine, heartfelt apology for the way this was handled. I could have communicated far better, and I recognize the stress and inconvenience this has caused. I'm truly sorry. I'd love the chance to make it right — please let me know what would be most helpful to you."]
-  },
-  Assertive:{
-    Shorter:["This needs to be resolved today. Please confirm.","Requesting a resolution by EOD. Please respond.","This is urgent — please action immediately."],
-    Same:["I need to address this directly: this situation requires immediate attention and a clear plan of action. I expect a detailed response outlining how this will be resolved, along with a timeline. Please confirm by end of day.","This issue has been outstanding too long and it's affecting our work. I'm requesting a concrete resolution plan within 24 hours. Please confirm you're actioning this.","I want to be clear about expectations: this needs to be resolved promptly and completely. Please respond with your approach and timeline."],
-    Longer:["I need to address this directly and transparently: this situation requires immediate attention and a clear, executable plan of action. This has gone on longer than is acceptable and it is now affecting our ability to deliver results. I expect a detailed response outlining exactly how this will be resolved, along with a firm timeline and confirmation of accountability. Please respond by end of day.","This issue has been outstanding far too long and it is beginning to impact the broader team's work. I am requesting a concrete, actionable resolution plan within the next 24 hours. Please confirm that you are treating this as a priority and provide a clear update on the steps being taken.","I want to set clear expectations: this situation needs to be resolved promptly, completely, and permanently. I'm available to discuss the best way to get there, but I need to hear a proposed approach and a realistic timeline. Please respond with that information at your earliest opportunity."]
-  },
-  Casual:{
-    Shorter:["Hey, can we sort this out?","Just wanted to flag this — pretty easy fix I think!","Hey, can we talk about this quickly?"],
-    Same:["Hey, so things got a bit complicated and I wanted to be upfront about it. Can we figure this out together? I'm pretty flexible and I'm sure we can sort it easily.","So I've been meaning to bring this up — it's not a big deal but it's worth talking about. What do you reckon?","Hey! Just wanted to flag this real quick — I think there might be an easy fix here. Let me know what you think!"],
-    Longer:["Hey! So things got a bit complicated on my end and I wanted to be upfront about it rather than leaving it hanging. Can we figure this out together? I'm honestly pretty flexible with timing and approach — I'm sure between the two of us we can sort it out easily without it becoming a whole thing.","So I've been meaning to bring this up for a little while — it's honestly not a massive deal but I think it's worth us having a quick chat about it. I've got a few ideas on how we could approach it. What do you reckon? Open to your thoughts too.","Hey! Just wanted to flag this real quick — I genuinely think there might be a pretty easy fix here and it doesn't need to be complicated at all. Let me know what you think or if you want to hop on a quick call to run through it. Easy as that!"]
-  },
-  Formal:{
-    Shorter:["I write to address the matter formally. Please respond at your earliest convenience.","I am writing regarding the above matter. Your prompt attention is appreciated.","Kindly acknowledge receipt and advise on resolution."],
-    Same:["I am writing to formally address the matter at hand. I would appreciate your prompt acknowledgment and response at your earliest convenience, as this requires timely attention.","I am writing to bring to your attention an issue that merits formal consideration. I would be grateful if you could review the matter and provide a written response outlining the steps you intend to take.","Please allow this correspondence to serve as formal notice regarding the matter referenced above. I would appreciate your written acknowledgment and a proposed resolution within a reasonable timeframe."],
-    Longer:["I am writing to formally address the matter at hand and to request your considered attention to the points herein. I trust this communication finds you well and I look forward to your prompt acknowledgment. I would be most grateful if you could review the situation in detail and provide a written response at your earliest convenience, as this matter does require timely attention.","I am writing to bring to your formal attention an issue that I believe merits careful consideration. I would be most grateful if you could review the matter thoroughly and provide a written response outlining the specific steps you intend to take and the expected timeframe within which they will be completed.","Please allow this correspondence to serve as formal notice regarding the matter referenced above. I wish to ensure this is handled with the appropriate level of care and urgency. I would appreciate your written acknowledgment of receipt and a proposed resolution within a reasonable timeframe agreed by both parties."]
-  }
-};
-
-var hindiRewrites={
-  Professional:{Same:["मैं इस विषय पर आपसे बात करना चाहता था। मुझे विश्वास है कि हम मिलकर एक अच्छा समाधान निकाल सकते हैं। कृपया अपनी सुविधानुसार अपनी राय साझा करें।","आपका समय देने के लिए धन्यवाद। मैंने इस स्थिति पर विचार किया है और सोचता हूँ कि हमें एक साथ इस पर चर्चा करनी चाहिए।","मैं इस मामले को सीधे तरीके से संबोधित करना चाहता था। आगे बढ़ने के सर्वोत्तम तरीके पर चर्चा के लिए एक संक्षिप्त बातचीत का समय निर्धारित करना उचित होगा।"]},
-  Friendly:{Same:["अरे! बस यह जानना चाहता था कि अगर हम मिलकर इस पर काम करें तो बहुत अच्छा समाधान निकलेगा। आपके विचार सुनना चाहूँगा। 😊","नमस्ते! मुझे लगता है इसका एक आसान हल है। जब भी आप उपलब्ध हों, बात करते हैं!","यार, मैं सोच रहा था कि अगर हम साथ मिलकर सोचें तो यह बिलकुल आसानी से ठीक हो सकता है।"]},
-  Apologetic:{Same:["मैं इस भूल के लिए हृदय से क्षमाप्रार्थी हूँ। इससे हुई किसी भी असुविधा के लिए मैं व्यक्तिगत रूप से जिम्मेदार हूँ और इसे सुधारने के लिए तत्पर हूँ।","मुझे सच में बहुत खेद है — आपकी निराशा बिलकुल उचित है। मैं यह सुनिश्चित करूँगा कि यह दोबारा न हो।","आपसे माफ़ी मांगना ज़रूरी समझता हूँ। बेहतर संवाद होना चाहिए था, और इसके लिए मैं क्षमाप्रार्थी हूँ।"]},
-  Assertive:{Same:["मैं सीधे बात करना चाहता हूँ: इस स्थिति पर तत्काल ध्यान देने की आवश्यकता है। कृपया आज के अंत तक समाधान की रूपरेखा बताएँ।","यह मामला लंबे समय से लंबित है। मैं 24 घंटे में ठोस समाधान चाहता हूँ।","मैं स्पष्ट रहना चाहता हूँ: इसे पूर्ण और शीघ्र हल किया जाना आवश्यक है।"]},
-  Casual:{Same:["यार, बात थोड़ी उलझी हुई है लेकिन मुझे लगता है हम मिलकर इसे आसानी से सुलझा सकते हैं।","भाई, यह कोई बड़ी बात नहीं लेकिन बात करना ज़रूरी था।","देख, एक आसान रास्ता निकल सकता है। बता क्या सोचता है!"]},
-  Formal:{Same:["मैं आधिकारिक रूप से इस विषय को आपके संज्ञान में लाना चाहता हूँ। आपसे अनुरोध है कि इस पर यथाशीघ्र अपनी प्रतिक्रिया प्रेषित करें।","यह पत्र इस महत्वपूर्ण विषय के संदर्भ में लिखा जा रहा है। कृपया इसकी समीक्षा कर उचित कार्यवाही की सूचना दें।","आपसे विनम्र निवेदन है कि इस प्रकरण पर ध्यान देकर उचित समाधान सुनिश्चित करने का कष्ट करें।"]}
-};
-
-var spanishRewrites={
-  Professional:{Same:["Quería hacer un seguimiento de este asunto para asegurarnos de que avanzamos en la dirección correcta. Estoy seguro de que podemos encontrar una solución que funcione para todos.","Gracias por traer esto a mi atención. He revisado la situación y creo que sería beneficioso hablar más al respecto para alinear expectativas y próximos pasos.","Le escribo para abordar este asunto de manera directa. Creo que el enfoque más productivo sería programar una breve conversación para avanzar juntos."]},
-  Friendly:{Same:["¡Hola! Solo quería retomar este tema — creo que si lo trabajamos juntos encontraremos una solución genial. ¡Estoy totalmente abierto a tus ideas! 😊","¡Buenas! Me parece que tiene una solución bastante sencilla. Hablamos cuando puedas.","Oye, he estado pensando en esto y creo que es muy manejable si lo abordamos juntos. ¿Cuándo podemos hablar?"]},
-  Apologetic:{Same:["Le ofrezco mis más sinceras disculpas por las molestias ocasionadas. Asumo plena responsabilidad y me comprometo a tomar las medidas necesarias para corregir la situación.","Lamento mucho lo sucedido — su malestar es completamente comprensible. Haré todo lo posible para solucionarlo.","Le debo una disculpa genuina. Podía haber comunicado mejor, y lo siento de verdad."]},
-  Assertive:{Same:["Quiero ser directo: esta situación requiere atención inmediata y un plan de acción claro. Espero una respuesta con la solución propuesta antes del final del día.","Este problema lleva demasiado tiempo sin resolverse. Solicito un plan concreto en las próximas 24 horas.","Quiero dejar claro que esto necesita resolverse de forma completa y urgente."]},
-  Casual:{Same:["Oye, la cosa se complicó un poco pero creo que lo podemos resolver fácilmente. ¿Qué te parece?","Mira, tampoco es para tanto, pero creo que vale la pena hablarlo. ¿Qué opinas?","Oye, creo que hay una solución rápida aquí. Díme qué piensas."]},
-  Formal:{Same:["Me dirijo a usted para comunicarle formalmente el asunto en cuestión. Le agradecería que me proporcionara una respuesta por escrito en el menor tiempo posible.","Por medio de la presente, me permito poner en su conocimiento esta situación. Quedo en espera de su respuesta con las acciones que estime pertinentes.","Me permito escribirle para tratar un asunto de importancia que requiere su atención."]}
-};
-
-var tamilRewrites={
-  Professional:{Same:["இந்த விஷயத்தில் நாம் சரியான திசையில் நகர்கிறோமா என்று உறுதிப்படுத்த விரும்புகிறேன். தெளிவான தொடர்பாடல் மூலம் நல்ல தீர்வு காண முடியும் என்று நம்புகிறேன். உங்கள் கருத்தை தெரிவிக்கவும்.","இதை என் கவனத்திற்கு கொண்டு வந்ததற்கு நன்றி. சூழலை கவனமாக ஆராய்ந்தேன் — சில விஷயங்களை ஒன்றாக பேசுவது பயனுள்ளதாக இருக்கும் என்று கருதுகிறேன்.","உங்கள் நேரத்திற்கு நன்றி. இந்த விஷயத்தை நேரடியாக கையாள்வதே சரியான அணுகுமுறை என்று கருதுகிறேன். முன்னேற்றத்திற்கான திட்டத்தை ஒன்றாக வகுப்போம்."]},
-  Friendly:{Same:["வணக்கம்! இதை நாம் இணைந்து செய்தால் நல்ல தீர்வு கிடைக்கும் என்று நம்புகிறேன். உங்கள் யோசனைகளை கேட்க மிகவும் ஆவலாக இருக்கிறேன்! 😊","ஹாய்! ஒரு நல்ல வழி இருக்கும் என்று தெரிகிறது. உங்களுக்கு வசதியான நேரத்தில் பேசுவோம் — நடக்கும்!","நண்பரே! இதை நாம் ஒன்றாக சரிசெய்வோம். மிகவும் நம்பிக்கையாக இருக்கிறேன் — கண்டிப்பாக நடக்கும்!"]},
-  Apologetic:{Same:["ஏற்பட்ட குழப்பத்திற்கு மனமாரக் மன்னிப்பு கேட்கிறேன். முழுப் பொறுப்பும் என்னுடையதே. சரிசெய்வதற்கு என்ன செய்யலாம் என்று தெரிவியுங்கள்.","ஏற்பட்ட அசௌகர்யத்திற்கு மிகவும் வருந்துகிறேன். உங்கள் கோபம் நியாயமானது. இதை சரிசெய்ய என்னால் ஆனதை செய்கிறேன்.","உண்மையான மன்னிப்பு தெரிவிக்கிறேன். இது சரியாக நடக்கவில்லை என்று ஒப்புக்கொள்கிறேன். சரிசெய்யும் வாய்ப்பு தருங்கள்."]},
-  Assertive:{Same:["நேரடியாக சொல்கிறேன்: இந்த நிலைமை உடனடி கவனத்தை நாடுகிறது. இன்று மாலைக்குள் தெளிவான தீர்வு திட்டத்தை தெரிவிக்கவும்.","இந்த பிரச்சனை நீண்டகாலமாக நிலுவையில் உள்ளது. 24 மணி நேரத்திற்குள் உறுதியான நடவடிக்கை திட்டம் தேவை.","எதிர்பார்ப்பை தெளிவாக சொல்கிறேன்: இதை முழுமையாகவும் விரைவாகவும் தீர்க்க வேண்டும். உங்கள் அணுகுமுறையை தெரிவிக்கவும்."]},
-  Casual:{Same:["டா! விஷயம் கொஞ்சம் உலுக்கிட்டு இருக்கு — ஆனா நாம் ஒன்னா சரிபண்ணலாம். என்ன நினைக்கிற?","பாரு, இதுக்கு ஒரு simple fix இருக்கு. கொஞ்சம் பேசுவோமா?","ஏய்! ஒரு நிமிஷம் பேசலாம். Easy ஆ solve ஆகும் — கவலைப்படாதே!"]},
-  Formal:{Same:["மரியாதைக்குரியவர்களுக்கு, இந்த விஷயத்தை உங்கள் கவனத்திற்கு கொண்டு வருகிறேன். உங்கள் விரைவான மறுமொழி மிகவும் பாராட்டத்தக்கது.","மரியாதையுடன் தெரிவித்துக்கொள்கிறேன், இந்த முக்கியமான விஷயத்தில் உங்கள் கருத்தும் வழிகாட்டுதலும் தேவைப்படுகிறது.","மரியாதையுடன் கோருகிறேன், இந்த விஷயம் உங்கள் கவனத்தை நாடுகிறது. எழுத்துப்பூர்வமான மறுமொழியை எதிர்பார்க்கிறேன்."]}
-};
-
-// Blended tone hint
-var blendMap={
-  'Professional+Friendly':'warm yet polished — confident but approachable',
-  'Professional+Apologetic':'accountable and constructive — acknowledges the issue professionally',
-  'Professional+Assertive':'firm and clear — direct but not aggressive',
-  'Friendly+Apologetic':'warm and genuinely sorry — human and sincere',
-  'Friendly+Casual':'relaxed and natural — conversational without being too informal',
-  'Assertive+Apologetic':'firm but empathetic — takes responsibility while standing firm on expectations',
-  'Formal+Professional':'highly structured — suitable for official or legal contexts'
-};
-
 function getBlendedNote(t1,t2){
   if(!t2||t2==='None'||t1===t2) return '';
   var key=t1+'+'+t2;
   var key2=t2+'+'+t1;
   return blendMap[key]||blendMap[key2]||'blending '+t1.toLowerCase()+' with '+t2.toLowerCase()+' tone';
+}
+
+// ===== MAIN REWRITE =====
+// ===== API HELPER =====
+function callAPI(payload, onSuccess, onError){
+  fetch('/api/rewrite',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(payload)
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.error) onError(d.error);
+    else onSuccess(d);
+  })
+  .catch(function(){onError('Network error — please try again.');});
 }
 
 // ===== MAIN REWRITE =====
@@ -1317,6 +1256,8 @@ function rewrite(){
   var tone2=tone2El?tone2El.dataset.tone2:'None';
   var lang=document.getElementById('langSelect').value;
   var len=currentLen;
+  var plat=(document.querySelector('#platBtns .plat-btn.active')||{}).dataset||{};
+  var platform=plat.plat||'Email';
   var btn=document.getElementById('goBtn');
   var txt=document.getElementById('goTxt');
   btn.classList.add('busy');
@@ -1324,66 +1265,43 @@ function rewrite(){
   document.getElementById('scoreSec').classList.remove('show');
   document.getElementById('versionsWrap').classList.remove('show');
 
+  var scores=scoreMessage(v);
+  var sec=document.getElementById('scoreSec');
+  sec.classList.add('show');
   setTimeout(function(){
-    var scores=scoreMessage(v);
-    var sec=document.getElementById('scoreSec');
-    sec.classList.add('show');
-    setTimeout(function(){
-      setBar('clarityFill','clarityVal',scores.clarity);
-      setBar('toneFill','toneVal',scores.tone);
-      setBar('profFill','profVal',scores.prof);
-      document.getElementById('scoreHint').textContent=getHint(scores);
-    },60);
-    txt.textContent='Rewriting...';
+    setBar('clarityFill','clarityVal',scores.clarity);
+    setBar('toneFill','toneVal',scores.tone);
+    setBar('profFill','profVal',scores.prof);
+    document.getElementById('scoreHint').textContent=getHint(scores);
+  },60);
+  txt.textContent='Rewriting with AI...';
 
-    setTimeout(function(){
-      var variants=getVariants(tone,tone2,lang,len);
-      renderVersions(variants,tone,tone2,v,lang);
+  callAPI({message:v, platform:platform, tone:tone, tone2:tone2, language:lang, length:len, emoji:emojiOn, mode:'rewrite'},
+    function(d){
+      var blendNote=(tone2&&tone2!=='None'&&tone2!==tone)?getBlendedNote(tone,tone2):'';
+      renderVersions({v1:d.v1,v2:d.v2,v3:d.v3,blendNote:blendNote,lang:lang},tone,tone2,v,lang);
       document.getElementById('versionsWrap').classList.add('show');
       document.getElementById('versionsWrap').scrollIntoView({behavior:'smooth',block:'nearest'});
       btn.classList.remove('busy');
       txt.textContent='✨ Rewrite My Message';
-      saveToHistory(v,variants[0],tone,lang);
-    },900);
-  },620);
-}
-
-function getVariants(tone,tone2,lang,len){
-  var src,blendNote='';
-  if(lang==='Hindi') src=hindiRewrites[tone]||hindiRewrites.Professional;
-  else if(lang==='Spanish') src=spanishRewrites[tone]||spanishRewrites.Professional;
-  else if(lang==='Tamil') src=tamilRewrites[tone]||tamilRewrites.Professional;
-  else src=rewriteData[tone]||rewriteData.Professional;
-
-  var variants;
-  if(lang==='Hindi'||lang==='Spanish'||lang==='Tamil'){
-    variants=src.Same?[...src.Same]:[...src];
-  } else {
-    variants=src[len]?[...src[len]]:[...src.Same];
-  }
-
-  if(emojiOn && lang==='English'){
-    var emojis=['✨','💡','👌'];
-    variants=variants.map(function(v,i){return emojis[i%emojis.length]+' '+v;});
-  }
-
-  if(tone2&&tone2!=='None'&&tone2!==tone&&lang==='English'){
-    blendNote=getBlendedNote(tone,tone2);
-  }
-
-  return {v1:variants[0],v2:variants[1],v3:variants[2],blendNote:blendNote,lang:lang};
+      saveToHistory(v,d.v1,tone,lang);
+    },
+    function(err){
+      btn.classList.remove('busy');
+      txt.textContent='✨ Rewrite My Message';
+      alert('⚠️ ' + err);
+    }
+  );
 }
 
 function renderVersions(data,tone,tone2,original,lang){
   var grid=document.getElementById('versionsGrid');
-  var langNote=(lang!=='English'&&lang!=='Hindi'&&lang!=='Spanish'&&lang!=='Tamil')?
-    '\n\n['+lang+' output activates on deployed site — showing English preview]':'';
   var blendInfo=data.blendNote?'<span style="font-size:9px;background:rgba(249,115,22,.14);padding:2px 7px;border-radius:100px;color:var(--o4)">+'+tone2+'</span>':'';
   var labels=['Version 1','Version 2','Version 3'];
   var texts=[data.v1,data.v2,data.v3];
   var origEscAttr=original.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   grid.innerHTML=labels.map(function(lbl,i){
-    var rewriteText=texts[i]+(i===0?langNote:'');
+    var rewriteText=texts[i]||'';
     var rewriteEscAttr=rewriteText.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     return '<div class="ver-card" data-orig="'+origEscAttr+'" data-rewrite="'+rewriteEscAttr+'">'
       +'<div class="ver-num"><span>'+lbl+'</span>'+blendInfo+'</div>'
@@ -1557,15 +1475,7 @@ function delTmpl(i){
 }
 
 // ===== REPLY GENERATOR =====
-var replyDemos={
-  Professional:["Thank you for your message. I appreciate you taking the time to reach out. I've noted your points and will review them carefully. I'll follow up with a detailed response by end of week.","Thank you for getting in touch. I've reviewed what you've shared and I believe we're aligned on the key priorities. I'll prepare a comprehensive response and send it over shortly.","I appreciate you reaching out. I've taken note of your message and will give it the attention it deserves. Please expect a thorough response from me within 24 hours."],
-  Friendly:["Hey, thanks so much for reaching out! I've got your message and I'll make sure to get back to you properly very soon. Really appreciate you being so clear! 😊","Thanks for the message! I've read it and I think I know exactly how to help. Give me a little while and I'll come back to you with something solid!","Hey! Got your message — love how clear you've been about this. Working on it now and will be in touch shortly!"],
-  Apologetic:["Thank you for taking the time to write. I sincerely apologize for any inconvenience you may have experienced. I want to make sure we resolve this properly and I'll be in touch with a full response very shortly.","I'm sorry to hear about your experience. Thank you for bringing this to my attention. I take this seriously and I'll be reaching out with a full response and proposed resolution as quickly as possible.","Thank you for being so patient. I sincerely apologize for how this has gone so far. I'm working on a proper resolution and will get back to you today."],
-  Assertive:["I've received your message and I want to address this directly. I'll respond with a full action plan within the next few hours. Please stand by.","Noted. This requires immediate action on my part. I'll have a concrete response and resolution plan to you within 24 hours.","Message received. I want to be direct: this needs to be resolved and I'll ensure it is. Full response incoming shortly."],
-  Casual:["Hey, got your message! Makes total sense — I'll figure it out and hit you back soon!","Got it! This is super easy to sort out. Give me a bit and I'll get back to you with the details.","Hey! All good — I've got this. Will drop you a reply as soon as I've sorted it out!"],
-  Formal:["I acknowledge receipt of your correspondence and wish to advise that I will respond in full within two business days. I appreciate your patience and will ensure this matter receives my complete attention.","Thank you for your communication. I am in receipt of your message and will prepare a formal response at the earliest opportunity. Please anticipate my reply by the close of business tomorrow.","I wish to acknowledge your message and to inform you that I will address the matters raised therein in a formal written response within the specified timeframe."]
-};
-
+// ===== REPLY GENERATOR =====
 function generateReply(){
   var v=document.getElementById('replyInp').value.trim();
   if(!v){
@@ -1575,32 +1485,41 @@ function generateReply(){
     return;
   }
   var tone=document.querySelector('#replyTones .tone-btn.active').dataset.tone||'Professional';
+  var lang=document.getElementById('replyLang').value||'English';
+  var plat=(document.querySelector('#platBtnsReply .plat-btn.active')||{}).dataset||{};
+  var platform=plat.plat||'Email';
   var btn=document.getElementById('replyBtn');
   var txt=document.getElementById('replyTxt');
   btn.classList.add('busy');
-  txt.textContent='Generating replies...';
+  txt.textContent='Generating with AI...';
   document.getElementById('replyCards').classList.remove('show');
 
-  setTimeout(function(){
-    var arr=replyDemos[tone]||replyDemos.Professional;
-    var labels=['Reply Option 1','Reply Option 2','Reply Option 3'];
-    var cards=document.getElementById('replyCards');
-    cards.innerHTML=arr.map(function(r,i){
-      return '<div class="reply-card">'
-        +'<div class="reply-num">'+labels[i]+'</div>'
-        +'<div class="reply-text">'+escHtml(r)+'</div>'
-        +'<div class="reply-actions">'
-          +'<button class="reply-copy-btn" onclick="copyReply(this)">📋 Copy Reply</button>'
-          +'<button class="reply-copy-btn ver-speak-btn" onclick="speakText(this,this.closest(\'.reply-card\').querySelector(\'.reply-text\').textContent,document.getElementById(\'replyLang\').value)">🔊 Listen</button>'
-        +'</div>'
-        +'<div class="share-row">'+buildShareRow()+'</div>'
-      +'</div>';
-    }).join('');
-    cards.classList.add('show');
-    cards.scrollIntoView({behavior:'smooth',block:'nearest'});
-    btn.classList.remove('busy');
-    txt.textContent='💬 Generate 3 Reply Options';
-  },900);
+  callAPI({message:v, platform:platform, tone:tone, language:lang, mode:'reply'},
+    function(d){
+      var labels=['Reply Option 1','Reply Option 2','Reply Option 3'];
+      var cards=document.getElementById('replyCards');
+      cards.innerHTML=[d.v1,d.v2,d.v3].map(function(r,i){
+        return '<div class="reply-card">'
+          +'<div class="reply-num">'+labels[i]+'</div>'
+          +'<div class="reply-text">'+escHtml(r)+'</div>'
+          +'<div class="reply-actions">'
+            +'<button class="reply-copy-btn" onclick="copyReply(this)">📋 Copy Reply</button>'
+            +'<button class="reply-copy-btn ver-speak-btn" onclick="speakText(this,this.closest(\'.reply-card\').querySelector(\'.reply-text\').textContent,document.getElementById(\'replyLang\').value)">🔊 Listen</button>'
+          +'</div>'
+          +'<div class="share-row">'+buildShareRow()+'</div>'
+        +'</div>';
+      }).join('');
+      cards.classList.add('show');
+      cards.scrollIntoView({behavior:'smooth',block:'nearest'});
+      btn.classList.remove('busy');
+      txt.textContent='💬 Generate 3 Reply Options';
+    },
+    function(err){
+      btn.classList.remove('busy');
+      txt.textContent='💬 Generate 3 Reply Options';
+      alert('⚠️ ' + err);
+    }
+  );
 }
 
 function copyReply(btn){
@@ -1611,18 +1530,12 @@ function copyReply(btn){
 }
 
 // ===== FOLLOW-UP GENERATOR =====
-var followUpDemos={
-  Professional:["I wanted to follow up on my previous message and check in on where things stand. I understand you may be busy, and I appreciate your time. I remain very interested in moving this forward and would welcome a brief update when convenient.","I'm following up to reiterate my interest and to check if there's anything further I can provide. I appreciate your consideration and look forward to connecting.","Just circling back on this — I'm still very much interested and wanted to ensure this didn't fall through the cracks. Please let me know if there's anything I can do to move things forward."],
-  Friendly:["Hey! Just wanted to do a friendly follow-up 😊 I know things get busy but I'm still really keen on this and wanted to stay on your radar. Let me know if there's anything you need from my side!","Hi! Popping in with a follow-up — still super interested and wanted to make sure this didn't get buried. Let me know if there's a good time to connect!","Hey, just circling back! No pressure at all, just wanted to stay in touch and make sure you have everything you need from me. Really looking forward to this!"],
-  Assertive:["I'm following up to request a status update. This has been pending for some time and I'd appreciate clarity on the timeline. Please respond by end of week.","I'm reaching out again as I haven't received a response. I need a concrete update on this. Please confirm the current status and expected resolution date.","Following up as promised. I need a clear answer on this by Friday. Please advise."],
-  Formal:["I am writing to formally follow up on my previous correspondence. I would be most grateful if you could provide an update on the current status and anticipated timeline for resolution.","Please consider this communication a formal follow-up to my earlier message. I would appreciate your written response with an update at your earliest convenience.","I write to request a status update on the matter raised in my previous correspondence. I look forward to your prompt response."],
-  Casual:["Hey! Just doing a quick follow-up — still interested and wanted to stay on your radar. Let me know when you get a chance!","Hey, circling back on this one! No rush but just wanted to check in. Let me know what you're thinking!","Hey! Hope you're doing well. Just a quick follow-up — still keen and wanted to touch base. Talk soon!"]
-};
-
+// ===== FOLLOW-UP GENERATOR =====
 function generateFollowUp(){
   var v1=document.getElementById('fuInp1').value.trim();
   var v2=document.getElementById('fuInp2').value.trim();
-  if(!v1&&!v2){
+  var msg=v2||v1;
+  if(!msg){
     document.getElementById('fuInp1').style.borderColor='rgba(249,115,22,.5)';
     setTimeout(function(){document.getElementById('fuInp1').style.borderColor='';},2000);
     return;
@@ -1631,21 +1544,27 @@ function generateFollowUp(){
   var btn=document.getElementById('fuBtn');
   var txt=document.getElementById('fuTxt');
   btn.classList.add('busy');
-  txt.textContent='Generating follow-up...';
+  txt.textContent='Generating with AI...';
   document.getElementById('fuVersionsWrap').classList.remove('show');
 
-  setTimeout(function(){
-    var arr=followUpDemos[tone]||followUpDemos.Professional;
-    var grid=document.getElementById('fuVersionsGrid');
-    var labels=['Version 1','Version 2','Version 3'];
-    grid.innerHTML=arr.map(function(r,i){
-      return '<div class="ver-card"><div class="ver-num"><span>'+labels[i]+'</span></div><div class="ver-text">'+escHtml(r)+'</div><div class="ver-actions"><button class="ver-btn ver-copy-btn" onclick="this.textContent=\'✓ Copied!\';try{navigator.clipboard.writeText(this.closest(\'.ver-card\').querySelector(\'.ver-text\').textContent);}catch(e){}setTimeout(function(){},2200)">📋 Copy</button></div></div>';
-    }).join('');
-    document.getElementById('fuVersionsWrap').classList.add('show');
-    document.getElementById('fuVersionsWrap').scrollIntoView({behavior:'smooth',block:'nearest'});
-    btn.classList.remove('busy');
-    txt.textContent='↩️ Generate Follow-Up Message';
-  },850);
+  callAPI({message:msg, originalMessage:v1, tone:tone, mode:'followup'},
+    function(d){
+      var grid=document.getElementById('fuVersionsGrid');
+      var labels=['Version 1','Version 2','Version 3'];
+      grid.innerHTML=[d.v1,d.v2,d.v3].map(function(r,i){
+        return '<div class="ver-card"><div class="ver-num"><span>'+labels[i]+'</span></div><div class="ver-text">'+escHtml(r)+'</div><div class="ver-actions"><button class="ver-btn ver-copy-btn" onclick="this.textContent='✓ Copied!';try{navigator.clipboard.writeText(this.closest(\'.ver-card\').querySelector(\'.ver-text\').textContent);}catch(e){}setTimeout(function(el){return function(){el.textContent=\'📋 Copy\'}}(this),2200)">📋 Copy</button></div></div>';
+      }).join('');
+      document.getElementById('fuVersionsWrap').classList.add('show');
+      document.getElementById('fuVersionsWrap').scrollIntoView({behavior:'smooth',block:'nearest'});
+      btn.classList.remove('busy');
+      txt.textContent='↩️ Generate Follow-Up Message';
+    },
+    function(err){
+      btn.classList.remove('busy');
+      txt.textContent='↩️ Generate Follow-Up Message';
+      alert('⚠️ ' + err);
+    }
+  );
 }
 
 // ===== BULK REWRITE =====
@@ -1656,26 +1575,56 @@ function bulkRewrite(){
     setTimeout(function(){document.getElementById('bulkInp').style.borderColor='';},2000);
     return;
   }
-  var msgs=raw.split(/\n\s*[-—]{2,}\s*\n/).map(function(m){return m.trim();}).filter(function(m){return m.length>0;}).slice(0,5);
+  var msgs=raw.split(/\n\s*[-—]{2,}\s*\n/).map(function(m){return m.trim();}).filter(function(m){return m.length>0;});
   var tone=document.querySelector('#bulkTones .tone-btn.active').dataset.tone||'Professional';
   var btn=document.getElementById('bulkBtn');
   var txt=document.getElementById('bulkTxt');
   btn.classList.add('busy');
-  txt.textContent='Processing '+msgs.length+' messages...';
+  txt.textContent='Processing '+msgs.length+' messages with AI...';
   document.getElementById('bulkResults').classList.remove('show');
 
-  setTimeout(function(){
-    var arr=rewriteData[tone]?rewriteData[tone].Same:rewriteData.Professional.Same;
-    var results=document.getElementById('bulkResults');
-    results.innerHTML=msgs.map(function(msg,i){
-      var out=arr[i%arr.length];
-      return '<div class="bulk-item"><div class="bulk-orig">Original: "'+escHtml(msg.substring(0,80))+(msg.length>80?'...':'')+'"</div><div class="bulk-out">'+escHtml(out)+'</div><div class="bulk-actions"><button class="bulk-copy" onclick="try{navigator.clipboard.writeText(\''+out.replace(/'/g,"\\'").replace(/\n/g,' ')+'\');}catch(e){}this.textContent=\'✓ Copied!\';setTimeout(function(el){return function(){el.textContent=\'📋 Copy\'}}(this),2200)">📋 Copy</button></div></div>';
-    }).join('');
-    results.classList.add('show');
-    results.scrollIntoView({behavior:'smooth',block:'nearest'});
+  var results=document.getElementById('bulkResults');
+  results.innerHTML='';
+  var pending=msgs.length;
+  var bulkOutput=new Array(msgs.length).fill(null);
+
+  if(pending===0){
     btn.classList.remove('busy');
     txt.textContent='📋 Rewrite All Messages';
-  },1200);
+    return;
+  }
+
+  msgs.forEach(function(msg,i){
+    callAPI({message:msg, tone:tone, mode:'rewrite'},
+      function(d){
+        bulkOutput[i]={orig:msg,out:d.v1};
+        pending--;
+        if(pending===0) renderBulkResults(bulkOutput,btn,txt);
+      },
+      function(){
+        bulkOutput[i]={orig:msg,out:'[AI error — please try again]'};
+        pending--;
+        if(pending===0) renderBulkResults(bulkOutput,btn,txt);
+      }
+    );
+  });
+}
+
+function renderBulkResults(bulkOutput,btn,txt){
+  var results=document.getElementById('bulkResults');
+  results.innerHTML=bulkOutput.map(function(item){
+    if(!item) return '';
+    var out=item.out;
+    return '<div class="bulk-item">'
+      +'<div class="bulk-orig">Original: "'+escHtml(item.orig.substring(0,80))+(item.orig.length>80?'...':'')+'"</div>'
+      +'<div class="bulk-out">'+escHtml(out)+'</div>'
+      +'<div class="bulk-actions"><button class="bulk-copy" onclick="try{navigator.clipboard.writeText(this.closest(\'.bulk-item\').querySelector(\'.bulk-out\').textContent);}catch(e){}this.textContent=\'✓ Copied!\';setTimeout(function(el){return function(){el.textContent=\'📋 Copy\'}}(this),2200)">📋 Copy</button></div>'
+    +'</div>';
+  }).join('');
+  results.classList.add('show');
+  results.scrollIntoView({behavior:'smooth',block:'nearest'});
+  btn.classList.remove('busy');
+  txt.textContent='📋 Rewrite All Messages';
 }
 
 // ===== FAQ =====
