@@ -1552,7 +1552,7 @@ function generateFollowUp(){
       var grid=document.getElementById('fuVersionsGrid');
       var labels=['Version 1','Version 2','Version 3'];
       grid.innerHTML=[d.v1,d.v2,d.v3].map(function(r,i){
-        return '<div class="ver-card"><div class="ver-num"><span>'+labels[i]+'</span></div><div class="ver-text">'+escHtml(r)+'</div><div class="ver-actions"><button class="ver-btn ver-copy-btn" onclick="this.textContent='✓ Copied!';try{navigator.clipboard.writeText(this.closest(\'.ver-card\').querySelector(\'.ver-text\').textContent);}catch(e){}setTimeout(function(el){return function(){el.textContent=\'📋 Copy\'}}(this),2200)">📋 Copy</button></div></div>';
+        return '<div class="ver-card"><div class="ver-num"><span>'+labels[i]+'</span></div><div class="ver-text">'+escHtml(r)+'</div><div class="ver-actions"><button class="ver-btn ver-copy-btn" onclick="this.textContent=\'✓ Copied!\';try{navigator.clipboard.writeText(this.closest(\'.ver-card\').querySelector(\'.ver-text\').textContent);}catch(e){}setTimeout(function(el){return function(){el.textContent=\'📋 Copy\'}}(this),2200)">📋 Copy</button></div></div>';
       }).join('');
       document.getElementById('fuVersionsWrap').classList.add('show');
       document.getElementById('fuVersionsWrap').scrollIntoView({behavior:'smooth',block:'nearest'});
