@@ -8,8 +8,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(200); exit; }
 if ($_SERVER['REQUEST_METHOD'] !== 'POST')    { http_response_code(405); echo json_encode(['error'=>'Method not allowed']); exit; }
 
 // ── API Key ──────────────────────────────────────────────────────────────────
-// Paste your OpenAI key below (same key used by SnapCaptioner)
-$OPENAI_API_KEY = 'YOUR_OPENAI_API_KEY_HERE';
+// Key is stored in config.php (not tracked by git — safe to edit on Hostinger)
+require_once __DIR__ . '/config.php';
 
 // ── Input ────────────────────────────────────────────────────────────────────
 $input           = json_decode(file_get_contents('php://input'), true) ?: [];

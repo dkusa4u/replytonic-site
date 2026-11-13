@@ -1,0 +1,6 @@
+# API key config — keep off GitHub, edit directly on Hostinger
+api/config.php
+
+# OS files
+.DS_Store
+Thumbs.db
