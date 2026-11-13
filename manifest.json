@@ -1,6 +1,6 @@
 {
-  "name": "ReplyBetter — AI Message Rewriter",
-  "short_name": "ReplyBetter",
+  "name": "ReplyTonic — AI Message Rewriter",
+  "short_name": "ReplyTonic",
   "description": "Paste any message. Get 3 polished AI rewrites in seconds. 20+ languages, 6 tones.",
   "start_url": "/",
   "scope": "/",
@@ -26,14 +26,14 @@
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "ReplyBetter desktop view"
+      "label": "ReplyTonic desktop view"
     },
     {
       "src": "icons/screenshot-narrow.png",
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "ReplyBetter mobile view"
+      "label": "ReplyTonic mobile view"
     }
   ],
   "shortcuts": [
