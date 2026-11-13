@@ -1229,7 +1229,7 @@ function getBlendedNote(t1,t2){
 // ===== MAIN REWRITE =====
 // ===== API HELPER =====
 function callAPI(payload, onSuccess, onError){
-  fetch('/api/rewrite',{
+  fetch('/api/rewrite.php',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify(payload)
