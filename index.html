@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ReplyBetter — AI Message Rewriter in Any Language</title>
+<meta name="description" content="Paste any message in any language. Get 3 polished versions in 2 seconds. 20+ languages. Reply Generator, Follow-Up AI, and more.">
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="manifest.json">
+
+<!-- PWA Theme & Status Bar -->
+<meta name="theme-color" content="#6366f1">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ReplyBetter">
+
+<!-- Apple Touch Icons -->
+<link rel="apple-touch-icon" href="icons/icon-152.png">
+<link rel="apple-touch-icon" sizes="72x72"   href="icons/icon-72.png">
+<link rel="apple-touch-icon" sizes="96x96"   href="icons/icon-96.png">
+<link rel="apple-touch-icon" sizes="128x128" href="icons/icon-128.png">
+<link rel="apple-touch-icon" sizes="144x144" href="icons/icon-144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
+<link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png">
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="96x96"   href="icons/icon-96.png">
+<link rel="shortcut icon"         href="icons/icon-96.png">
+
+<!-- iOS Splash Screens (iPhone 14 Pro / common sizes) -->
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<!-- Open Graph (for sharing links) -->
+<meta property="og:title"       content="ReplyBetter — AI Message Rewriter">
+<meta property="og:description" content="Get 3 AI-polished message rewrites in seconds. 20+ languages, 6 tones.">
+<meta property="og:image"       content="icons/icon-512.png">
+<meta property="og:type"        content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0f;--bg2:#0f0f1a;
+  --card:rgba(255,255,255,.04);--card-h:rgba(255,255,255,.07);
+  --border:rgba(255,255,255,.08);--border-p:rgba(99,102,241,.4);
+  --p4:#a78bfa;--p5:#8b5cf6;--p6:#7c3aed;
+  --i4:#818cf8;--i5:#6366f1;
+  --o4:#fb923c;--o5:#f97316;
+  --g4:#4ade80;--y4:#facc15;
+  --t1:#fff;--t2:rgba(255,255,255,.65);--t3:rgba(255,255,255,.4);
+  --r8:8px;--r12:12px;--r20:20px;--r28:28px;
+  --glow:0 0 50px rgba(99,102,241,.14);
+  --oshadow:0 4px 20px rgba(249,115,22,.3);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t1);line-height:1.6;overflow-x:hidden}
+img{max-width:100%} a{color:inherit;text-decoration:none} button{cursor:pointer;border:none;background:none;font-family:inherit}
+body::before{content:'';position:fixed;top:-40%;left:-15%;width:55%;height:55%;background:radial-gradient(ellipse,rgba(99,102,241,.1) 0%,transparent 70%);pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;bottom:-30%;right:-15%;width:50%;height:50%;background:radial-gradient(ellipse,rgba(139,92,246,.07) 0%,transparent 70%);pointer-events:none;z-index:0}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(10,10,15,.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.logo{font-size:20px;font-weight:800;background:linear-gradient(135deg,#818cf8,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.5px}
+.navlinks{display:flex;align-items:center;gap:24px;list-style:none}
+.navlinks a{font-size:14px;font-weight:500;color:var(--t2);transition:color .2s}
+.navlinks a:hover{color:var(--t1)}
+.nav-cta{background:var(--o5);color:#fff!important;padding:9px 18px;border-radius:var(--r8);font-weight:700;font-size:14px;transition:all .2s;box-shadow:var(--oshadow)}
+.nav-cta:hover{background:var(--o4)!important;transform:translateY(-1px)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer}
+.hamburger span{display:block;width:24px;height:2px;background:var(--t2);border-radius:2px}
+.mob-menu{display:none;position:fixed;top:64px;left:0;right:0;background:rgba(10,10,15,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:20px 24px;z-index:99;flex-direction:column;gap:4px}
+.mob-menu.open{display:flex}
+.mob-menu a{font-size:16px;font-weight:500;color:var(--t2);padding:12px 0;border-bottom:1px solid var(--border)}
+.mob-menu a:last-child{border-bottom:none;color:var(--o4)}
+.hero{position:relative;z-index:1;padding:120px 24px 80px;max-width:1200px;margin:0 auto}
+.badge{display:inline-flex;align-items:center;gap:8px;background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.22);padding:6px 16px;border-radius:100px;font-size:13px;font-weight:500;color:var(--i4);margin-bottom:24px}
+.badge-dot{width:7px;height:7px;background:var(--i4);border-radius:50%;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+h1{font-size:clamp(36px,5.5vw,68px);font-weight:900;line-height:1.08;letter-spacing:-2px;margin-bottom:20px;max-width:760px}
+.grad{background:linear-gradient(135deg,#818cf8 0%,#a78bfa 50%,#c084fc 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:18px;color:var(--t2);max-width:520px;margin-bottom:48px;line-height:1.65}
+/* TOOL CARD */
+.tool-card{background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:var(--r28);padding:32px;max-width:960px;position:relative;backdrop-filter:blur(10px);box-shadow:var(--glow),0 24px 60px rgba(0,0,0,.4)}
+.tool-card::before{content:'';position:absolute;inset:-1px;background:linear-gradient(135deg,rgba(99,102,241,.25),rgba(139,92,246,.08),transparent 60%);border-radius:var(--r28);z-index:-1}
+/* MODE TABS */
+.mode-tabs{display:flex;gap:3px;margin-bottom:24px;background:rgba(0,0,0,.25);padding:4px;border-radius:var(--r12);border:1px solid var(--border)}
+.mode-tab{flex:1;padding:9px 8px;border-radius:var(--r8);font-size:12px;font-weight:600;color:var(--t3);cursor:pointer;text-align:center;transition:all .2s;white-space:nowrap}
+.mode-tab:hover{color:var(--t2)}
+.mode-tab.active{background:rgba(99,102,241,.18);color:var(--i4);border:1px solid rgba(99,102,241,.28)}
+.mode-panel{display:none}
+.mode-panel.active{display:block}
+/* INPUTS */
+.tool-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);margin-bottom:10px}
+.tool-label.recv-lbl{color:rgba(74,222,128,.75)}
+.tool-label.sent-lbl{color:rgba(99,102,241,.85)}
+textarea{width:100%;background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:var(--r12);padding:16px;color:var(--t1);font-size:15px;font-family:inherit;line-height:1.6;resize:vertical;min-height:100px;transition:border-color .2s}
+textarea:focus{outline:none;border-color:rgba(99,102,241,.45)}
+textarea::placeholder{color:var(--t3)}
+/* VOICE FEATURES */
+.msg-voice-wrap{position:relative}
+.mic-btn{position:absolute;bottom:10px;right:10px;width:34px;height:34px;border-radius:50%;background:rgba(99,102,241,.14);border:1px solid rgba(99,102,241,.28);color:var(--i4);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;z-index:2;line-height:1}
+.mic-btn:hover{background:rgba(99,102,241,.28);transform:scale(1.08)}
+.mic-btn.listening{background:rgba(239,68,68,.2);border-color:rgba(239,68,68,.5);color:#f87171;animation:pulse-mic .8s infinite}
+@keyframes pulse-mic{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4)}50%{box-shadow:0 0 0 7px rgba(239,68,68,0)}}
+.ver-speak-btn{background:rgba(129,140,248,.08);border:1px solid rgba(129,140,248,.18);color:var(--i4)}
+.ver-speak-btn:hover{background:rgba(129,140,248,.18)}
+.ver-speak-btn.speaking{background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.3);color:var(--g4)}
+/* CHAR COUNTER */
+.char-counter{text-align:right;font-size:11px;color:var(--t3);margin-top:5px;min-height:16px;transition:color .2s}
+.char-counter.warn{color:#facc15}
+.char-counter.over{color:#ef4444;font-weight:700}
+/* SHARE ROW */
+.share-row{display:flex;gap:5px;margin-top:9px;flex-wrap:wrap;padding-top:9px;border-top:1px solid rgba(255,255,255,.07)}
+.share-btn{padding:5px 9px;border-radius:var(--r8);font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--t3);display:flex;align-items:center;gap:4px}
+.share-btn:hover{transform:translateY(-1px)}
+.share-btn.wa{border-color:rgba(37,211,102,.3);color:#25d366}.share-btn.wa:hover{background:rgba(37,211,102,.12)}
+.share-btn.em{border-color:rgba(99,102,241,.3);color:var(--i4)}.share-btn.em:hover{background:rgba(99,102,241,.12)}
+.share-btn.sms{border-color:rgba(249,115,22,.3);color:var(--o4)}.share-btn.sms:hover{background:rgba(249,115,22,.12)}
+.share-btn.li{border-color:rgba(10,102,194,.4);color:#0a66c2}.share-btn.li:hover{background:rgba(10,102,194,.12)}
+.share-btn.sl{border-color:rgba(228,30,90,.3);color:#e01e5a}.share-btn.sl:hover{background:rgba(228,30,90,.1)}
+/* BEFORE/AFTER TOGGLE */
+.ba-toggle{background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--t3)}
+.ba-toggle:hover{background:rgba(99,102,241,.1);border-color:rgba(99,102,241,.3);color:var(--i4)}
+.ba-toggle.showing-orig{background:rgba(249,115,22,.1);border-color:rgba(249,115,22,.3);color:var(--o4)}
+/* PLATFORM */
+.section-row{margin:18px 0 0}
+.section-row-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);margin-bottom:10px}
+.plat-row{display:flex;flex-wrap:wrap;gap:8px}
+.plat-btn{display:flex;align-items:center;gap:6px;padding:7px 13px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:var(--r8);font-size:13px;font-weight:500;color:var(--t2);cursor:pointer;transition:all .2s}
+.plat-btn:hover{background:rgba(99,102,241,.1);border-color:rgba(99,102,241,.28);color:var(--t1)}
+.plat-btn.active{background:rgba(99,102,241,.18);border-color:rgba(99,102,241,.45);color:var(--i4)}
+/* TONE + LANG ROW */
+.tone-lang-row{display:flex;align-items:flex-start;gap:16px;margin-top:16px;flex-wrap:wrap}
+.tone-side{flex:1;min-width:0}
+.lang-side{flex-shrink:0}
+.tone-row{display:flex;flex-wrap:wrap;gap:8px}
+.tone-btn{padding:8px 15px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:100px;font-size:13px;font-weight:500;color:var(--t2);cursor:pointer;transition:all .2s}
+.tone-btn:hover{background:rgba(99,102,241,.1);border-color:rgba(99,102,241,.28);color:var(--t1)}
+.tone-btn.active{background:rgba(99,102,241,.18);border-color:rgba(99,102,241,.45);color:var(--i4)}
+.lang-select{appearance:none;-webkit-appearance:none;background:rgba(0,0,0,.35) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='rgba(255,255,255,0.4)' d='M5 6L0 0h10z'/%3E%3C/svg%3E") no-repeat right 12px center;border:1px solid var(--border);border-radius:var(--r12);padding:9px 34px 9px 14px;color:var(--t1);font-size:13px;font-family:inherit;font-weight:500;cursor:pointer;min-width:195px;transition:border-color .2s}
+.lang-select:focus{outline:none;border-color:rgba(99,102,241,.45)}
+.lang-select option,.lang-select optgroup{background:#0f0f1a;color:var(--t1)}
+/* TONE BLENDER */
+.blend-row{margin-top:12px}
+.blend-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(249,115,22,.75);margin-bottom:7px;display:flex;align-items:center;gap:7px}
+.blend-hint{font-size:10px;font-weight:400;color:var(--t3);text-transform:none;letter-spacing:0}
+.tone2-row{display:flex;flex-wrap:wrap;gap:7px}
+.tone2-btn{padding:6px 12px;background:rgba(249,115,22,.05);border:1px solid rgba(249,115,22,.14);border-radius:100px;font-size:12px;font-weight:500;color:rgba(251,146,60,.8);cursor:pointer;transition:all .2s}
+.tone2-btn:hover{background:rgba(249,115,22,.12)}
+.tone2-btn.active{background:rgba(249,115,22,.18);border-color:rgba(249,115,22,.45);color:var(--o4)}
+.tone2-btn.none-opt{color:var(--t3);border-color:var(--border);background:rgba(255,255,255,.04)}
+.tone2-btn.none-opt.active{background:rgba(255,255,255,.08);color:var(--t2)}
+/* LENGTH + EMOJI ROW */
+.extras-row{display:flex;align-items:center;gap:14px;margin-top:14px;flex-wrap:wrap}
+.len-group{display:flex;align-items:center;gap:5px}
+.len-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t3);margin-right:4px}
+.len-btn{padding:6px 11px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:var(--r8);font-size:12px;font-weight:500;color:var(--t2);cursor:pointer;transition:all .2s}
+.len-btn:hover{background:rgba(99,102,241,.1);border-color:rgba(99,102,241,.28);color:var(--t1)}
+.len-btn.active{background:rgba(99,102,241,.18);border-color:rgba(99,102,241,.45);color:var(--i4)}
+.emoji-toggle-wrap{display:flex;align-items:center;gap:8px}
+.emoji-toggle-lbl{font-size:12px;color:var(--t2)}
+.toggle-sw{width:38px;height:21px;background:rgba(255,255,255,.1);border-radius:100px;position:relative;cursor:pointer;border:1px solid var(--border);transition:background .2s;flex-shrink:0}
+.toggle-sw.on{background:rgba(99,102,241,.5);border-color:rgba(99,102,241,.6)}
+.toggle-sw::after{content:'';position:absolute;top:2px;left:2px;width:15px;height:15px;background:#fff;border-radius:50%;transition:transform .2s}
+.toggle-sw.on::after{transform:translateX(17px)}
+/* SUBJECT LINE */
+.subject-sec{margin-top:14px;display:none}
+.subject-sec.show{display:block}
+.subj-opts{display:flex;flex-direction:column;gap:7px;margin-top:8px}
+.subj-opt{padding:9px 14px;background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:var(--r8);font-size:13px;color:var(--t2);cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:space-between}
+.subj-opt:hover{background:rgba(99,102,241,.1);border-color:rgba(99,102,241,.3);color:var(--t1)}
+.subj-copy-ic{font-size:11px;color:var(--t3);flex-shrink:0}
+/* GO BUTTON */
+.go-btn{width:100%;margin-top:16px;background:var(--o5);color:#fff;padding:16px 24px;border-radius:var(--r12);font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;box-shadow:var(--oshadow);letter-spacing:.2px}
+.go-btn:hover{background:var(--o4);transform:translateY(-2px);box-shadow:0 8px 32px rgba(249,115,22,.45)}
+.go-btn:active{transform:translateY(0)}
+.go-btn.busy{opacity:.7;pointer-events:none}
+/* MESSAGE SCORE */
+.score-sec{margin-top:20px;background:rgba(0,0,0,.28);border:1px solid var(--border);border-radius:var(--r12);padding:18px;display:none;animation:fadeUp .3s ease}
+.score-sec.show{display:block}
+.score-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);margin-bottom:14px}
+.score-row{display:flex;align-items:center;gap:12px;margin-bottom:9px}
+.score-row:last-of-type{margin-bottom:0}
+.score-name{font-size:13px;font-weight:600;color:var(--t2);width:118px;flex-shrink:0}
+.score-track{flex:1;height:7px;background:rgba(255,255,255,.08);border-radius:100px;overflow:hidden}
+.score-fill{height:100%;border-radius:100px;width:0;transition:width .7s cubic-bezier(.4,0,.2,1)}
+.score-fill.low{background:linear-gradient(90deg,#ef4444,#f97316)}
+.score-fill.mid{background:linear-gradient(90deg,#f97316,#facc15)}
+.score-fill.good{background:linear-gradient(90deg,var(--i5),var(--p4))}
+.score-val{font-size:13px;font-weight:700;width:36px;text-align:right;flex-shrink:0;transition:color .3s}
+.score-hint{margin-top:13px;font-size:12px;color:var(--t3);line-height:1.5;padding-top:12px;border-top:1px solid var(--border)}
+/* 3 VERSIONS OUTPUT */
+.versions-wrap{margin-top:20px;display:none;animation:fadeUp .3s ease}
+.versions-wrap.show{display:block}
+.versions-hdr{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);margin-bottom:12px}
+.versions-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+.ver-card{background:rgba(99,102,241,.05);border:1px solid rgba(99,102,241,.14);border-radius:var(--r12);padding:16px;display:flex;flex-direction:column}
+.ver-num{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--i4);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between}
+.ver-badge{padding:3px 8px;background:rgba(99,102,241,.14);border-radius:100px;font-size:10px}
+.ver-text{font-size:13px;line-height:1.6;color:var(--t1);flex:1;white-space:pre-wrap}
+.ver-actions{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+.ver-btn{padding:6px 11px;border-radius:var(--r8);font-size:11px;font-weight:600;cursor:pointer;transition:all .2s}
+.ver-copy-btn{background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--t2)}
+.ver-copy-btn:hover{background:rgba(255,255,255,.12);color:var(--t1)}
+.ver-save-btn{background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.22);color:var(--i4)}
+.ver-save-btn:hover{background:rgba(99,102,241,.22)}
+/* REPLY CARDS */
+.reply-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:16px;display:none;animation:fadeUp .3s ease}
+.reply-cards.show{display:grid}
+.reply-card{background:rgba(74,222,128,.05);border:1px solid rgba(74,222,128,.13);border-radius:var(--r12);padding:16px;display:flex;flex-direction:column}
+.reply-num{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(74,222,128,.8);margin-bottom:8px}
+.reply-text{font-size:13px;line-height:1.6;color:var(--t1);flex:1;white-space:pre-wrap}
+.reply-actions{display:flex;gap:6px;margin-top:12px}
+.reply-copy-btn{padding:6px 11px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:var(--r8);font-size:11px;font-weight:600;color:var(--t2);cursor:pointer;transition:all .2s}
+.reply-copy-btn:hover{background:rgba(255,255,255,.12);color:var(--t1)}
+/* HISTORY PANEL */
+.hist-wrap{margin-top:22px;border-top:1px solid var(--border);padding-top:16px;display:none}
+.hist-wrap.has-items{display:block}
+.hist-toggle{font-size:12px;font-weight:600;color:var(--t3);cursor:pointer;display:flex;align-items:center;gap:6px;user-select:none;margin-bottom:10px}
+.hist-toggle:hover{color:var(--t2)}
+.hist-toggle span{transition:transform .2s}
+.hist-list{display:flex;flex-direction:column;gap:6px}
+.hist-item{background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:var(--r8);padding:9px 12px;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.hist-item:hover{background:rgba(99,102,241,.07);border-color:rgba(99,102,241,.22)}
+.hist-preview{font-size:12px;color:var(--t2);line-height:1.4;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hist-meta{font-size:10px;color:var(--t3);flex-shrink:0;text-align:right;line-height:1.5}
+/* TEMPLATES MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-bg.show{display:flex}
+.modal{background:#0f0f1a;border:1px solid rgba(99,102,241,.25);border-radius:var(--r20);padding:28px;max-width:580px;width:100%;max-height:80vh;overflow-y:auto;position:relative}
+.modal-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.modal-title{font-size:18px;font-weight:700}
+.modal-close{font-size:24px;color:var(--t3);cursor:pointer;line-height:1;padding:0 4px;transition:color .2s}
+.modal-close:hover{color:var(--t1)}
+.tmpl-list{display:flex;flex-direction:column;gap:9px}
+.tmpl-item{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--r12);padding:14px}
+.tmpl-meta{font-size:11px;color:var(--t3);margin-bottom:5px;display:flex;gap:9px}
+.tmpl-text{font-size:13px;color:var(--t2);line-height:1.5;margin-bottom:10px}
+.tmpl-actions{display:flex;gap:7px}
+.tmpl-use{padding:5px 11px;background:rgba(99,102,241,.14);border:1px solid rgba(99,102,241,.25);border-radius:var(--r8);font-size:12px;font-weight:600;color:var(--i4);cursor:pointer;transition:all .2s}
+.tmpl-use:hover{background:rgba(99,102,241,.25)}
+.tmpl-del{padding:5px 11px;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.15);border-radius:var(--r8);font-size:12px;font-weight:600;color:rgba(252,165,165,.85);cursor:pointer;transition:all .2s}
+.tmpl-del:hover{background:rgba(239,68,68,.15)}
+.tmpl-empty{font-size:14px;color:var(--t3);text-align:center;padding:28px 0}
+/* DEMO NOTE */
+.demo-note{margin-top:16px;padding:12px 16px;background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.15);border-radius:var(--r8);font-size:12px;color:rgba(249,115,22,.85);display:flex;align-items:center;gap:8px}
+/* BULK */
+.bulk-results{margin-top:16px;flex-direction:column;gap:11px;display:none}
+.bulk-results.show{display:flex}
+.bulk-item{background:rgba(99,102,241,.05);border:1px solid rgba(99,102,241,.14);border-radius:var(--r12);padding:14px}
+.bulk-orig{font-size:11px;color:var(--t3);margin-bottom:7px;font-style:italic}
+.bulk-out{font-size:14px;color:var(--t1);line-height:1.6}
+.bulk-actions{display:flex;gap:7px;margin-top:9px}
+.bulk-copy{padding:6px 11px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:var(--r8);font-size:12px;font-weight:600;color:var(--t2);cursor:pointer;transition:all .2s}
+.bulk-copy:hover{background:rgba(255,255,255,.12);color:var(--t1)}
+/* PROOF BAR */
+.proof-bar{position:relative;z-index:1;background:rgba(255,255,255,.02);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:22px 24px;display:flex;justify-content:center;align-items:center;gap:48px;flex-wrap:wrap}
+.proof-item{text-align:center}
+.proof-num{font-size:22px;font-weight:800;background:linear-gradient(135deg,#818cf8,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.proof-txt{font-size:12px;color:var(--t3);margin-top:2px;font-weight:500}
+.proof-div{width:1px;height:36px;background:var(--border)}
+/* SECTIONS */
+.sec{position:relative;z-index:1;padding:88px 24px;max-width:1200px;margin:0 auto}
+.eyebrow{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--i4);margin-bottom:12px}
+h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-height:1.12;margin-bottom:14px}
+.sec-sub{font-size:17px;color:var(--t2);max-width:490px;margin-bottom:52px;line-height:1.65}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.step{background:var(--card);border:1px solid var(--border);border-radius:var(--r20);padding:30px;transition:all .3s}
+.step:hover{background:var(--card-h);border-color:var(--border-p);transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,.3)}
+.step-num{width:44px;height:44px;background:linear-gradient(135deg,var(--i5),var(--p5));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;margin-bottom:20px;color:#fff}
+.step h3{font-size:19px;font-weight:700;margin-bottom:10px;letter-spacing:-.3px}
+.step p{font-size:15px;color:var(--t2);line-height:1.6}
+/* BEFORE & AFTER */
+.ba-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.ba-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r20);padding:22px;transition:all .3s}
+.ba-card:hover{background:var(--card-h);border-color:var(--border-p);transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,.3)}
+.ba-plat{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.14);border-radius:100px;font-size:12px;font-weight:600;color:var(--i4);margin-bottom:14px}
+.ba-mlabel{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.ba-mlabel.bef{color:rgba(249,115,22,.8)}
+.ba-mlabel.aft{color:rgba(74,222,128,.8)}
+.ba-msg{padding:11px 13px;border-radius:var(--r8);font-size:13px;line-height:1.55;margin-bottom:8px}
+.ba-msg.bef{background:rgba(249,115,22,.07);border:1px solid rgba(249,115,22,.14);color:rgba(255,200,170,.9);font-style:italic}
+.ba-msg.aft{background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.13);color:rgba(190,255,210,.9)}
+.ba-arr{text-align:center;color:var(--t3);font-size:16px;line-height:1;margin-bottom:8px}
+/* BENTO */
+.bento{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.bc{background:var(--card);border:1px solid var(--border);border-radius:var(--r20);padding:26px;position:relative;overflow:hidden;transition:all .3s}
+.bc:hover{background:var(--card-h);border-color:var(--border-p);transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,.3)}
+.bc:nth-child(1){grid-column:span 7}
+.bc:nth-child(2){grid-column:span 5}
+.bc:nth-child(3),.bc:nth-child(4),.bc:nth-child(5){grid-column:span 4}
+.bc:nth-child(6){grid-column:span 12}
+.b-tag{display:inline-block;padding:4px 10px;background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.18);border-radius:100px;font-size:12px;font-weight:600;color:var(--i4);margin-bottom:14px}
+.b-icon{font-size:30px;margin-bottom:14px;display:block}
+.bc h3{font-size:18px;font-weight:700;margin-bottom:9px;letter-spacing:-.3px}
+.bc p{font-size:14px;color:var(--t2);line-height:1.6}
+.b-ex{margin-top:14px;background:rgba(0,0,0,.28);border:1px solid var(--border);border-radius:var(--r8);padding:13px;font-size:13px;line-height:1.55}
+.b-before{color:rgba(255,110,110,.85);font-style:italic;margin-bottom:7px}
+.b-after{color:rgba(100,220,100,.9)}
+.b-wide-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.b-pills{display:flex;flex-wrap:wrap;gap:7px}
+.b-pill{padding:7px 15px;background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2);border-radius:100px;font-size:13px;font-weight:500;color:var(--p4)}
+.b-lpill{padding:6px 12px;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.15);border-radius:100px;font-size:12px;font-weight:500;color:var(--i4)}
+/* PRICING */
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:960px}
+.price-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r28);padding:32px;position:relative;transition:all .3s}
+.price-card.hot{border-color:rgba(99,102,241,.38);background:rgba(99,102,241,.04);box-shadow:0 0 60px rgba(99,102,241,.09)}
+.price-card.teams{border-color:rgba(249,115,22,.22);background:rgba(249,115,22,.02)}
+.hot-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--i5),var(--p5));color:#fff;font-size:12px;font-weight:700;padding:4px 14px;border-radius:100px;white-space:nowrap}
+.tier{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);margin-bottom:7px}
+.price{font-size:44px;font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:4px}
+.price sup{font-size:18px;vertical-align:top;margin-top:8px;display:inline-block}
+.period{font-size:13px;color:var(--t3);margin-bottom:20px}
+.feat-list{list-style:none;margin-bottom:24px}
+.feat-list li{display:flex;align-items:flex-start;gap:9px;font-size:14px;color:var(--t2);margin-bottom:8px;line-height:1.4}
+.feat-list li::before{content:'✓';color:var(--i4);font-weight:700;flex-shrink:0;margin-top:1px}
+.p-btn{display:block;width:100%;padding:13px;border-radius:var(--r12);font-size:15px;font-weight:700;text-align:center;transition:all .2s;cursor:pointer}
+.p-free{background:rgba(255,255,255,.07);border:1px solid var(--border);color:var(--t1)}
+.p-free:hover{background:rgba(255,255,255,.12)}
+.p-hot{background:var(--o5);color:#fff;box-shadow:var(--oshadow)}
+.p-hot:hover{background:var(--o4);transform:translateY(-2px);box-shadow:0 8px 28px rgba(249,115,22,.45)}
+.p-teams{background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.28);color:var(--o4)}
+.p-teams:hover{background:rgba(249,115,22,.2);transform:translateY(-2px)}
+.price-note{font-size:13px;color:var(--t3);margin-top:18px}
+.price-note a{color:var(--i4)}
+/* CHROME EXT */
+.ext-wrap{position:relative;z-index:1;padding:0 24px 88px;max-width:1200px;margin:0 auto}
+.ext-card{background:linear-gradient(135deg,rgba(99,102,241,.07) 0%,rgba(139,92,246,.04) 60%,rgba(249,115,22,.04) 100%);border:1px solid rgba(99,102,241,.18);border-radius:var(--r28);padding:52px 48px;display:flex;align-items:center;gap:52px;position:relative;overflow:hidden}
+.ext-card::before{content:'';position:absolute;top:-50%;right:-5%;width:380px;height:380px;background:radial-gradient(ellipse,rgba(99,102,241,.07) 0%,transparent 70%);pointer-events:none}
+.ext-left{flex:1;min-width:0}
+.ext-soon{display:inline-flex;align-items:center;gap:7px;background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.22);padding:5px 14px;border-radius:100px;font-size:12px;font-weight:700;color:var(--o4);margin-bottom:20px;letter-spacing:.5px}
+.ext-card h2{font-size:clamp(24px,3.2vw,36px);font-weight:800;letter-spacing:-1.2px;margin-bottom:12px;max-width:500px}
+.ext-card p{font-size:16px;color:var(--t2);max-width:460px;line-height:1.65;margin-bottom:26px}
+.email-form{display:flex;gap:10px;max-width:440px}
+.email-input{flex:1;background:rgba(0,0,0,.35);border:1px solid var(--border);border-radius:var(--r12);padding:12px 16px;color:var(--t1);font-size:14px;font-family:inherit;transition:border-color .2s}
+.email-input::placeholder{color:var(--t3)}
+.email-input:focus{outline:none;border-color:rgba(99,102,241,.45)}
+.email-btn{background:var(--o5);color:#fff;padding:12px 20px;border-radius:var(--r12);font-size:14px;font-weight:700;white-space:nowrap;transition:all .2s;box-shadow:var(--oshadow);flex-shrink:0;border:none;cursor:pointer}
+.email-btn:hover{background:var(--o4);transform:translateY(-1px)}
+.ext-right{flex-shrink:0}
+.ext-mockup{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:var(--r20);padding:24px 20px;min-width:200px;text-align:center}
+.ext-icon{font-size:46px;margin-bottom:10px}
+.ext-m-title{font-size:14px;font-weight:700;color:var(--t1);margin-bottom:4px}
+.ext-m-sub{font-size:12px;color:var(--t3);margin-bottom:14px}
+.ext-m-bar{height:6px;background:rgba(255,255,255,.06);border-radius:100px;overflow:hidden;margin-bottom:4px}
+.ext-m-fill{height:100%;width:65%;background:linear-gradient(90deg,var(--i5),var(--p4));border-radius:100px}
+.ext-m-label{font-size:11px;color:var(--t3);text-align:left}
+.ext-features{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.ext-feat{padding:5px 11px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:100px;font-size:12px;color:var(--t3)}
+/* FAQ */
+.faq-wrap{max-width:660px}
+.faq-item{border-bottom:1px solid var(--border)}
+.faq-q{display:flex;justify-content:space-between;align-items:center;padding:20px 0;cursor:pointer;font-size:16px;font-weight:600;color:var(--t1);gap:14px;transition:color .2s}
+.faq-q:hover{color:var(--i4)}
+.faq-ic{font-size:20px;color:var(--t3);flex-shrink:0;transition:transform .25s;line-height:1}
+.faq-item.open .faq-ic{transform:rotate(45deg);color:var(--i4)}
+.faq-a{display:none;padding-bottom:20px;font-size:15px;color:var(--t2);line-height:1.65}
+.faq-item.open .faq-a{display:block}
+/* FOOTER */
+.foot-wrap{position:relative;z-index:1;background:rgba(0,0,0,.28);border-top:1px solid var(--border)}
+.foot{max-width:1200px;margin:0 auto;padding:52px 24px 34px}
+.foot-top{display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:44px;margin-bottom:40px}
+.foot-logo{font-size:20px;font-weight:800;background:linear-gradient(135deg,#818cf8,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px}
+.foot-desc{font-size:14px;color:var(--t3);line-height:1.6;max-width:230px}
+.foot-col-t{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t3);margin-bottom:14px}
+.foot-links{list-style:none;display:flex;flex-direction:column;gap:9px}
+.foot-links a{font-size:14px;color:var(--t2);transition:color .2s}
+.foot-links a:hover{color:var(--t1)}
+.foot-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:24px;border-top:1px solid var(--border);flex-wrap:wrap;gap:10px}
+.foot-copy{font-size:13px;color:var(--t3)}
+.foot-legal{display:flex;gap:18px}
+.foot-legal a{font-size:13px;color:var(--t3);transition:color .2s}
+.foot-legal a:hover{color:var(--t2)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* RESPONSIVE */
+@media(max-width:960px){
+  .navlinks{display:none}
+  .hamburger{display:flex}
+  .steps{grid-template-columns:1fr}
+  .ba-grid{grid-template-columns:repeat(2,1fr)}
+  .bc:nth-child(1),.bc:nth-child(2),.bc:nth-child(3),.bc:nth-child(4),.bc:nth-child(5),.bc:nth-child(6){grid-column:span 12}
+  .b-wide-inner{flex-direction:column}
+  .price-grid{grid-template-columns:1fr}
+  .foot-top{grid-template-columns:1fr 1fr}
+  .ext-card{flex-direction:column;padding:36px 28px}
+  .ext-right{width:100%}
+  .tone-lang-row{flex-direction:column}
+  .lang-select{min-width:100%;width:100%}
+  .versions-grid,.reply-cards{grid-template-columns:1fr}
+  .mode-tabs{flex-wrap:wrap}
+}
+@media(max-width:600px){
+  .hero{padding:100px 18px 60px}
+  .sec{padding:64px 18px}
+  .ext-wrap{padding:0 18px 64px}
+  .tool-card{padding:20px}
+  .proof-bar{gap:20px}
+  .proof-div{display:none}
+  .ba-grid{grid-template-columns:1fr}
+  .foot-top{grid-template-columns:1fr}
+  .foot-bottom{flex-direction:column;align-items:flex-start}
+  .foot-legal{flex-wrap:wrap;gap:12px}
+  .email-form{flex-direction:column}
+  .ext-card{padding:28px 20px}
+}
+</style>
+</head>
+<body>
+
+<!-- TEMPLATES MODAL -->
+<div class="modal-bg" id="tmplModal" onclick="if(event.target===this)closeTmpl()">
+  <div class="modal">
+    <div class="modal-top">
+      <div class="modal-title">📌 My Templates</div>
+      <span class="modal-close" onclick="closeTmpl()">×</span>
+    </div>
+    <div id="tmplList" class="tmpl-list"><div class="tmpl-empty">No saved templates yet.<br>Click "Save as Template" on any rewrite to save it here.</div></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">ReplyBetter</div>
+  <ul class="navlinks">
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#examples">Examples</a></li>
+    <li><a href="#cases">Use Cases</a></li>
+    <li><a href="#teams">Teams</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#tool" class="nav-cta">Try It Free</a></li>
+  </ul>
+  <div class="hamburger" onclick="toggleNav()"><span></span><span></span><span></span></div>
+</nav>
+<div class="mob-menu" id="mobMenu">
+  <a href="#how" onclick="closeNav()">How It Works</a>
+  <a href="#examples" onclick="closeNav()">Examples</a>
+  <a href="#cases" onclick="closeNav()">Use Cases</a>
+  <a href="#teams" onclick="closeNav()">Teams</a>
+  <a href="#pricing" onclick="closeNav()">Pricing</a>
+  <a href="#faq" onclick="closeNav()">FAQ</a>
+  <a href="#tool" onclick="closeNav()">Try It Free</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="tool">
+  <div class="badge"><span class="badge-dot"></span>AI-Powered &middot; 20+ Languages &middot; 10 Features</div>
+  <h1>Stop sending messages<br><span class="grad">you regret.</span></h1>
+  <p class="hero-sub">Rewrite, Reply, Follow Up, or Bulk process &mdash; in any language, any tone, any platform. 3 versions every time so you pick the perfect one.</p>
+
+  <div class="tool-card">
+
+    <!-- MODE TABS -->
+    <div class="mode-tabs">
+      <div class="mode-tab active" data-mode="rewrite" onclick="switchMode('rewrite')">✏️ Rewrite</div>
+      <div class="mode-tab" data-mode="reply" onclick="switchMode('reply')">💬 Reply Generator</div>
+      <div class="mode-tab" data-mode="followup" onclick="switchMode('followup')">↩️ Follow-Up</div>
+      <div class="mode-tab" data-mode="bulk" onclick="switchMode('bulk')">📋 Bulk Rewrite</div>
+    </div>
+
+    <!-- ===== MODE 1: REWRITE ===== -->
+    <div class="mode-panel active" id="mode-rewrite">
+      <div class="tool-label">Your Message</div>
+      <div class="msg-voice-wrap"><textarea id="inp" rows="4" placeholder="Paste any message here — in any language. e.g. 'sorry i messed up the report can u just fix it' or type in Hindi, Spanish, Tamil..."></textarea><button id="mic-inp" class="mic-btn" onclick="startVoiceInput('inp','langSelect')" title="Speak your message">🎤</button></div>
+      <div class="char-counter" id="cc-inp"></div>
+
+      <div class="section-row">
+        <div class="section-row-label">Platform</div>
+        <div class="plat-row" id="platBtns">
+          <button class="plat-btn active" data-plat="Email">📧 Email</button>
+          <button class="plat-btn" data-plat="WhatsApp">💬 WhatsApp</button>
+          <button class="plat-btn" data-plat="LinkedIn">💼 LinkedIn</button>
+          <button class="plat-btn" data-plat="SMS">📱 SMS</button>
+          <button class="plat-btn" data-plat="Slack">🖥️ Slack</button>
+          <button class="plat-btn" data-plat="Text">🗨️ Text</button>
+        </div>
+      </div>
+
+      <div class="tone-lang-row">
+        <div class="tone-side">
+          <div class="section-row-label">Tone</div>
+          <div class="tone-row" id="tones">
+            <button class="tone-btn active" data-tone="Professional">Professional</button>
+            <button class="tone-btn" data-tone="Friendly">Friendly</button>
+            <button class="tone-btn" data-tone="Apologetic">Apologetic</button>
+            <button class="tone-btn" data-tone="Assertive">Assertive</button>
+            <button class="tone-btn" data-tone="Casual">Casual</button>
+            <button class="tone-btn" data-tone="Formal">Formal</button>
+          </div>
+          <!-- TONE BLENDER -->
+          <div class="blend-row">
+            <div class="blend-lbl">🎨 Tone Blender <span class="blend-hint">— Mix with a second tone (optional)</span></div>
+            <div class="tone2-row" id="tone2Row">
+              <button class="tone2-btn none-opt active" data-tone2="None">None</button>
+              <button class="tone2-btn" data-tone2="Professional">Professional</button>
+              <button class="tone2-btn" data-tone2="Friendly">Friendly</button>
+              <button class="tone2-btn" data-tone2="Apologetic">Apologetic</button>
+              <button class="tone2-btn" data-tone2="Assertive">Assertive</button>
+              <button class="tone2-btn" data-tone2="Casual">Casual</button>
+              <button class="tone2-btn" data-tone2="Formal">Formal</button>
+            </div>
+          </div>
+        </div>
+        <div class="lang-side">
+          <div class="section-row-label">Output Language</div>
+          <select id="langSelect" class="lang-select" onchange="checkSubject()">
+            <option value="English">🇺🇸 English (Default)</option>
+            <optgroup label="Indian Languages">
+              <option value="Hindi">Hindi &mdash; हिंदी</option>
+              <option value="Bengali">Bengali &mdash; বাংলা</option>
+              <option value="Telugu">Telugu &mdash; తెలుగు</option>
+              <option value="Tamil">Tamil &mdash; தமிழ்</option>
+              <option value="Marathi">Marathi &mdash; मराठी</option>
+              <option value="Gujarati">Gujarati &mdash; ગુજરાતી</option>
+              <option value="Kannada">Kannada &mdash; ಕನ್ನಡ</option>
+              <option value="Malayalam">Malayalam &mdash; മലയാളം</option>
+              <option value="Punjabi">Punjabi &mdash; ਪੰਜਾਬੀ</option>
+              <option value="Urdu">Urdu &mdash; اردو</option>
+            </optgroup>
+            <optgroup label="World Languages">
+              <option value="Spanish">Spanish &mdash; Español</option>
+              <option value="Arabic">Arabic &mdash; العربية</option>
+              <option value="Portuguese">Portuguese &mdash; Português</option>
+              <option value="French">French &mdash; Français</option>
+              <option value="Indonesian">Indonesian &mdash; Bahasa</option>
+              <option value="Russian">Russian &mdash; Русский</option>
+              <option value="Japanese">Japanese &mdash; 日本語</option>
+              <option value="Korean">Korean &mdash; 한국어</option>
+              <option value="German">German &mdash; Deutsch</option>
+              <option value="Turkish">Turkish &mdash; Türkçe</option>
+              <option value="Vietnamese">Vietnamese &mdash; Tiếng Việt</option>
+              <option value="Swahili">Swahili</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+
+      <!-- LENGTH + EMOJI -->
+      <div class="extras-row">
+        <div class="len-group">
+          <span class="len-lbl">Length:</span>
+          <button class="len-btn" data-len="Shorter" onclick="setLen('Shorter',this)">Shorter</button>
+          <button class="len-btn active" data-len="Same" onclick="setLen('Same',this)">Same</button>
+          <button class="len-btn" data-len="Longer" onclick="setLen('Longer',this)">Longer</button>
+        </div>
+        <div class="emoji-toggle-wrap">
+          <div class="toggle-sw" id="emojiToggle" onclick="toggleEmoji(this)"></div>
+          <span class="emoji-toggle-lbl">Add emojis</span>
+        </div>
+        <button style="padding:6px 13px;background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.22);border-radius:var(--r8);font-size:12px;font-weight:600;color:var(--i4);cursor:pointer;margin-left:auto" onclick="openTmpl()">📌 My Templates</button>
+      </div>
+
+      <!-- SUBJECT LINE (Email only) -->
+      <div class="subject-sec" id="subjectSec">
+        <div class="section-row-label">✉️ Subject Line Suggestions</div>
+        <div class="subj-opts" id="subjectOpts"></div>
+      </div>
+
+      <button class="go-btn" id="goBtn" onclick="rewrite()">
+        <span id="goTxt">✨ Rewrite My Message</span>
+      </button>
+
+      <!-- SCORE -->
+      <div class="score-sec" id="scoreSec">
+        <div class="score-title">📊 Message Score — Original</div>
+        <div class="score-row">
+          <span class="score-name">Clarity</span>
+          <div class="score-track"><div class="score-fill" id="clarityFill"></div></div>
+          <span class="score-val" id="clarityVal">—</span>
+        </div>
+        <div class="score-row">
+          <span class="score-name">Tone</span>
+          <div class="score-track"><div class="score-fill" id="toneFill"></div></div>
+          <span class="score-val" id="toneVal">—</span>
+        </div>
+        <div class="score-row">
+          <span class="score-name">Professionalism</span>
+          <div class="score-track"><div class="score-fill" id="profFill"></div></div>
+          <span class="score-val" id="profVal">—</span>
+        </div>
+        <div class="score-hint" id="scoreHint"></div>
+      </div>
+
+      <!-- 3 VERSIONS OUTPUT -->
+      <div class="versions-wrap" id="versionsWrap">
+        <div class="versions-hdr">Your Rewritten Message — 3 Versions</div>
+        <div class="versions-grid" id="versionsGrid"></div>
+      </div>
+
+      <!-- HISTORY -->
+      <div class="hist-wrap" id="histWrap">
+        <div class="hist-toggle" onclick="toggleHist()"><span id="histArrow">▸</span> Recent Rewrites <span id="histCount" style="background:rgba(99,102,241,.14);padding:2px 8px;border-radius:100px;font-size:10px;color:var(--i4)"></span></div>
+        <div class="hist-list" id="histList" style="display:none"></div>
+      </div>
+
+      <div class="demo-note">🔵 <span><strong>Preview Mode</strong> — showing demo rewrites. Live AI via OpenAI GPT-4o + full language output activates on your deployed website.</span></div>
+    </div>
+
+    <!-- ===== MODE 2: REPLY GENERATOR ===== -->
+    <div class="mode-panel" id="mode-reply">
+      <div class="tool-label recv-lbl">Message You Received</div>
+      <div class="msg-voice-wrap"><textarea id="replyInp" rows="4" placeholder="Paste the message you received and need to reply to... e.g. 'We're reviewing your application and will get back to you within 5 business days.'"></textarea><button id="mic-replyInp" class="mic-btn" onclick="startVoiceInput('replyInp','replyLang')" title="Speak your message">🎤</button></div>
+      <div class="char-counter" id="cc-replyInp"></div>
+
+      <div class="section-row">
+        <div class="section-row-label">Platform</div>
+        <div class="plat-row" id="platBtnsReply">
+          <button class="plat-btn active" data-plat="Email">📧 Email</button>
+          <button class="plat-btn" data-plat="WhatsApp">💬 WhatsApp</button>
+          <button class="plat-btn" data-plat="LinkedIn">💼 LinkedIn</button>
+          <button class="plat-btn" data-plat="SMS">📱 SMS</button>
+          <button class="plat-btn" data-plat="Slack">🖥️ Slack</button>
+          <button class="plat-btn" data-plat="Text">🗨️ Text</button>
+        </div>
+      </div>
+
+      <div class="tone-lang-row">
+        <div class="tone-side">
+          <div class="section-row-label">My Reply Tone</div>
+          <div class="tone-row" id="replyTones">
+            <button class="tone-btn active" data-tone="Professional">Professional</button>
+            <button class="tone-btn" data-tone="Friendly">Friendly</button>
+            <button class="tone-btn" data-tone="Apologetic">Apologetic</button>
+            <button class="tone-btn" data-tone="Assertive">Assertive</button>
+            <button class="tone-btn" data-tone="Casual">Casual</button>
+            <button class="tone-btn" data-tone="Formal">Formal</button>
+          </div>
+        </div>
+        <div class="lang-side">
+          <div class="section-row-label">Output Language</div>
+          <select id="replyLang" class="lang-select">
+            <option value="English">🇺🇸 English (Default)</option>
+            <optgroup label="Indian Languages">
+              <option value="Hindi">Hindi — हिंदी</option>
+              <option value="Bengali">Bengali — বাংলা</option>
+              <option value="Tamil">Tamil — தமிழ்</option>
+              <option value="Telugu">Telugu — తెలుగు</option>
+              <option value="Marathi">Marathi — मराठी</option>
+            </optgroup>
+            <optgroup label="World Languages">
+              <option value="Spanish">Spanish — Español</option>
+              <option value="French">French — Français</option>
+              <option value="Portuguese">Portuguese — Português</option>
+              <option value="Japanese">Japanese — 日本語</option>
+              <option value="Korean">Korean — 한국어</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+
+      <button class="go-btn" id="replyBtn" onclick="generateReply()">
+        <span id="replyTxt">💬 Generate 3 Reply Options</span>
+      </button>
+
+      <div class="reply-cards" id="replyCards"></div>
+      <div class="demo-note" style="margin-top:16px">🔵 <span><strong>Preview Mode</strong> — reply suggestions are demos. Live contextual replies activate on your deployed site.</span></div>
+    </div>
+
+    <!-- ===== MODE 3: FOLLOW-UP ===== -->
+    <div class="mode-panel" id="mode-followup">
+      <div class="tool-label sent-lbl">Your Original Message (what you sent)</div>
+      <div class="msg-voice-wrap"><textarea id="fuInp1" rows="3" placeholder="Paste the message you originally sent... e.g. 'Hi, I applied for the position last week and wanted to follow up.'"></textarea><button id="mic-fuInp1" class="mic-btn" onclick="startVoiceInput('fuInp1','fuLang')" title="Speak your message">🎤</button></div>
+      <div class="char-counter" id="cc-fuInp1"></div>
+      <div class="tool-label recv-lbl" style="margin-top:14px">Their Response (what they sent back)</div>
+      <div class="msg-voice-wrap"><textarea id="fuInp2" rows="3" placeholder="Paste their reply here... e.g. 'Thanks for reaching out, we'll be in touch when a position opens up.'"></textarea><button id="mic-fuInp2" class="mic-btn" onclick="startVoiceInput('fuInp2','fuLang')" title="Speak their reply">🎤</button></div>
+      <div class="char-counter" id="cc-fuInp2"></div>
+
+      <div class="tone-lang-row" style="margin-top:14px">
+        <div class="tone-side">
+          <div class="section-row-label">Follow-Up Tone</div>
+          <div class="tone-row" id="fuTones">
+            <button class="tone-btn active" data-tone="Professional">Professional</button>
+            <button class="tone-btn" data-tone="Friendly">Friendly</button>
+            <button class="tone-btn" data-tone="Assertive">Assertive</button>
+            <button class="tone-btn" data-tone="Formal">Formal</button>
+            <button class="tone-btn" data-tone="Casual">Casual</button>
+          </div>
+        </div>
+        <div class="lang-side">
+          <div class="section-row-label">Output Language</div>
+          <select id="fuLang" class="lang-select">
+            <option value="English">🇺🇸 English (Default)</option>
+            <option value="Hindi">Hindi — हिंदी</option>
+            <option value="Spanish">Spanish — Español</option>
+            <option value="French">French — Français</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="go-btn" id="fuBtn" onclick="generateFollowUp()">
+        <span id="fuTxt">↩️ Generate Follow-Up Message</span>
+      </button>
+
+      <div class="versions-wrap" id="fuVersionsWrap">
+        <div class="versions-hdr">Your Follow-Up — 3 Options</div>
+        <div class="versions-grid" id="fuVersionsGrid"></div>
+      </div>
+      <div class="demo-note" style="margin-top:16px">🔵 <span><strong>Preview Mode</strong> — follow-up messages are demos. Context-aware AI activates on your deployed site.</span></div>
+    </div>
+
+    <!-- ===== MODE 4: BULK REWRITE ===== -->
+    <div class="mode-panel" id="mode-bulk">
+      <div class="tool-label">Bulk Messages <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--t3);font-size:12px">— Separate each message with a blank line or ——</span></div>
+      <div class="msg-voice-wrap"><textarea id="bulkInp" rows="8" class="bulk-textarea" placeholder="Message 1: thanks for the meeting today&#10;&#10;——&#10;&#10;Message 2: i need the report by tomorrow morning&#10;&#10;——&#10;&#10;Message 3: ur late again this is so annoying"></textarea><button id="mic-bulkInp" class="mic-btn" onclick="startVoiceInput('bulkInp','bulkLang')" title="Speak your message">🎤</button></div>
+      <div class="char-counter" id="cc-bulkInp"></div>
+
+      <div class="tone-lang-row">
+        <div class="tone-side">
+          <div class="section-row-label">Apply This Tone to All</div>
+          <div class="tone-row" id="bulkTones">
+            <button class="tone-btn active" data-tone="Professional">Professional</button>
+            <button class="tone-btn" data-tone="Friendly">Friendly</button>
+            <button class="tone-btn" data-tone="Apologetic">Apologetic</button>
+            <button class="tone-btn" data-tone="Assertive">Assertive</button>
+            <button class="tone-btn" data-tone="Casual">Casual</button>
+            <button class="tone-btn" data-tone="Formal">Formal</button>
+          </div>
+        </div>
+        <div class="lang-side">
+          <div class="section-row-label">Output Language</div>
+          <select id="bulkLang" class="lang-select">
+            <option value="English">🇺🇸 English (Default)</option>
+            <option value="Hindi">Hindi — हिंदी</option>
+            <option value="Spanish">Spanish — Español</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="go-btn" id="bulkBtn" onclick="bulkRewrite()">
+        <span id="bulkTxt">📋 Rewrite All Messages</span>
+      </button>
+
+      <div class="bulk-results" id="bulkResults"></div>
+      <div class="demo-note" style="margin-top:16px">🔵 <span><strong>Preview Mode</strong> — bulk processing is capped at 5 messages in demo. No limit on deployed site.</span></div>
+    </div>
+
+  </div><!-- end tool-card -->
+</section>
+
+<!-- PROOF BAR -->
+<div class="proof-bar">
+  <div class="proof-item"><div class="proof-num">2.4M+</div><div class="proof-txt">Messages Rewritten</div></div>
+  <div class="proof-div"></div>
+  <div class="proof-item"><div class="proof-num">20+</div><div class="proof-txt">Languages</div></div>
+  <div class="proof-div"></div>
+  <div class="proof-item"><div class="proof-num">92%</div><div class="proof-txt">Send on First Try</div></div>
+  <div class="proof-div"></div>
+  <div class="proof-item"><div class="proof-num">90+</div><div class="proof-txt">Countries</div></div>
+  <div class="proof-div"></div>
+  <div class="proof-item"><div class="proof-num">4.9★</div><div class="proof-txt">Average Rating</div></div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="sec" id="how">
+  <div class="eyebrow">How It Works</div>
+  <h2>4 steps. 2 seconds. Done.</h2>
+  <p class="sec-sub">No sign-up to try it. No complicated settings. Paste, pick your mode, platform, tone, and language — send.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Pick Your Mode</h3>
+      <p>Rewrite your own message, generate a reply to someone, create a follow-up, or batch-process multiple messages at once &mdash; all in the same tool.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Set Platform &amp; Tone</h3>
+      <p>Select where the message is going and pick a tone. Blend two tones together for nuanced output. The AI adapts length and style for each platform automatically.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Get 3 Versions</h3>
+      <p>ReplyBetter returns 3 polished versions side by side. Pick the one you like, copy it, or save it to your templates library for later.</p>
+    </div>
+  </div>
+</section>
+
+<!-- BEFORE & AFTER -->
+<section class="sec" id="examples">
+  <div class="eyebrow">Real Examples</div>
+  <h2>See the difference it makes.</h2>
+  <p class="sec-sub">Real message types — before and after ReplyBetter. You'll recognize yourself in at least one of these.</p>
+  <div class="ba-grid">
+    <div class="ba-card">
+      <div class="ba-plat">📧 Work Email</div>
+      <div class="ba-mlabel bef">❌ Before</div>
+      <div class="ba-msg bef">"this report is completely wrong, do it again the right way"</div>
+      <div class="ba-arr">↓</div>
+      <div class="ba-mlabel aft">✓ After — Professional</div>
+      <div class="ba-msg aft">"I've reviewed the report and noticed a few areas that need adjustment. I'd be happy to share specific feedback — would you have time to connect briefly this week?"</div>
+    </div>
+    <div class="ba-card">
+      <div class="ba-plat">💬 WhatsApp</div>
+      <div class="ba-mlabel bef">❌ Before</div>
+      <div class="ba-msg bef">"u never listen to me and it's really frustrating tbh"</div>
+      <div class="ba-arr">↓</div>
+      <div class="ba-mlabel aft">✓ After — Friendly</div>
+      <div class="ba-msg aft">"I've been feeling a bit unheard lately and wanted to bring it up. Can we find a good time to talk? I'd love for us to understand each other better."</div>
+    </div>
+    <div class="ba-card">
+      <div class="ba-plat">📧 Customer Service</div>
+      <div class="ba-mlabel bef">❌ Before</div>
+      <div class="ba-msg bef">"ur product broke and I want refund NOW this is ridiculous"</div>
+      <div class="ba-arr">↓</div>
+      <div class="ba-mlabel aft">✓ After — Assertive</div>
+      <div class="ba-msg aft">"I'm reaching out about a defective product I received. I'd appreciate a prompt resolution — either a replacement or a full refund. Thank you for your assistance."</div>
+    </div>
+    <div class="ba-card">
+      <div class="ba-plat">💼 LinkedIn</div>
+      <div class="ba-mlabel bef">❌ Before</div>
+      <div class="ba-msg bef">"i want this job, can we talk? i'm good at stuff"</div>
+      <div class="ba-arr">↓</div>
+      <div class="ba-mlabel aft">✓ After — Professional</div>
+      <div class="ba-msg aft">"I'm very enthusiastic about this opportunity and believe my background aligns closely with your team's goals. I'd welcome the chance to discuss how I could contribute."</div>
+    </div>
+    <div class="ba-card">
+      <div class="ba-plat">📱 SMS · Non-Native Speaker</div>
+      <div class="ba-mlabel bef">❌ Before</div>
+      <div class="ba-msg bef">"i not understand your message please you explain more"</div>
+      <div class="ba-arr">↓</div>
+      <div class="ba-mlabel aft">✓ After — Formal</div>
+      <div class="ba-msg aft">"I'd appreciate some additional clarification on your message. Could you provide more details so I can ensure I respond accurately?"</div>
+    </div>
+    <div class="ba-card">
+      <div class="ba-plat">💬 Apology Message</div>
+      <div class="ba-mlabel bef">❌ Before</div>
+      <div class="ba-msg bef">"sorry i messed up the presentation hopefully it's ok"</div>
+      <div class="ba-arr">↓</div>
+      <div class="ba-mlabel aft">✓ After — Apologetic</div>
+      <div class="ba-msg aft">"I sincerely apologize for the presentation issues. I take full responsibility and I'm already working to make sure this doesn't happen again. Thank you for your patience."</div>
+    </div>
+  </div>
+</section>
+
+<!-- USE CASES BENTO -->
+<section class="sec" id="cases">
+  <div class="eyebrow">Use Cases</div>
+  <h2>Works for every situation.</h2>
+  <p class="sec-sub">Whatever you're trying to say — there's a right way to say it, in any language.</p>
+  <div class="bento">
+    <div class="bc">
+      <span class="b-tag">Work &amp; Career</span>
+      <span class="b-icon">💼</span>
+      <h3>Workplace Messages</h3>
+      <p>Turn blunt feedback into constructive comments. Push back on unreasonable requests diplomatically. Write performance reviews that motivate, not demoralize.</p>
+      <div class="b-ex">
+        <div class="b-before">Before: "This is completely wrong, fix it"</div>
+        <div class="b-after">After: "I noticed a few areas that could use adjustments. I'd be happy to walk through the specifics so we're aligned on the best path forward."</div>
+      </div>
+    </div>
+    <div class="bc">
+      <span class="b-tag">Personal</span>
+      <span class="b-icon">❤️</span>
+      <h3>Relationships</h3>
+      <p>Apologize without sounding defensive. Reconnect after distance. Set boundaries without damaging the relationship.</p>
+      <div class="b-ex">
+        <div class="b-before">Before: "u never listen to me"</div>
+        <div class="b-after">After: "I've been feeling a bit unheard lately and wanted to bring it up — I'd love for us to work on our communication together."</div>
+      </div>
+    </div>
+    <div class="bc">
+      <span class="b-tag">Customer Service</span>
+      <span class="b-icon">📞</span>
+      <h3>Complaints &amp; Returns</h3>
+      <p>Write firm but polite complaint messages that actually get results. Escalate without burning bridges.</p>
+    </div>
+    <div class="bc">
+      <span class="b-tag">Academic</span>
+      <span class="b-icon">🎓</span>
+      <h3>Students &amp; Educators</h3>
+      <p>Email professors confidently, ask for extensions gracefully, write peer feedback, and handle school admin with ease.</p>
+    </div>
+    <div class="bc">
+      <span class="b-tag">Global</span>
+      <span class="b-icon">🌍</span>
+      <h3>Non-Native Speakers</h3>
+      <p>Write in your own language — ReplyBetter polishes it into fluent, confident output in English or any other language you choose. No embarrassment, no guessing.</p>
+    </div>
+    <div class="bc">
+      <div class="b-wide-inner">
+        <div>
+          <span class="b-tag">20+ Languages</span>
+          <h3>Your language. Any platform.</h3>
+          <p style="max-width:340px">Rewrite in 6 tones across 6 platforms, in 20+ languages including all major Indian languages and the world's most-spoken.</p>
+          <div class="b-pills" style="margin-top:14px">
+            <span class="b-pill">Professional</span><span class="b-pill">Friendly</span><span class="b-pill">Apologetic</span>
+            <span class="b-pill">Assertive</span><span class="b-pill">Casual</span><span class="b-pill">Formal</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t3);margin-bottom:10px">Indian Languages</div>
+          <div class="b-pills" style="margin-bottom:14px">
+            <span class="b-lpill">Hindi</span><span class="b-lpill">Bengali</span><span class="b-lpill">Tamil</span>
+            <span class="b-lpill">Telugu</span><span class="b-lpill">Marathi</span><span class="b-lpill">Gujarati</span>
+            <span class="b-lpill">Kannada</span><span class="b-lpill">Malayalam</span><span class="b-lpill">Punjabi</span><span class="b-lpill">Urdu</span>
+          </div>
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t3);margin-bottom:10px">World Languages</div>
+          <div class="b-pills">
+            <span class="b-lpill">Spanish</span><span class="b-lpill">Arabic</span><span class="b-lpill">French</span>
+            <span class="b-lpill">Portuguese</span><span class="b-lpill">Indonesian</span><span class="b-lpill">Russian</span>
+            <span class="b-lpill">Japanese</span><span class="b-lpill">Korean</span><span class="b-lpill">German</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="sec" id="pricing">
+  <div class="eyebrow">Pricing</div>
+  <h2>Start free. Scale when ready.</h2>
+  <p class="sec-sub">No credit card needed to get started. Cancel anytime — one click.</p>
+  <div class="price-grid">
+    <div class="price-card">
+      <div class="tier">Free</div>
+      <div class="price">$0</div>
+      <div class="period">forever</div>
+      <ul class="feat-list">
+        <li>5 rewrites per day</li>
+        <li>All 6 tones</li>
+        <li>All 6 platforms</li>
+        <li>English output</li>
+        <li>No credit card needed</li>
+      </ul>
+      <a href="#tool" class="p-btn p-free">Get Started Free</a>
+    </div>
+    <div class="price-card hot">
+      <div class="hot-badge">MOST POPULAR</div>
+      <div class="tier">Premium</div>
+      <div class="price"><sup>$</sup>7</div>
+      <div class="period">per month &middot; cancel anytime</div>
+      <ul class="feat-list">
+        <li>Unlimited rewrites</li>
+        <li>All 6 tones + custom tone</li>
+        <li>All 6 platforms</li>
+        <li>20+ languages output</li>
+        <li>Reply Generator + Follow-Up AI</li>
+        <li>Bulk Rewrite (unlimited)</li>
+        <li>Message history (30 days)</li>
+        <li>Templates library</li>
+        <li>7-day free trial</li>
+      </ul>
+      <a href="#tool" class="p-btn p-hot">Start 7-Day Free Trial</a>
+    </div>
+    <div class="price-card teams" id="teams">
+      <div class="tier">Teams</div>
+      <div class="price"><sup>$</sup>29</div>
+      <div class="period">per month &middot; 5 seats included</div>
+      <ul class="feat-list">
+        <li>Everything in Premium</li>
+        <li>5 team seats included</li>
+        <li>Shared workspace &amp; history</li>
+        <li>Shared templates library</li>
+        <li>Usage analytics dashboard</li>
+        <li>API access included</li>
+        <li>Priority support</li>
+        <li>Add more seats at $5/seat</li>
+      </ul>
+      <a href="#tool" class="p-btn p-teams">Start Team Trial &rarr;</a>
+    </div>
+  </div>
+  <p class="price-note">Regional pricing available — typically 40–70% lower for India, Southeast Asia, Africa &amp; Latin America. Students &amp; non-profits get 50% off. <a href="#faq">See FAQ →</a></p>
+</section>
+
+<!-- CHROME EXTENSION -->
+<div class="ext-wrap">
+  <div class="ext-card">
+    <div class="ext-left">
+      <div class="ext-soon">🚀 Coming Q1 2027</div>
+      <h2>ReplyBetter everywhere — without leaving the tab.</h2>
+      <p>The Chrome Extension lets you rewrite any message on any website — Gmail, WhatsApp Web, LinkedIn, Slack — in one click. No copy-paste. No tab switching. Just highlight and rewrite.</p>
+      <div id="extFormWrap">
+        <form class="email-form" id="extForm" onsubmit="submitExt(event)">
+          <input class="email-input" id="extEmail" type="email" placeholder="Enter your email to get notified" required>
+          <button class="email-btn" type="submit">Notify Me</button>
+        </form>
+      </div>
+      <div class="ext-features" style="margin-top:16px">
+        <span class="ext-feat">✓ Gmail</span>
+        <span class="ext-feat">✓ WhatsApp Web</span>
+        <span class="ext-feat">✓ LinkedIn</span>
+        <span class="ext-feat">✓ Slack</span>
+        <span class="ext-feat">✓ Any text field</span>
+      </div>
+    </div>
+    <div class="ext-right">
+      <div class="ext-mockup">
+        <div class="ext-icon">🧩</div>
+        <div class="ext-m-title">ReplyBetter</div>
+        <div class="ext-m-sub">Chrome Extension</div>
+        <div class="ext-m-bar"><div class="ext-m-fill"></div></div>
+        <div class="ext-m-label">Rewriting... Professional</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<section class="sec" id="faq">
+  <div class="eyebrow">FAQ</div>
+  <h2>Questions? Answered.</h2>
+  <div class="faq-wrap">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What languages does it support?<span class="faq-ic">+</span></div>
+      <div class="faq-a">ReplyBetter supports 20+ languages — all 10 major Indian languages (Hindi, Bengali, Telugu, Tamil, Marathi, Gujarati, Kannada, Malayalam, Punjabi, Urdu) plus Spanish, Arabic, French, Portuguese, Indonesian, Russian, Japanese, Korean, German, Turkish, Vietnamese, and Swahili. You can type your message in any language and get the rewritten output in any other language.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">How is this different from just using ChatGPT?<span class="faq-ic">+</span></div>
+      <div class="faq-a">ChatGPT requires you to write a prompt explaining what you want — most people don't know how to do that well. ReplyBetter is purpose-built: 4 modes, 6 tones, 6 platforms, 20+ languages, 3 versions every time. It's faster, simpler, and built specifically for messaging. Plus, it has features ChatGPT doesn't — Reply Generator, Follow-Up AI, Bulk Rewrite, Templates Library, and a Tone Blender.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What is the Reply Generator?<span class="faq-ic">+</span></div>
+      <div class="faq-a">The Reply Generator is a separate mode where you paste a message you received and need to respond to. Instead of rewriting your own draft, the AI generates 3 smart reply options in your chosen tone and language — ready to send without writing a single word yourself. Perfect for follow-ups, job application responses, customer messages, or any situation where you don't know what to say back.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What is the Follow-Up Generator?<span class="faq-ic">+</span></div>
+      <div class="faq-a">The Follow-Up mode takes your original message and their reply, then generates the perfect next follow-up. It understands the context of the conversation — not just a generic follow-up. Great for sales outreach, job applications, client check-ins, and any situation where you need to keep a conversation moving.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What is the Tone Blender?<span class="faq-ic">+</span></div>
+      <div class="faq-a">The Tone Blender lets you mix two tones for a more nuanced output. For example, "Professional + Friendly" gives you a warm but polished message. "Assertive + Apologetic" helps you be firm without sounding cold. This is especially useful for messages where you need to balance competing goals — like following up assertively while still being friendly.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What is the Message Score?<span class="faq-ic">+</span></div>
+      <div class="faq-a">When you click Rewrite, ReplyBetter first scores your original message on three dimensions: Clarity (how clear and understandable it is), Tone (how the message might be perceived emotionally), and Professionalism (how suitable it is for the chosen platform). Low scores signal exactly why you need a rewrite — and the improved versions directly address those weak spots.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What are Templates?<span class="faq-ic">+</span></div>
+      <div class="faq-a">Templates let you save your best rewrites for reuse. When you get a rewrite you love — a perfect client apology, your standard invoice follow-up, your best job application tone — save it as a template. Next time you need a similar message, open Templates and load it straight into the tool. Teams users get a shared templates library for the whole team.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Is there regional pricing?<span class="faq-ic">+</span></div>
+      <div class="faq-a">Yes. We offer purchasing power parity pricing for users in developing economies. If you're in India, Southeast Asia, Africa, or Latin America, you'll automatically see pricing adjusted for your region — typically 40–70% lower than the standard rate. Students and non-profits get an additional 50% off.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div class="foot-wrap">
+  <div class="foot">
+    <div class="foot-top">
+      <div>
+        <div class="foot-logo">ReplyBetter</div>
+        <p class="foot-desc">AI-powered message rewriting in 20+ languages. 4 modes, 10 features. Used in 90+ countries daily.</p>
+      </div>
+      <div>
+        <div class="foot-col-t">Product</div>
+        <ul class="foot-links">
+          <li><a href="#tool">Try It Free</a></li>
+          <li><a href="#how">How It Works</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#teams">For Teams</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="foot-col-t">Company</div>
+        <ul class="foot-links">
+          <li><a href="#">About</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Affiliate Program</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="foot-col-t">Support</div>
+        <ul class="foot-links">
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">Regional Pricing</a></li>
+          <li><a href="#">Student Discount</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div class="foot-copy">&copy; 2026 ReplyBetter. All rights reserved.</div>
+      <div class="foot-legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Cookie Policy</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== PLATFORM BUTTONS (all sets) =====
+function initPlatBtns(containerId){
+  document.querySelectorAll('#'+containerId+' .plat-btn').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('#'+containerId+' .plat-btn').forEach(function(x){x.classList.remove('active')});
+      this.classList.add('active');
+      if(containerId==='platBtns') checkSubject();
+    });
+  });
+}
+initPlatBtns('platBtns');
+initPlatBtns('platBtnsReply');
+
+function initToneBtns(containerId){
+  document.querySelectorAll('#'+containerId+' .tone-btn').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('#'+containerId+' .tone-btn').forEach(function(x){x.classList.remove('active')});
+      this.classList.add('active');
+      if(containerId==='tones') checkSubject();
+    });
+  });
+}
+initToneBtns('tones');
+initToneBtns('replyTones');
+initToneBtns('fuTones');
+initToneBtns('bulkTones');
+
+// Tone blender
+document.querySelectorAll('#tone2Row .tone2-btn').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('#tone2Row .tone2-btn').forEach(function(x){x.classList.remove('active')});
+    this.classList.add('active');
+  });
+});
+
+// ===== LENGTH =====
+var currentLen='Same';
+function setLen(l,el){
+  currentLen=l;
+  document.querySelectorAll('.len-btn').forEach(function(b){b.classList.remove('active')});
+  el.classList.add('active');
+}
+
+// ===== EMOJI TOGGLE =====
+var emojiOn=false;
+function toggleEmoji(el){
+  emojiOn=!emojiOn;
+  el.classList.toggle('on',emojiOn);
+}
+
+// ===== MODE SWITCHING =====
+function switchMode(mode){
+  document.querySelectorAll('.mode-tab').forEach(function(t){t.classList.remove('active')});
+  document.querySelectorAll('.mode-panel').forEach(function(p){p.classList.remove('active')});
+  document.querySelector('[data-mode="'+mode+'"]').classList.add('active');
+  document.getElementById('mode-'+mode).classList.add('active');
+}
+
+// ===== SUBJECT LINE =====
+var subjectLines={
+  Professional:["Following Up on Our Conversation","Regarding [Topic] — Action Required","Update: Next Steps on [Project]"],
+  Friendly:["Quick Update From Me! 😊","Hey — Wanted to Circle Back","Just Checking In!"],
+  Apologetic:["I Owe You an Apology","Following Up with Sincere Regrets","My Apologies — Wanted to Address This"],
+  Assertive:["Urgent: Response Required by EOD","Important — Action Needed","Final Notice: Please Respond"],
+  Casual:["Hey, Got a Sec?","Quick Thing I Wanted to Mention","Circling Back on That"],
+  Formal:["Formal Notice Regarding [Matter]","Official Correspondence — [Subject]","In Reference to Our Prior Communication"]
+};
+
+function checkSubject(){
+  var plat=document.querySelector('#platBtns .plat-btn.active');
+  var tone=document.querySelector('#tones .tone-btn.active');
+  var sec=document.getElementById('subjectSec');
+  if(plat&&plat.dataset.plat==='Email'){
+    sec.classList.add('show');
+    var t=tone?tone.dataset.tone:'Professional';
+    var lines=subjectLines[t]||subjectLines.Professional;
+    var opts=document.getElementById('subjectOpts');
+    opts.innerHTML=lines.map(function(l){
+      return '<div class="subj-opt" onclick="copySubject(this)"><span>'+l+'</span><span class="subj-copy-ic">📋 Copy</span></div>';
+    }).join('');
+  } else {
+    sec.classList.remove('show');
+  }
+}
+checkSubject();
+
+function copySubject(el){
+  var txt=el.querySelector('span').textContent;
+  try{navigator.clipboard.writeText(txt);}catch(e){}
+  el.querySelector('.subj-copy-ic').textContent='✓ Copied!';
+  setTimeout(function(){el.querySelector('.subj-copy-ic').textContent='📋 Copy';},2000);
+}
+
+// ===== SCORE =====
+function scoreMessage(text){
+  var len=text.trim().length;
+  var words=text.trim().split(/\s+/).length;
+  var aggressive=/\b(fix it|right now|immediately|wrong|terrible|stupid|hate|worst|horrible|ridiculous|broken|useless)\b/i.test(text);
+  var slang=/\b(u |r |ur |gonna|wanna|lol|omg|wtf|ngl|tbh|idk|imo|ya |yea|bc |cuz)\b/i.test(text);
+  var allCaps=len>5&&text.replace(/\s/g,'')===(text.replace(/\s/g,'')).toUpperCase();
+  var hasPunct=/[.!?]$/.test(text.trim());
+  var clarity=5;
+  if(len<15) clarity=3;
+  else if(len<40) clarity=4;
+  else if(len>=40&&len<80) clarity=6;
+  else if(len>=80) clarity=7;
+  if(hasPunct) clarity=Math.min(9,clarity+1);
+  if(words<3) clarity=Math.max(2,clarity-1);
+  var tone=6;
+  if(aggressive) tone=Math.max(2,tone-2);
+  if(allCaps) tone=Math.max(2,tone-2);
+  if(slang) tone=Math.max(2,tone-1);
+  var prof=5;
+  if(slang) prof=Math.max(2,prof-2);
+  if(allCaps) prof=Math.max(2,prof-2);
+  if(aggressive) prof=Math.max(2,prof-1);
+  if(hasPunct) prof=Math.min(8,prof+1);
+  if(len>60) prof=Math.min(8,prof+1);
+  return{clarity:clarity,tone:tone,prof:prof};
+}
+function getClass(v){return v<=4?'low':v<=6?'mid':'good'}
+function getColor(v){return v<=4?'#f97316':v<=6?'#facc15':'#818cf8'}
+function getHint(s){
+  var avg=(s.clarity+s.tone+s.prof)/3;
+  if(avg<=4) return "⚠️ Warning: This message could seriously be misread. ReplyBetter will soften the tone and clarify the intent.";
+  if(avg<=6) return "💡 Tip: Decent start — a few improvements will make this land much better.";
+  return "✅ Good: Reasonable message. ReplyBetter will still polish it to feel more confident and natural.";
+}
+function setBar(fillId,valId,score){
+  var fill=document.getElementById(fillId);
+  var val=document.getElementById(valId);
+  fill.style.width=(score/10*100)+'%';
+  fill.className='score-fill '+getClass(score);
+  val.textContent=score+'/10';
+  val.style.color=getColor(score);
+}
+
+// ===== REWRITE DATA =====
+var rewriteData={
+  Professional:{
+    Shorter:["Thanks for reaching out. I'll review this and follow up shortly.","Happy to look into this — I'll be in touch.","Noted. I'll review and respond by EOD."],
+    Same:["I wanted to follow up on this matter to ensure we're moving in the right direction. I believe with clearer communication and collaboration, we can find an effective solution. Please let me know your thoughts at your earliest convenience.","Thank you for bringing this to my attention. I've reviewed the situation carefully and believe there are a few areas we could address together. I'd welcome the opportunity to discuss this further.","I appreciate your time and wanted to address this matter directly. I believe the most productive approach would be to schedule a brief conversation to align on expectations and next steps."],
+    Longer:["I wanted to follow up on this matter to ensure we're moving in the right direction. Having reviewed the situation from multiple angles, I believe with clearer communication and closer collaboration, we can arrive at an effective and sustainable solution. I'd love to connect at your earliest convenience to align on the best path forward.","Thank you for bringing this to my attention. I've taken time to review the situation carefully and I believe there are a few key areas we could work through together. I'd welcome the opportunity to discuss this further — perhaps a brief call this week to align on expectations and next steps?","I appreciate you sharing this with me, and I wanted to address it directly. I've given this some thought and I believe the most productive approach would be to schedule a brief conversation to get on the same page. I'm confident we can find a resolution that works well for everyone involved."]
+  },
+  Friendly:{
+    Shorter:["Hey! Happy to sort this — let's connect soon 😊","Hi! I think there's an easy fix here. Talk soon?","Hey, let's figure this out together!"],
+    Same:["Hey! Just wanted to circle back on this — I think if we work on it together we can find a really good solution. I'm totally open to your ideas! What do you think works best?","Hi there! I wanted to reach out because I think there's an easy fix here. Let's connect whenever works for you — I'm confident we can sort this out!","Hey, I've been thinking about this and I actually think it's very manageable if we approach it together. Would love to chat and figure out the best way forward!"],
+    Longer:["Hey! Just wanted to circle back on this — I genuinely think if we put our heads together we can find a really good solution. I love collaboration and I'm totally open to your ideas and perspective on this. What sounds like it might work best for you? I'm flexible on timing 😊","Hi there! I wanted to reach out because I think there's actually an easier fix here than it might seem. Let's connect whenever works for you — I'm confident we'll be able to sort this out in no time. I'm around most of the week if you'd like to grab a quick call?","Hey! I've been giving this some thought and honestly I think it's very manageable if we approach it together. I always find things work out better when we tackle them as a team. Would love to chat soon and figure out the best way forward — let me know what works for you!"]
+  },
+  Apologetic:{
+    Shorter:["I'm truly sorry for this — I want to make it right.","My sincere apologies. I take full responsibility.","I'm sorry — this was my mistake and I'll fix it."],
+    Same:["I sincerely apologize for the confusion and any inconvenience this may have caused. I take full responsibility and genuinely want to make this right. Please let me know what I can do.","I'm really sorry about this — you have every right to be frustrated, and I completely understand. I want you to know I take this seriously and I'm going to do everything I can to make it right.","I owe you a genuine apology for how this was handled. I could have communicated better, and I'm truly sorry for any stress this caused. I'd love the chance to make it right."],
+    Longer:["I sincerely apologize for the confusion and any inconvenience this may have caused. I want you to know that I take this situation very seriously and I accept full responsibility for what happened. It shouldn't have gone this way, and I genuinely want to make things right. Please let me know how I can help resolve this for you.","I'm really sorry about this — you have every right to feel frustrated, and I completely understand. I want you to know that I'm taking this seriously and I'm committed to doing everything in my power to make it right. If there's anything specific I can do to help, please don't hesitate to ask.","I owe you a genuine, heartfelt apology for the way this was handled. I could have communicated far better, and I recognize the stress and inconvenience this has caused. I'm truly sorry. I'd love the chance to make it right — please let me know what would be most helpful to you."]
+  },
+  Assertive:{
+    Shorter:["This needs to be resolved today. Please confirm.","Requesting a resolution by EOD. Please respond.","This is urgent — please action immediately."],
+    Same:["I need to address this directly: this situation requires immediate attention and a clear plan of action. I expect a detailed response outlining how this will be resolved, along with a timeline. Please confirm by end of day.","This issue has been outstanding too long and it's affecting our work. I'm requesting a concrete resolution plan within 24 hours. Please confirm you're actioning this.","I want to be clear about expectations: this needs to be resolved promptly and completely. Please respond with your approach and timeline."],
+    Longer:["I need to address this directly and transparently: this situation requires immediate attention and a clear, executable plan of action. This has gone on longer than is acceptable and it is now affecting our ability to deliver results. I expect a detailed response outlining exactly how this will be resolved, along with a firm timeline and confirmation of accountability. Please respond by end of day.","This issue has been outstanding far too long and it is beginning to impact the broader team's work. I am requesting a concrete, actionable resolution plan within the next 24 hours. Please confirm that you are treating this as a priority and provide a clear update on the steps being taken.","I want to set clear expectations: this situation needs to be resolved promptly, completely, and permanently. I'm available to discuss the best way to get there, but I need to hear a proposed approach and a realistic timeline. Please respond with that information at your earliest opportunity."]
+  },
+  Casual:{
+    Shorter:["Hey, can we sort this out?","Just wanted to flag this — pretty easy fix I think!","Hey, can we talk about this quickly?"],
+    Same:["Hey, so things got a bit complicated and I wanted to be upfront about it. Can we figure this out together? I'm pretty flexible and I'm sure we can sort it easily.","So I've been meaning to bring this up — it's not a big deal but it's worth talking about. What do you reckon?","Hey! Just wanted to flag this real quick — I think there might be an easy fix here. Let me know what you think!"],
+    Longer:["Hey! So things got a bit complicated on my end and I wanted to be upfront about it rather than leaving it hanging. Can we figure this out together? I'm honestly pretty flexible with timing and approach — I'm sure between the two of us we can sort it out easily without it becoming a whole thing.","So I've been meaning to bring this up for a little while — it's honestly not a massive deal but I think it's worth us having a quick chat about it. I've got a few ideas on how we could approach it. What do you reckon? Open to your thoughts too.","Hey! Just wanted to flag this real quick — I genuinely think there might be a pretty easy fix here and it doesn't need to be complicated at all. Let me know what you think or if you want to hop on a quick call to run through it. Easy as that!"]
+  },
+  Formal:{
+    Shorter:["I write to address the matter formally. Please respond at your earliest convenience.","I am writing regarding the above matter. Your prompt attention is appreciated.","Kindly acknowledge receipt and advise on resolution."],
+    Same:["I am writing to formally address the matter at hand. I would appreciate your prompt acknowledgment and response at your earliest convenience, as this requires timely attention.","I am writing to bring to your attention an issue that merits formal consideration. I would be grateful if you could review the matter and provide a written response outlining the steps you intend to take.","Please allow this correspondence to serve as formal notice regarding the matter referenced above. I would appreciate your written acknowledgment and a proposed resolution within a reasonable timeframe."],
+    Longer:["I am writing to formally address the matter at hand and to request your considered attention to the points herein. I trust this communication finds you well and I look forward to your prompt acknowledgment. I would be most grateful if you could review the situation in detail and provide a written response at your earliest convenience, as this matter does require timely attention.","I am writing to bring to your formal attention an issue that I believe merits careful consideration. I would be most grateful if you could review the matter thoroughly and provide a written response outlining the specific steps you intend to take and the expected timeframe within which they will be completed.","Please allow this correspondence to serve as formal notice regarding the matter referenced above. I wish to ensure this is handled with the appropriate level of care and urgency. I would appreciate your written acknowledgment of receipt and a proposed resolution within a reasonable timeframe agreed by both parties."]
+  }
+};
+
+var hindiRewrites={
+  Professional:{Same:["मैं इस विषय पर आपसे बात करना चाहता था। मुझे विश्वास है कि हम मिलकर एक अच्छा समाधान निकाल सकते हैं। कृपया अपनी सुविधानुसार अपनी राय साझा करें।","आपका समय देने के लिए धन्यवाद। मैंने इस स्थिति पर विचार किया है और सोचता हूँ कि हमें एक साथ इस पर चर्चा करनी चाहिए।","मैं इस मामले को सीधे तरीके से संबोधित करना चाहता था। आगे बढ़ने के सर्वोत्तम तरीके पर चर्चा के लिए एक संक्षिप्त बातचीत का समय निर्धारित करना उचित होगा।"]},
+  Friendly:{Same:["अरे! बस यह जानना चाहता था कि अगर हम मिलकर इस पर काम करें तो बहुत अच्छा समाधान निकलेगा। आपके विचार सुनना चाहूँगा। 😊","नमस्ते! मुझे लगता है इसका एक आसान हल है। जब भी आप उपलब्ध हों, बात करते हैं!","यार, मैं सोच रहा था कि अगर हम साथ मिलकर सोचें तो यह बिलकुल आसानी से ठीक हो सकता है।"]},
+  Apologetic:{Same:["मैं इस भूल के लिए हृदय से क्षमाप्रार्थी हूँ। इससे हुई किसी भी असुविधा के लिए मैं व्यक्तिगत रूप से जिम्मेदार हूँ और इसे सुधारने के लिए तत्पर हूँ।","मुझे सच में बहुत खेद है — आपकी निराशा बिलकुल उचित है। मैं यह सुनिश्चित करूँगा कि यह दोबारा न हो।","आपसे माफ़ी मांगना ज़रूरी समझता हूँ। बेहतर संवाद होना चाहिए था, और इसके लिए मैं क्षमाप्रार्थी हूँ।"]},
+  Assertive:{Same:["मैं सीधे बात करना चाहता हूँ: इस स्थिति पर तत्काल ध्यान देने की आवश्यकता है। कृपया आज के अंत तक समाधान की रूपरेखा बताएँ।","यह मामला लंबे समय से लंबित है। मैं 24 घंटे में ठोस समाधान चाहता हूँ।","मैं स्पष्ट रहना चाहता हूँ: इसे पूर्ण और शीघ्र हल किया जाना आवश्यक है।"]},
+  Casual:{Same:["यार, बात थोड़ी उलझी हुई है लेकिन मुझे लगता है हम मिलकर इसे आसानी से सुलझा सकते हैं।","भाई, यह कोई बड़ी बात नहीं लेकिन बात करना ज़रूरी था।","देख, एक आसान रास्ता निकल सकता है। बता क्या सोचता है!"]},
+  Formal:{Same:["मैं आधिकारिक रूप से इस विषय को आपके संज्ञान में लाना चाहता हूँ। आपसे अनुरोध है कि इस पर यथाशीघ्र अपनी प्रतिक्रिया प्रेषित करें।","यह पत्र इस महत्वपूर्ण विषय के संदर्भ में लिखा जा रहा है। कृपया इसकी समीक्षा कर उचित कार्यवाही की सूचना दें।","आपसे विनम्र निवेदन है कि इस प्रकरण पर ध्यान देकर उचित समाधान सुनिश्चित करने का कष्ट करें।"]}
+};
+
+var spanishRewrites={
+  Professional:{Same:["Quería hacer un seguimiento de este asunto para asegurarnos de que avanzamos en la dirección correcta. Estoy seguro de que podemos encontrar una solución que funcione para todos.","Gracias por traer esto a mi atención. He revisado la situación y creo que sería beneficioso hablar más al respecto para alinear expectativas y próximos pasos.","Le escribo para abordar este asunto de manera directa. Creo que el enfoque más productivo sería programar una breve conversación para avanzar juntos."]},
+  Friendly:{Same:["¡Hola! Solo quería retomar este tema — creo que si lo trabajamos juntos encontraremos una solución genial. ¡Estoy totalmente abierto a tus ideas! 😊","¡Buenas! Me parece que tiene una solución bastante sencilla. Hablamos cuando puedas.","Oye, he estado pensando en esto y creo que es muy manejable si lo abordamos juntos. ¿Cuándo podemos hablar?"]},
+  Apologetic:{Same:["Le ofrezco mis más sinceras disculpas por las molestias ocasionadas. Asumo plena responsabilidad y me comprometo a tomar las medidas necesarias para corregir la situación.","Lamento mucho lo sucedido — su malestar es completamente comprensible. Haré todo lo posible para solucionarlo.","Le debo una disculpa genuina. Podía haber comunicado mejor, y lo siento de verdad."]},
+  Assertive:{Same:["Quiero ser directo: esta situación requiere atención inmediata y un plan de acción claro. Espero una respuesta con la solución propuesta antes del final del día.","Este problema lleva demasiado tiempo sin resolverse. Solicito un plan concreto en las próximas 24 horas.","Quiero dejar claro que esto necesita resolverse de forma completa y urgente."]},
+  Casual:{Same:["Oye, la cosa se complicó un poco pero creo que lo podemos resolver fácilmente. ¿Qué te parece?","Mira, tampoco es para tanto, pero creo que vale la pena hablarlo. ¿Qué opinas?","Oye, creo que hay una solución rápida aquí. Díme qué piensas."]},
+  Formal:{Same:["Me dirijo a usted para comunicarle formalmente el asunto en cuestión. Le agradecería que me proporcionara una respuesta por escrito en el menor tiempo posible.","Por medio de la presente, me permito poner en su conocimiento esta situación. Quedo en espera de su respuesta con las acciones que estime pertinentes.","Me permito escribirle para tratar un asunto de importancia que requiere su atención."]}
+};
+
+var tamilRewrites={
+  Professional:{Same:["இந்த விஷயத்தில் நாம் சரியான திசையில் நகர்கிறோமா என்று உறுதிப்படுத்த விரும்புகிறேன். தெளிவான தொடர்பாடல் மூலம் நல்ல தீர்வு காண முடியும் என்று நம்புகிறேன். உங்கள் கருத்தை தெரிவிக்கவும்.","இதை என் கவனத்திற்கு கொண்டு வந்ததற்கு நன்றி. சூழலை கவனமாக ஆராய்ந்தேன் — சில விஷயங்களை ஒன்றாக பேசுவது பயனுள்ளதாக இருக்கும் என்று கருதுகிறேன்.","உங்கள் நேரத்திற்கு நன்றி. இந்த விஷயத்தை நேரடியாக கையாள்வதே சரியான அணுகுமுறை என்று கருதுகிறேன். முன்னேற்றத்திற்கான திட்டத்தை ஒன்றாக வகுப்போம்."]},
+  Friendly:{Same:["வணக்கம்! இதை நாம் இணைந்து செய்தால் நல்ல தீர்வு கிடைக்கும் என்று நம்புகிறேன். உங்கள் யோசனைகளை கேட்க மிகவும் ஆவலாக இருக்கிறேன்! 😊","ஹாய்! ஒரு நல்ல வழி இருக்கும் என்று தெரிகிறது. உங்களுக்கு வசதியான நேரத்தில் பேசுவோம் — நடக்கும்!","நண்பரே! இதை நாம் ஒன்றாக சரிசெய்வோம். மிகவும் நம்பிக்கையாக இருக்கிறேன் — கண்டிப்பாக நடக்கும்!"]},
+  Apologetic:{Same:["ஏற்பட்ட குழப்பத்திற்கு மனமாரக் மன்னிப்பு கேட்கிறேன். முழுப் பொறுப்பும் என்னுடையதே. சரிசெய்வதற்கு என்ன செய்யலாம் என்று தெரிவியுங்கள்.","ஏற்பட்ட அசௌகர்யத்திற்கு மிகவும் வருந்துகிறேன். உங்கள் கோபம் நியாயமானது. இதை சரிசெய்ய என்னால் ஆனதை செய்கிறேன்.","உண்மையான மன்னிப்பு தெரிவிக்கிறேன். இது சரியாக நடக்கவில்லை என்று ஒப்புக்கொள்கிறேன். சரிசெய்யும் வாய்ப்பு தருங்கள்."]},
+  Assertive:{Same:["நேரடியாக சொல்கிறேன்: இந்த நிலைமை உடனடி கவனத்தை நாடுகிறது. இன்று மாலைக்குள் தெளிவான தீர்வு திட்டத்தை தெரிவிக்கவும்.","இந்த பிரச்சனை நீண்டகாலமாக நிலுவையில் உள்ளது. 24 மணி நேரத்திற்குள் உறுதியான நடவடிக்கை திட்டம் தேவை.","எதிர்பார்ப்பை தெளிவாக சொல்கிறேன்: இதை முழுமையாகவும் விரைவாகவும் தீர்க்க வேண்டும். உங்கள் அணுகுமுறையை தெரிவிக்கவும்."]},
+  Casual:{Same:["டா! விஷயம் கொஞ்சம் உலுக்கிட்டு இருக்கு — ஆனா நாம் ஒன்னா சரிபண்ணலாம். என்ன நினைக்கிற?","பாரு, இதுக்கு ஒரு simple fix இருக்கு. கொஞ்சம் பேசுவோமா?","ஏய்! ஒரு நிமிஷம் பேசலாம். Easy ஆ solve ஆகும் — கவலைப்படாதே!"]},
+  Formal:{Same:["மரியாதைக்குரியவர்களுக்கு, இந்த விஷயத்தை உங்கள் கவனத்திற்கு கொண்டு வருகிறேன். உங்கள் விரைவான மறுமொழி மிகவும் பாராட்டத்தக்கது.","மரியாதையுடன் தெரிவித்துக்கொள்கிறேன், இந்த முக்கியமான விஷயத்தில் உங்கள் கருத்தும் வழிகாட்டுதலும் தேவைப்படுகிறது.","மரியாதையுடன் கோருகிறேன், இந்த விஷயம் உங்கள் கவனத்தை நாடுகிறது. எழுத்துப்பூர்வமான மறுமொழியை எதிர்பார்க்கிறேன்."]}
+};
+
+// Blended tone hint
+var blendMap={
+  'Professional+Friendly':'warm yet polished — confident but approachable',
+  'Professional+Apologetic':'accountable and constructive — acknowledges the issue professionally',
+  'Professional+Assertive':'firm and clear — direct but not aggressive',
+  'Friendly+Apologetic':'warm and genuinely sorry — human and sincere',
+  'Friendly+Casual':'relaxed and natural — conversational without being too informal',
+  'Assertive+Apologetic':'firm but empathetic — takes responsibility while standing firm on expectations',
+  'Formal+Professional':'highly structured — suitable for official or legal contexts'
+};
+
+function getBlendedNote(t1,t2){
+  if(!t2||t2==='None'||t1===t2) return '';
+  var key=t1+'+'+t2;
+  var key2=t2+'+'+t1;
+  return blendMap[key]||blendMap[key2]||'blending '+t1.toLowerCase()+' with '+t2.toLowerCase()+' tone';
+}
+
+// ===== MAIN REWRITE =====
+function rewrite(){
+  var v=document.getElementById('inp').value.trim();
+  if(!v){
+    var ta=document.getElementById('inp');
+    ta.style.borderColor='rgba(249,115,22,.5)';
+    setTimeout(function(){ta.style.borderColor='';},2000);
+    return;
+  }
+  var tone=document.querySelector('#tones .tone-btn.active').dataset.tone||'Professional';
+  var tone2El=document.querySelector('#tone2Row .tone2-btn.active');
+  var tone2=tone2El?tone2El.dataset.tone2:'None';
+  var lang=document.getElementById('langSelect').value;
+  var len=currentLen;
+  var btn=document.getElementById('goBtn');
+  var txt=document.getElementById('goTxt');
+  btn.classList.add('busy');
+  txt.textContent='Analyzing...';
+  document.getElementById('scoreSec').classList.remove('show');
+  document.getElementById('versionsWrap').classList.remove('show');
+
+  setTimeout(function(){
+    var scores=scoreMessage(v);
+    var sec=document.getElementById('scoreSec');
+    sec.classList.add('show');
+    setTimeout(function(){
+      setBar('clarityFill','clarityVal',scores.clarity);
+      setBar('toneFill','toneVal',scores.tone);
+      setBar('profFill','profVal',scores.prof);
+      document.getElementById('scoreHint').textContent=getHint(scores);
+    },60);
+    txt.textContent='Rewriting...';
+
+    setTimeout(function(){
+      var variants=getVariants(tone,tone2,lang,len);
+      renderVersions(variants,tone,tone2,v,lang);
+      document.getElementById('versionsWrap').classList.add('show');
+      document.getElementById('versionsWrap').scrollIntoView({behavior:'smooth',block:'nearest'});
+      btn.classList.remove('busy');
+      txt.textContent='✨ Rewrite My Message';
+      saveToHistory(v,variants[0],tone,lang);
+    },900);
+  },620);
+}
+
+function getVariants(tone,tone2,lang,len){
+  var src,blendNote='';
+  if(lang==='Hindi') src=hindiRewrites[tone]||hindiRewrites.Professional;
+  else if(lang==='Spanish') src=spanishRewrites[tone]||spanishRewrites.Professional;
+  else if(lang==='Tamil') src=tamilRewrites[tone]||tamilRewrites.Professional;
+  else src=rewriteData[tone]||rewriteData.Professional;
+
+  var variants;
+  if(lang==='Hindi'||lang==='Spanish'||lang==='Tamil'){
+    variants=src.Same?[...src.Same]:[...src];
+  } else {
+    variants=src[len]?[...src[len]]:[...src.Same];
+  }
+
+  if(emojiOn && lang==='English'){
+    var emojis=['✨','💡','👌'];
+    variants=variants.map(function(v,i){return emojis[i%emojis.length]+' '+v;});
+  }
+
+  if(tone2&&tone2!=='None'&&tone2!==tone&&lang==='English'){
+    blendNote=getBlendedNote(tone,tone2);
+  }
+
+  return {v1:variants[0],v2:variants[1],v3:variants[2],blendNote:blendNote,lang:lang};
+}
+
+function renderVersions(data,tone,tone2,original,lang){
+  var grid=document.getElementById('versionsGrid');
+  var langNote=(lang!=='English'&&lang!=='Hindi'&&lang!=='Spanish'&&lang!=='Tamil')?
+    '\n\n['+lang+' output activates on deployed site — showing English preview]':'';
+  var blendInfo=data.blendNote?'<span style="font-size:9px;background:rgba(249,115,22,.14);padding:2px 7px;border-radius:100px;color:var(--o4)">+'+tone2+'</span>':'';
+  var labels=['Version 1','Version 2','Version 3'];
+  var texts=[data.v1,data.v2,data.v3];
+  var origEscAttr=original.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  grid.innerHTML=labels.map(function(lbl,i){
+    var rewriteText=texts[i]+(i===0?langNote:'');
+    var rewriteEscAttr=rewriteText.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return '<div class="ver-card" data-orig="'+origEscAttr+'" data-rewrite="'+rewriteEscAttr+'">'
+      +'<div class="ver-num"><span>'+lbl+'</span>'+blendInfo+'</div>'
+      +'<div class="ver-text">'+escHtml(rewriteText)+'</div>'
+      +'<div class="ver-actions">'
+        +'<button class="ver-btn ver-copy-btn" onclick="copyVer(this)">📋 Copy</button>'
+        +'<button class="ver-btn ver-speak-btn" onclick="speakText(this,this.closest(\'.ver-card\').querySelector(\'.ver-text\').textContent,document.getElementById(\'langSelect\').value)">🔊 Listen</button>'
+        +'<button class="ver-btn ba-toggle" onclick="toggleBA(this)">👁 Original</button>'
+        +'<button class="ver-btn ver-save-btn" onclick="saveVer(this)">📌 Save</button>'
+      +'</div>'
+      +'<div class="share-row">'+buildShareRow()+'</div>'
+    +'</div>';
+  }).join('');
+}
+
+function buildShareRow(){
+  return '<button class="share-btn wa" onclick="shareCard(this,\'wa\')">💬 WhatsApp</button>'
+    +'<button class="share-btn em" onclick="shareCard(this,\'em\')">📧 Email</button>'
+    +'<button class="share-btn sms" onclick="shareCard(this,\'sms\')">📱 SMS</button>'
+    +'<button class="share-btn li" onclick="shareCard(this,\'li\')">💼 LinkedIn</button>'
+    +'<button class="share-btn sl" onclick="shareCard(this,\'sl\')">🖥 Slack</button>';
+}
+
+function shareCard(btn,platform){
+  var card=btn.closest('.ver-card,.reply-card');
+  var textEl=card.querySelector('.ver-text')||card.querySelector('.reply-text');
+  var text=textEl?textEl.textContent:'';
+  var enc=encodeURIComponent(text);
+  if(platform==='wa') window.open('https://api.whatsapp.com/send?text='+enc,'_blank');
+  else if(platform==='em') window.location.href='mailto:?body='+enc;
+  else if(platform==='sms') window.location.href='sms:?body='+enc;
+  else if(platform==='li'||platform==='sl'){
+    var origLbl=btn.textContent;
+    navigator.clipboard.writeText(text).then(function(){
+      btn.textContent='✓ Copied!';
+      setTimeout(function(){btn.textContent=origLbl;},2000);
+      window.open(platform==='li'?'https://www.linkedin.com/messaging/compose/':'https://slack.com/','_blank');
+    }).catch(function(){
+      window.open(platform==='li'?'https://www.linkedin.com/messaging/compose/':'https://slack.com/','_blank');
+    });
+  }
+}
+
+function toggleBA(btn){
+  var card=btn.closest('.ver-card');
+  var textDiv=card.querySelector('.ver-text');
+  if(btn.classList.contains('showing-orig')){
+    textDiv.textContent=card.dataset.rewrite;
+    btn.textContent='👁 Original';
+    btn.classList.remove('showing-orig');
+  } else {
+    textDiv.textContent=card.dataset.orig;
+    btn.textContent='✏️ Rewrite';
+    btn.classList.add('showing-orig');
+  }
+}
+
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+function copyVer(btn){
+  var text=btn.closest('.ver-card').querySelector('.ver-text').textContent;
+  try{navigator.clipboard.writeText(text);}catch(e){}
+  btn.textContent='✓ Copied!';
+  setTimeout(function(){btn.textContent='📋 Copy';},2200);
+}
+
+function saveVer(btn){
+  var card=btn.closest('.ver-card');
+  var text=card.querySelector('.ver-text').textContent;
+  var tone=document.querySelector('#tones .tone-btn.active').dataset.tone||'Professional';
+  var lang=document.getElementById('langSelect').value;
+  saveTemplate(text,tone,lang);
+  btn.textContent='✓ Saved!';
+  setTimeout(function(){btn.textContent='📌 Save Template';},2200);
+}
+
+// ===== HISTORY =====
+function saveToHistory(original,rewritten,tone,lang){
+  var hist=getHistory();
+  hist.unshift({orig:original.substring(0,80),out:rewritten,tone:tone,lang:lang,time:Date.now()});
+  if(hist.length>15) hist=hist.slice(0,15);
+  try{localStorage.setItem('rb_history',JSON.stringify(hist));}catch(e){}
+  renderHistory();
+}
+
+function getHistory(){
+  try{return JSON.parse(localStorage.getItem('rb_history'))||[];}catch(e){return [];}
+}
+
+function renderHistory(){
+  var hist=getHistory();
+  var wrap=document.getElementById('histWrap');
+  var list=document.getElementById('histList');
+  if(!hist.length){wrap.classList.remove('has-items');return;}
+  wrap.classList.add('has-items');
+  document.getElementById('histCount').textContent=hist.length;
+  list.innerHTML=hist.map(function(h,i){
+    var d=new Date(h.time);
+    var timeStr=d.getHours()+':'+(d.getMinutes()<10?'0':'')+d.getMinutes();
+    return '<div class="hist-item" onclick="loadHistory('+i+')" title="Click to reload this rewrite"><div class="hist-preview">'+escHtml(h.orig)+(h.orig.length>=80?'...':'')+'</div><div class="hist-meta"><div>'+h.tone+'</div><div>'+timeStr+'</div></div></div>';
+  }).join('');
+}
+
+function loadHistory(i){
+  var hist=getHistory();
+  var item=hist[i];
+  if(!item) return;
+  document.getElementById('inp').value=item.orig;
+  document.getElementById('inp').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function toggleHist(){
+  var list=document.getElementById('histList');
+  var arrow=document.getElementById('histArrow');
+  var open=list.style.display==='flex';
+  list.style.display=open?'none':'flex';
+  arrow.textContent=open?'▸':'▾';
+}
+
+renderHistory();
+
+// ===== TEMPLATES =====
+function getTemplates(){
+  try{return JSON.parse(localStorage.getItem('rb_templates'))||[];}catch(e){return [];}
+}
+
+function saveTemplate(text,tone,lang){
+  var tmpl=getTemplates();
+  tmpl.unshift({text:text,tone:tone,lang:lang,time:Date.now()});
+  if(tmpl.length>20) tmpl=tmpl.slice(0,20);
+  try{localStorage.setItem('rb_templates',JSON.stringify(tmpl));}catch(e){}
+}
+
+function openTmpl(){
+  renderTmplList();
+  document.getElementById('tmplModal').classList.add('show');
+}
+
+function closeTmpl(){
+  document.getElementById('tmplModal').classList.remove('show');
+}
+
+function renderTmplList(){
+  var tmpl=getTemplates();
+  var el=document.getElementById('tmplList');
+  if(!tmpl.length){
+    el.innerHTML='<div class="tmpl-empty">No saved templates yet.<br>Click "Save as Template" on any rewrite to save it here.</div>';
+    return;
+  }
+  el.innerHTML=tmpl.map(function(t,i){
+    var d=new Date(t.time);
+    var dateStr=(d.getMonth()+1)+'/'+(d.getDate())+' '+d.getHours()+':'+(d.getMinutes()<10?'0':'')+d.getMinutes();
+    return '<div class="tmpl-item"><div class="tmpl-meta"><span>'+t.tone+'</span><span>'+t.lang+'</span><span>'+dateStr+'</span></div><div class="tmpl-text">'+escHtml(t.text.substring(0,200))+(t.text.length>200?'...':'')+'</div><div class="tmpl-actions"><button class="tmpl-use" onclick="useTmpl('+i+')">📋 Use This</button><button class="tmpl-del" onclick="delTmpl('+i+')">🗑 Delete</button></div></div>';
+  }).join('');
+}
+
+function useTmpl(i){
+  var tmpl=getTemplates();
+  var t=tmpl[i];
+  if(!t) return;
+  document.getElementById('inp').value=t.text;
+  closeTmpl();
+  document.getElementById('inp').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function delTmpl(i){
+  var tmpl=getTemplates();
+  tmpl.splice(i,1);
+  try{localStorage.setItem('rb_templates',JSON.stringify(tmpl));}catch(e){}
+  renderTmplList();
+}
+
+// ===== REPLY GENERATOR =====
+var replyDemos={
+  Professional:["Thank you for your message. I appreciate you taking the time to reach out. I've noted your points and will review them carefully. I'll follow up with a detailed response by end of week.","Thank you for getting in touch. I've reviewed what you've shared and I believe we're aligned on the key priorities. I'll prepare a comprehensive response and send it over shortly.","I appreciate you reaching out. I've taken note of your message and will give it the attention it deserves. Please expect a thorough response from me within 24 hours."],
+  Friendly:["Hey, thanks so much for reaching out! I've got your message and I'll make sure to get back to you properly very soon. Really appreciate you being so clear! 😊","Thanks for the message! I've read it and I think I know exactly how to help. Give me a little while and I'll come back to you with something solid!","Hey! Got your message — love how clear you've been about this. Working on it now and will be in touch shortly!"],
+  Apologetic:["Thank you for taking the time to write. I sincerely apologize for any inconvenience you may have experienced. I want to make sure we resolve this properly and I'll be in touch with a full response very shortly.","I'm sorry to hear about your experience. Thank you for bringing this to my attention. I take this seriously and I'll be reaching out with a full response and proposed resolution as quickly as possible.","Thank you for being so patient. I sincerely apologize for how this has gone so far. I'm working on a proper resolution and will get back to you today."],
+  Assertive:["I've received your message and I want to address this directly. I'll respond with a full action plan within the next few hours. Please stand by.","Noted. This requires immediate action on my part. I'll have a concrete response and resolution plan to you within 24 hours.","Message received. I want to be direct: this needs to be resolved and I'll ensure it is. Full response incoming shortly."],
+  Casual:["Hey, got your message! Makes total sense — I'll figure it out and hit you back soon!","Got it! This is super easy to sort out. Give me a bit and I'll get back to you with the details.","Hey! All good — I've got this. Will drop you a reply as soon as I've sorted it out!"],
+  Formal:["I acknowledge receipt of your correspondence and wish to advise that I will respond in full within two business days. I appreciate your patience and will ensure this matter receives my complete attention.","Thank you for your communication. I am in receipt of your message and will prepare a formal response at the earliest opportunity. Please anticipate my reply by the close of business tomorrow.","I wish to acknowledge your message and to inform you that I will address the matters raised therein in a formal written response within the specified timeframe."]
+};
+
+function generateReply(){
+  var v=document.getElementById('replyInp').value.trim();
+  if(!v){
+    var ta=document.getElementById('replyInp');
+    ta.style.borderColor='rgba(249,115,22,.5)';
+    setTimeout(function(){ta.style.borderColor='';},2000);
+    return;
+  }
+  var tone=document.querySelector('#replyTones .tone-btn.active').dataset.tone||'Professional';
+  var btn=document.getElementById('replyBtn');
+  var txt=document.getElementById('replyTxt');
+  btn.classList.add('busy');
+  txt.textContent='Generating replies...';
+  document.getElementById('replyCards').classList.remove('show');
+
+  setTimeout(function(){
+    var arr=replyDemos[tone]||replyDemos.Professional;
+    var labels=['Reply Option 1','Reply Option 2','Reply Option 3'];
+    var cards=document.getElementById('replyCards');
+    cards.innerHTML=arr.map(function(r,i){
+      return '<div class="reply-card">'
+        +'<div class="reply-num">'+labels[i]+'</div>'
+        +'<div class="reply-text">'+escHtml(r)+'</div>'
+        +'<div class="reply-actions">'
+          +'<button class="reply-copy-btn" onclick="copyReply(this)">📋 Copy Reply</button>'
+          +'<button class="reply-copy-btn ver-speak-btn" onclick="speakText(this,this.closest(\'.reply-card\').querySelector(\'.reply-text\').textContent,document.getElementById(\'replyLang\').value)">🔊 Listen</button>'
+        +'</div>'
+        +'<div class="share-row">'+buildShareRow()+'</div>'
+      +'</div>';
+    }).join('');
+    cards.classList.add('show');
+    cards.scrollIntoView({behavior:'smooth',block:'nearest'});
+    btn.classList.remove('busy');
+    txt.textContent='💬 Generate 3 Reply Options';
+  },900);
+}
+
+function copyReply(btn){
+  var text=btn.closest('.reply-card').querySelector('.reply-text').textContent;
+  try{navigator.clipboard.writeText(text);}catch(e){}
+  btn.textContent='✓ Copied!';
+  setTimeout(function(){btn.textContent='📋 Copy Reply';},2200);
+}
+
+// ===== FOLLOW-UP GENERATOR =====
+var followUpDemos={
+  Professional:["I wanted to follow up on my previous message and check in on where things stand. I understand you may be busy, and I appreciate your time. I remain very interested in moving this forward and would welcome a brief update when convenient.","I'm following up to reiterate my interest and to check if there's anything further I can provide. I appreciate your consideration and look forward to connecting.","Just circling back on this — I'm still very much interested and wanted to ensure this didn't fall through the cracks. Please let me know if there's anything I can do to move things forward."],
+  Friendly:["Hey! Just wanted to do a friendly follow-up 😊 I know things get busy but I'm still really keen on this and wanted to stay on your radar. Let me know if there's anything you need from my side!","Hi! Popping in with a follow-up — still super interested and wanted to make sure this didn't get buried. Let me know if there's a good time to connect!","Hey, just circling back! No pressure at all, just wanted to stay in touch and make sure you have everything you need from me. Really looking forward to this!"],
+  Assertive:["I'm following up to request a status update. This has been pending for some time and I'd appreciate clarity on the timeline. Please respond by end of week.","I'm reaching out again as I haven't received a response. I need a concrete update on this. Please confirm the current status and expected resolution date.","Following up as promised. I need a clear answer on this by Friday. Please advise."],
+  Formal:["I am writing to formally follow up on my previous correspondence. I would be most grateful if you could provide an update on the current status and anticipated timeline for resolution.","Please consider this communication a formal follow-up to my earlier message. I would appreciate your written response with an update at your earliest convenience.","I write to request a status update on the matter raised in my previous correspondence. I look forward to your prompt response."],
+  Casual:["Hey! Just doing a quick follow-up — still interested and wanted to stay on your radar. Let me know when you get a chance!","Hey, circling back on this one! No rush but just wanted to check in. Let me know what you're thinking!","Hey! Hope you're doing well. Just a quick follow-up — still keen and wanted to touch base. Talk soon!"]
+};
+
+function generateFollowUp(){
+  var v1=document.getElementById('fuInp1').value.trim();
+  var v2=document.getElementById('fuInp2').value.trim();
+  if(!v1&&!v2){
+    document.getElementById('fuInp1').style.borderColor='rgba(249,115,22,.5)';
+    setTimeout(function(){document.getElementById('fuInp1').style.borderColor='';},2000);
+    return;
+  }
+  var tone=document.querySelector('#fuTones .tone-btn.active').dataset.tone||'Professional';
+  var btn=document.getElementById('fuBtn');
+  var txt=document.getElementById('fuTxt');
+  btn.classList.add('busy');
+  txt.textContent='Generating follow-up...';
+  document.getElementById('fuVersionsWrap').classList.remove('show');
+
+  setTimeout(function(){
+    var arr=followUpDemos[tone]||followUpDemos.Professional;
+    var grid=document.getElementById('fuVersionsGrid');
+    var labels=['Version 1','Version 2','Version 3'];
+    grid.innerHTML=arr.map(function(r,i){
+      return '<div class="ver-card"><div class="ver-num"><span>'+labels[i]+'</span></div><div class="ver-text">'+escHtml(r)+'</div><div class="ver-actions"><button class="ver-btn ver-copy-btn" onclick="this.textContent=\'✓ Copied!\';try{navigator.clipboard.writeText(this.closest(\'.ver-card\').querySelector(\'.ver-text\').textContent);}catch(e){}setTimeout(function(){},2200)">📋 Copy</button></div></div>';
+    }).join('');
+    document.getElementById('fuVersionsWrap').classList.add('show');
+    document.getElementById('fuVersionsWrap').scrollIntoView({behavior:'smooth',block:'nearest'});
+    btn.classList.remove('busy');
+    txt.textContent='↩️ Generate Follow-Up Message';
+  },850);
+}
+
+// ===== BULK REWRITE =====
+function bulkRewrite(){
+  var raw=document.getElementById('bulkInp').value.trim();
+  if(!raw){
+    document.getElementById('bulkInp').style.borderColor='rgba(249,115,22,.5)';
+    setTimeout(function(){document.getElementById('bulkInp').style.borderColor='';},2000);
+    return;
+  }
+  var msgs=raw.split(/\n\s*[-—]{2,}\s*\n/).map(function(m){return m.trim();}).filter(function(m){return m.length>0;}).slice(0,5);
+  var tone=document.querySelector('#bulkTones .tone-btn.active').dataset.tone||'Professional';
+  var btn=document.getElementById('bulkBtn');
+  var txt=document.getElementById('bulkTxt');
+  btn.classList.add('busy');
+  txt.textContent='Processing '+msgs.length+' messages...';
+  document.getElementById('bulkResults').classList.remove('show');
+
+  setTimeout(function(){
+    var arr=rewriteData[tone]?rewriteData[tone].Same:rewriteData.Professional.Same;
+    var results=document.getElementById('bulkResults');
+    results.innerHTML=msgs.map(function(msg,i){
+      var out=arr[i%arr.length];
+      return '<div class="bulk-item"><div class="bulk-orig">Original: "'+escHtml(msg.substring(0,80))+(msg.length>80?'...':'')+'"</div><div class="bulk-out">'+escHtml(out)+'</div><div class="bulk-actions"><button class="bulk-copy" onclick="try{navigator.clipboard.writeText(\''+out.replace(/'/g,"\\'").replace(/\n/g,' ')+'\');}catch(e){}this.textContent=\'✓ Copied!\';setTimeout(function(el){return function(){el.textContent=\'📋 Copy\'}}(this),2200)">📋 Copy</button></div></div>';
+    }).join('');
+    results.classList.add('show');
+    results.scrollIntoView({behavior:'smooth',block:'nearest'});
+    btn.classList.remove('busy');
+    txt.textContent='📋 Rewrite All Messages';
+  },1200);
+}
+
+// ===== FAQ =====
+function toggleFaq(el){
+  var item=el.parentElement;
+  var open=item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(function(i){i.classList.remove('open');});
+  if(!open) item.classList.add('open');
+}
+
+// ===== NAV =====
+function toggleNav(){document.getElementById('mobMenu').classList.toggle('open');}
+function closeNav(){document.getElementById('mobMenu').classList.remove('open');}
+
+// ===== CHROME EXT EMAIL =====
+function submitExt(e){
+  e.preventDefault();
+  document.getElementById('extFormWrap').innerHTML='<div style="font-size:15px;color:var(--g4);font-weight:600;padding:8px 0">✓ You\'re on the list! We\'ll email you when the extension launches.</div>';
+}
+
+// Keyboard shortcut
+document.addEventListener('keydown',function(e){
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){
+    var mode=document.querySelector('.mode-tab.active').dataset.mode;
+    if(mode==='rewrite') rewrite();
+    else if(mode==='reply') generateReply();
+    else if(mode==='followup') generateFollowUp();
+    else if(mode==='bulk') bulkRewrite();
+  }
+});
+
+/* ===== VOICE FEATURES ===== */
+var voiceLangMap={
+  'English':'en-US','Hindi':'hi-IN','Bengali':'bn-IN','Telugu':'te-IN',
+  'Tamil':'ta-IN','Marathi':'mr-IN','Gujarati':'gu-IN','Kannada':'kn-IN',
+  'Malayalam':'ml-IN','Punjabi':'pa-IN','Urdu':'ur-PK','Spanish':'es-ES',
+  'Arabic':'ar-SA','Portuguese':'pt-PT','French':'fr-FR','Indonesian':'id-ID',
+  'Russian':'ru-RU','Japanese':'ja-JP','Korean':'ko-KR','German':'de-DE',
+  'Turkish':'tr-TR','Vietnamese':'vi-VN','Swahili':'sw-KE'
+};
+var currentRecognition=null;
+function startVoiceInput(taId,langSelId){
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){alert('Voice input works in Chrome, Edge, or Safari. Please open the site in one of those browsers.');return;}
+  var btn=document.getElementById('mic-'+taId);
+  if(currentRecognition){currentRecognition.stop();currentRecognition=null;if(btn){btn.classList.remove('listening');btn.textContent='🎤';}return;}
+  var langEl=langSelId?document.getElementById(langSelId):null;
+  var langVal=langEl?langEl.value:'English';
+  var langCode=voiceLangMap[langVal]||'en-US';
+  var recognition=new SR();
+  recognition.lang=langCode;recognition.continuous=false;recognition.interimResults=false;
+  currentRecognition=recognition;
+  if(btn){btn.classList.add('listening');btn.textContent='⏹';}
+  recognition.onresult=function(e){
+    var t=e.results[0][0].transcript;
+    var ta=document.getElementById(taId);
+    if(ta){ta.value=(ta.value?ta.value+' ':'')+t;ta.focus();}
+    currentRecognition=null;if(btn){btn.classList.remove('listening');btn.textContent='🎤';}
+  };
+  recognition.onerror=function(e){
+    currentRecognition=null;if(btn){btn.classList.remove('listening');btn.textContent='🎤';}
+    if(e.error==='not-allowed')alert('Microphone access was denied. Allow microphone access in your browser settings and try again.');
+    else if(e.error!=='aborted')alert('Voice error: '+e.error+'. Please try again.');
+  };
+  recognition.onend=function(){currentRecognition=null;if(btn){btn.classList.remove('listening');btn.textContent='🎤';}};
+  recognition.start();
+}
+/* ===== CHARACTER COUNTER ===== */
+var platLimits={Email:0,WhatsApp:1000,LinkedIn:3000,SMS:160,Slack:40000,Text:0};
+function getMode1PlatLimit(){
+  var active=document.querySelector('#platBtns .plat-btn.active');
+  var plat=active?active.dataset.plat:'Email';
+  return platLimits[plat]||0;
+}
+function updateCharCount(taId,ccId,getLimitFn){
+  var ta=document.getElementById(taId);
+  var cc=document.getElementById(ccId);
+  if(!ta||!cc) return;
+  var len=ta.value.length;
+  var limit=getLimitFn?getLimitFn():0;
+  if(!limit){
+    cc.textContent=len>0?len+' chars':'';
+    cc.className='char-counter';
+  } else {
+    var rem=limit-len;
+    cc.textContent=len+' / '+limit+(rem<0?' ('+Math.abs(rem)+' over limit)':'');
+    cc.className='char-counter'+(rem<0?' over':rem<limit*0.1?' warn':'');
+  }
+}
+(function initCharCounters(){
+  var pairs=[
+    {ta:'inp',cc:'cc-inp',fn:getMode1PlatLimit},
+    {ta:'replyInp',cc:'cc-replyInp',fn:null},
+    {ta:'fuInp1',cc:'cc-fuInp1',fn:null},
+    {ta:'fuInp2',cc:'cc-fuInp2',fn:null},
+    {ta:'bulkInp',cc:'cc-bulkInp',fn:null}
+  ];
+  pairs.forEach(function(p){
+    var ta=document.getElementById(p.ta);
+    if(!ta) return;
+    ta.addEventListener('input',function(){updateCharCount(p.ta,p.cc,p.fn);});
+  });
+  document.querySelectorAll('#platBtns .plat-btn').forEach(function(b){
+    b.addEventListener('click',function(){
+      setTimeout(function(){updateCharCount('inp','cc-inp',getMode1PlatLimit);},50);
+    });
+  });
+})();
+
+function speakText(btn,text,langVal){
+  if(!window.speechSynthesis){alert('Text-to-speech is not supported in this browser.');return;}
+  if(window.speechSynthesis.speaking){
+    window.speechSynthesis.cancel();
+    document.querySelectorAll('.ver-speak-btn').forEach(function(b){b.textContent='🔊 Listen';b.classList.remove('speaking');});
+    return;
+  }
+  var langCode=voiceLangMap[langVal||'English']||'en-US';
+  var utt=new SpeechSynthesisUtterance(text);
+  utt.lang=langCode;utt.rate=0.95;
+  btn.textContent='⏹ Stop';btn.classList.add('speaking');
+  utt.onend=function(){btn.textContent='🔊 Listen';btn.classList.remove('speaking');};
+  utt.onerror=function(){btn.textContent='🔊 Listen';btn.classList.remove('speaking');};
+  window.speechSynthesis.speak(utt);
+}
+</script>
+
+<script>
+// ── PWA Service Worker Registration ──────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js')
+      .then(function(reg) {
+        console.log('[ReplyBetter] Service worker registered:', reg.scope);
+      })
+      .catch(function(err) {
+        console.warn('[ReplyBetter] Service worker registration failed:', err);
+      });
+  });
+}
+
+// ── PWA Install Prompt ────────────────────────────────────────────────────────
+let deferredInstallPrompt = null;
+
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+
+  // Show a subtle install banner after 30 seconds if not already installed
+  setTimeout(function() {
+    if (deferredInstallPrompt && !window.matchMedia('(display-mode: standalone)').matches) {
+      showInstallBanner();
+    }
+  }, 30000);
+});
+
+function showInstallBanner() {
+  if (document.getElementById('pwaInstallBanner')) return;
+  var banner = document.createElement('div');
+  banner.id = 'pwaInstallBanner';
+  banner.style.cssText = [
+    'position:fixed;bottom:80px;left:50%;transform:translateX(-50%)',
+    'background:rgba(99,102,241,0.95);backdrop-filter:blur(12px)',
+    'color:#fff;padding:12px 20px;border-radius:40px',
+    'display:flex;align-items:center;gap:12px;z-index:9999',
+    'font-size:14px;font-weight:500;box-shadow:0 4px 24px rgba(99,102,241,0.4)',
+    'animation:fadeInUp .3s ease'
+  ].join(';');
+  banner.innerHTML = [
+    '<span>⚡ Add ReplyBetter to your home screen</span>',
+    '<button onclick="installPWA()" style="',
+      'background:#fff;color:#6366f1;border:none;padding:6px 14px;',
+      'border-radius:20px;font-weight:600;cursor:pointer;font-size:13px',
+    '">Install</button>',
+    '<button onclick="this.parentElement.remove()" style="',
+      'background:none;border:none;color:rgba(255,255,255,.7);',
+      'cursor:pointer;font-size:18px;line-height:1;padding:0 4px',
+    '">×</button>'
+  ].join('');
+  document.body.appendChild(banner);
+}
+
+function installPWA() {
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  deferredInstallPrompt.userChoice.then(function(result) {
+    console.log('[ReplyBetter] PWA install:', result.outcome);
+    deferredInstallPrompt = null;
+    var banner = document.getElementById('pwaInstallBanner');
+    if (banner) banner.remove();
+  });
+}
+
+window.addEventListener('appinstalled', function() {
+  console.log('[ReplyBetter] PWA installed successfully');
+  deferredInstallPrompt = null;
+});
+</script>
+</body>
+</html>
