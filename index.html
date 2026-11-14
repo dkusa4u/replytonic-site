@@ -230,7 +230,10 @@ textarea::placeholder{color:var(--t3)}
 .reply-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:16px;display:none;animation:fadeUp .3s ease}
 .reply-cards.show{display:grid}
 .reply-card{background:rgba(74,222,128,.05);border:1px solid rgba(74,222,128,.13);border-radius:var(--r12);padding:16px;display:flex;flex-direction:column}
-.reply-num{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(74,222,128,.8);margin-bottom:8px}
+.reply-num{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(74,222,128,.8);margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.reply-label{background:rgba(99,102,241,.18);color:var(--i4);font-size:9px;font-weight:700;padding:2px 8px;border-radius:100px;letter-spacing:.8px;text-transform:uppercase;border:1px solid rgba(99,102,241,.25);flex-shrink:0}
+.score-sec.live .score-title{color:var(--i4)}
+.score-sec.live{border-color:rgba(99,102,241,.25);background:rgba(99,102,241,.05)}
 .reply-text{font-size:13px;line-height:1.6;color:var(--t1);flex:1;white-space:pre-wrap}
 .reply-actions{display:flex;gap:6px;margin-top:12px}
 .reply-copy-btn{padding:6px 11px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:var(--r8);font-size:11px;font-weight:600;color:var(--t2);cursor:pointer;transition:all .2s}
@@ -1703,6 +1706,35 @@ function getBlendedNote(t1,t2){
   return blendMap[key]||blendMap[key2]||'blending '+t1.toLowerCase()+' with '+t2.toLowerCase()+' tone';
 }
 
+// ===== LIVE TONE SCORE =====
+(function(){
+  var liveTimer=null;
+  var inp=document.getElementById('inp');
+  if(!inp) return;
+  inp.addEventListener('input',function(){
+    clearTimeout(liveTimer);
+    var v=this.value.trim();
+    var sec=document.getElementById('scoreSec');
+    if(!v||v.length<8){
+      // Don't hide if rewrite already showed scores
+      if(sec.classList.contains('live')||!sec.classList.contains('show')){
+        sec.classList.remove('show','live');
+      }
+      return;
+    }
+    liveTimer=setTimeout(function(){
+      var scores=scoreMessage(v);
+      var title=sec.querySelector('.score-title');
+      if(title) title.textContent='📊 Live Message Analysis';
+      sec.classList.add('show','live');
+      setBar('clarityFill','clarityVal',scores.clarity);
+      setBar('toneFill','toneVal',scores.tone);
+      setBar('profFill','profVal',scores.prof);
+      document.getElementById('scoreHint').textContent=getHint(scores);
+    },600);
+  });
+})();
+
 // ===== MAIN REWRITE =====
 // ===== API HELPER =====
 function callAPI(payload, onSuccess, onError){
@@ -1755,6 +1787,9 @@ function rewrite(){
 
   var scores=scoreMessage(v);
   var sec=document.getElementById('scoreSec');
+  var stitle=sec.querySelector('.score-title');
+  if(stitle) stitle.textContent='📊 Message Score — Original';
+  sec.classList.remove('live');
   sec.classList.add('show');
   setTimeout(function(){
     setBar('clarityFill','clarityVal',scores.clarity);
@@ -1998,10 +2033,12 @@ function generateReply(){
   callAPI({message:v, platform:platform, tone:tone, language:lang, mode:'reply'},
     function(d){
       var labels=['Reply Option 1','Reply Option 2','Reply Option 3'];
+      var apiLabels=[d.v1_label,d.v2_label,d.v3_label];
       var cards=document.getElementById('replyCards');
       cards.innerHTML=[d.v1,d.v2,d.v3].map(function(r,i){
+        var labelBadge=apiLabels[i]?'<span class="reply-label">'+escHtml(apiLabels[i])+'</span>':'';
         return '<div class="reply-card">'
-          +'<div class="reply-num">'+labels[i]+'</div>'
+          +'<div class="reply-num"><span>'+labels[i]+'</span>'+labelBadge+'</div>'
           +'<div class="reply-text">'+escHtml(r)+'</div>'
           +'<div class="reply-actions">'
             +'<button class="reply-copy-btn" onclick="copyReply(this)">📋 Copy Reply</button>'

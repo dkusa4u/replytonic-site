@@ -135,10 +135,13 @@ if ($useVoice && $isPremium && $userId) {
 
 // ── Build prompt ──────────────────────────────────────────────────────────────
 if ($mode === 'reply') {
-  $userPrompt = "A user received this message:\n\"{$originalMessage}\"\n\n"
-              . "They want to reply with:\n\"{$message}\"\n\n"
-              . "Generate 3 distinct {$blendedToneDesc} reply versions for a {$platCtx}. "
-              . "{$lengthInstruction} {$emojiInstruction} {$languageInstruction}";
+  $userPrompt = "A user received this message:\n\"{$message}\"\n\n"
+              . "Generate 3 distinctly different {$blendedToneDesc} reply strategies for a {$platCtx}. "
+              . "Each reply should take a noticeably different approach or angle. "
+              . "For each reply, also provide a short 2-4 word label that captures its unique approach (e.g. 'Direct & Clear', 'Warm & Empathetic', 'Brief & Assertive', 'Firm but Polite', 'Enthusiastic & Open'). "
+              . "{$lengthInstruction} {$emojiInstruction} {$languageInstruction}\n\n"
+              . "Respond ONLY with valid JSON: {\"v1\":\"...\",\"v1_label\":\"...\",\"v2\":\"...\",\"v2_label\":\"...\",\"v3\":\"...\",\"v3_label\":\"...\"}";
+} elseif ($mode === 'followup') {
 } elseif ($mode === 'followup') {
   $src = $originalMessage ?: $message;
   $userPrompt = "Original message sent:\n\"{$src}\"\n\n"
@@ -154,13 +157,15 @@ if ($sesqInstruction)       $userPrompt .= "\n\n" . $sesqInstruction;
 if ($customInstrLine)       $userPrompt .= "\n\n" . $customInstrLine;
 if ($humanTouchInstruction) $userPrompt .= "\n\n" . $humanTouchInstruction;
 if ($voiceInstruction)      $userPrompt .= "\n\n" . $voiceInstruction;
-$userPrompt .= "\n\nRespond ONLY with valid JSON: {\"v1\":\"...\",\"v2\":\"...\",\"v3\":\"...\"}";
+if ($mode !== 'reply') {
+  $userPrompt .= "\n\nRespond ONLY with valid JSON: {\"v1\":\"...\",\"v2\":\"...\",\"v3\":\"...\"}";
+}
 
 // ── Call OpenAI ───────────────────────────────────────────────────────────────
 $payload = json_encode([
   'model'           => 'gpt-4o',
   'temperature'     => 0.82,
-  'max_tokens'      => 900,
+  'max_tokens'      => ($mode === 'reply' ? 1100 : 900),
   'response_format' => ['type' => 'json_object'],
   'messages'        => [
     ['role' => 'system', 'content' =>
@@ -248,4 +253,10 @@ if ($userId && $mode !== 'followup') {
     } catch (Exception $e) { /* non-critical */ }
 }
 
-echo json_encode(['success' => true, 'v1' => $result['v1'], 'v2' => $result['v2'], 'v3' => $result['v3']]);
+$out = ['success' => true, 'v1' => $result['v1'], 'v2' => $result['v2'], 'v3' => $result['v3']];
+if ($mode === 'reply') {
+  if (!empty($result['v1_label'])) $out['v1_label'] = $result['v1_label'];
+  if (!empty($result['v2_label'])) $out['v2_label'] = $result['v2_label'];
+  if (!empty($result['v3_label'])) $out['v3_label'] = $result['v3_label'];
+}
+echo json_encode($out);
