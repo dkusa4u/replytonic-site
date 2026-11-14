@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy — ReplyTonic</title>
+<meta name="description" content="ReplyTonic Privacy Policy — how we collect, use, and protect your data.">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#0a0a0f;
+    --bg2:#0f0f1a;
+    --card:#13131f;
+    --border:rgba(255,255,255,.07);
+    --t1:#f1f1f5;
+    --t2:#a8a8b8;
+    --t3:#6b6b80;
+    --i5:#6366f1;
+    --i6:#8b5cf6;
+    --r20:16px;
+  }
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);line-height:1.7;-webkit-font-smoothing:antialiased}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,15,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between}
+  .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+  .logo-mark{width:32px;height:32px;background:linear-gradient(135deg,var(--i5),var(--i6));border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#fff}
+  .logo-name{font-weight:700;font-size:17px;color:var(--t1)}
+  .nav-back{color:var(--t2);text-decoration:none;font-size:14px;display:flex;align-items:center;gap:6px;transition:color .2s}
+  .nav-back:hover{color:var(--t1)}
+  .nav-back svg{width:16px;height:16px}
+
+  /* CONTENT */
+  .page-wrap{max-width:720px;margin:0 auto;padding:100px 24px 80px}
+  .page-header{margin-bottom:48px}
+  .page-header h1{font-size:clamp(28px,4vw,38px);font-weight:700;margin-bottom:12px}
+  .page-header .meta{color:var(--t3);font-size:14px}
+  .page-header .meta span{color:var(--t2)}
+
+  h2{font-size:20px;font-weight:600;color:var(--t1);margin:40px 0 12px}
+  h3{font-size:16px;font-weight:600;color:var(--t2);margin:24px 0 8px}
+  p{color:var(--t2);margin-bottom:16px;font-size:15px}
+  ul,ol{color:var(--t2);font-size:15px;padding-left:20px;margin-bottom:16px}
+  li{margin-bottom:8px}
+  a{color:var(--i5);text-decoration:none}
+  a:hover{text-decoration:underline}
+  strong{color:var(--t1);font-weight:600}
+
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--r20);padding:24px;margin:24px 0}
+  .card p:last-child{margin-bottom:0}
+
+  .highlight{background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.2);border-radius:12px;padding:16px 20px;margin:24px 0;color:var(--t2);font-size:14px}
+  .highlight strong{color:var(--i5)}
+
+  hr{border:none;border-top:1px solid var(--border);margin:40px 0}
+
+  /* FOOTER */
+  footer{text-align:center;padding:32px 24px;color:var(--t3);font-size:13px;border-top:1px solid var(--border)}
+  footer a{color:var(--t3);transition:color .2s}
+  footer a:hover{color:var(--t2)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <div class="logo-mark">R</div>
+    <span class="logo-name">ReplyTonic</span>
+  </a>
+  <a href="/" class="nav-back">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 12L6 8l4-4"/></svg>
+    Back to home
+  </a>
+</nav>
+
+<div class="page-wrap">
+  <div class="page-header">
+    <h1>Privacy Policy</h1>
+    <p class="meta">Last updated: <span>November 14, 2026</span> &nbsp;·&nbsp; Effective: <span>November 14, 2026</span></p>
+  </div>
+
+  <div class="highlight">
+    <strong>Short version:</strong> ReplyTonic does not sell your data, does not store the text you process, and does not share personal information with third parties except as necessary to run the service (OpenAI for AI processing, Stripe for payments).
+  </div>
+
+  <h2>1. Who We Are</h2>
+  <p>ReplyTonic ("we," "us," or "our") is an AI-powered communication tool available at <a href="https://replytonic.com">replytonic.com</a> and as a Chrome Extension. We help users rewrite, reply to, summarize, grammar-check, humanize, and analyze messages using AI.</p>
+  <p>Contact: <a href="mailto:privacy@replytonic.com">privacy@replytonic.com</a></p>
+
+  <h2>2. Information We Collect</h2>
+
+  <h3>Account Information</h3>
+  <ul>
+    <li><strong>Email address</strong> — used to create your account, send usage alerts, and communicate with you</li>
+    <li><strong>Password</strong> — stored as a bcrypt hash; we never see your plain-text password</li>
+    <li><strong>Account creation date</strong> and usage timestamps</li>
+  </ul>
+
+  <h3>Usage Data</h3>
+  <ul>
+    <li>Feature used (Rewrite, Reply, Summarize, etc.) and timestamp — to enforce daily limits and show you your usage history</li>
+    <li>Rewrite history (optional) — stored only if you are logged in and use the History feature; you can delete it at any time</li>
+    <li>Tool preference and tone selections</li>
+  </ul>
+
+  <h3>Text You Submit</h3>
+  <p>Text you paste into ReplyTonic is sent to OpenAI's API to generate a response. <strong>We do not store the raw text you submit</strong> after the API call completes. OpenAI may retain submitted text per their own privacy policy; see <a href="https://openai.com/policies/privacy-policy" target="_blank" rel="noopener">openai.com/policies/privacy-policy</a>.</p>
+
+  <h3>Payment Information</h3>
+  <p>Payments are handled by <strong>Stripe</strong>. We never see or store your credit card number. We receive a Stripe customer ID and subscription status to manage your plan. See <a href="https://stripe.com/privacy" target="_blank" rel="noopener">stripe.com/privacy</a>.</p>
+
+  <h3>Chrome Extension</h3>
+  <ul>
+    <li>The extension reads page content <strong>only on user action</strong> (when you click the ReplyTonic button or select text)</li>
+    <li>No browsing history, URLs, or page content is collected or transmitted without your direct interaction</li>
+    <li>Extension settings and your authentication token are stored locally in <code>chrome.storage.local</code> on your device</li>
+    <li>The extension does not use cookies or tracking pixels</li>
+  </ul>
+
+  <h3>Automatically Collected Data</h3>
+  <ul>
+    <li>Standard server logs: IP address, browser type, referring URL — retained for up to 30 days for security and debugging only</li>
+    <li>No third-party analytics, advertising pixels, or cross-site trackers</li>
+  </ul>
+
+  <h2>3. How We Use Your Information</h2>
+  <ul>
+    <li>Provide and improve the ReplyTonic service</li>
+    <li>Authenticate your account and enforce usage limits</li>
+    <li>Process payments and manage subscriptions</li>
+    <li>Send transactional emails (account confirmation, password reset, usage alerts)</li>
+    <li>Detect and prevent abuse or unauthorized access</li>
+    <li>Respond to your support requests</li>
+  </ul>
+  <p>We do <strong>not</strong> use your data to train AI models, sell it to advertisers, or share it with data brokers.</p>
+
+  <h2>4. Data Sharing</h2>
+  <div class="card">
+    <p>We share data only with the following service providers, and only as needed to operate the service:</p>
+    <ul>
+      <li><strong>OpenAI</strong> — receives text you submit for AI processing</li>
+      <li><strong>Stripe</strong> — handles payment processing</li>
+      <li><strong>Hostinger</strong> — web hosting and database infrastructure</li>
+    </ul>
+    <p>We do not sell personal data. We do not share personal data with advertisers.</p>
+  </div>
+
+  <h2>5. Data Retention</h2>
+  <ul>
+    <li><strong>Account data</strong> — retained while your account is active, plus 30 days after deletion request</li>
+    <li><strong>Usage logs</strong> — retained for 90 days, then auto-deleted</li>
+    <li><strong>Rewrite history</strong> — retained until you delete it, or until account deletion</li>
+    <li><strong>Payment records</strong> — retained as required by law (typically 7 years)</li>
+    <li><strong>Submitted text</strong> — not retained after the API response is returned</li>
+  </ul>
+
+  <h2>6. Your Rights</h2>
+  <p>You may at any time:</p>
+  <ul>
+    <li><strong>Access</strong> the personal data we hold about you</li>
+    <li><strong>Delete</strong> your account and associated data</li>
+    <li><strong>Export</strong> your rewrite history</li>
+    <li><strong>Opt out</strong> of non-transactional emails via the unsubscribe link</li>
+    <li><strong>Correct</strong> inaccurate data by contacting us</li>
+  </ul>
+  <p>To exercise these rights, email <a href="mailto:privacy@replytonic.com">privacy@replytonic.com</a>. We will respond within 30 days.</p>
+
+  <h2>7. Security</h2>
+  <p>We use HTTPS for all data in transit, bcrypt for password hashing, JWT tokens for session authentication, and row-level access controls in the database. No system is 100% secure; if you discover a vulnerability, please report it to <a href="mailto:security@replytonic.com">security@replytonic.com</a>.</p>
+
+  <h2>8. Children's Privacy</h2>
+  <p>ReplyTonic is not directed at children under 13. We do not knowingly collect personal information from children under 13. If you believe a child has provided us information, contact us and we will delete it promptly.</p>
+
+  <h2>9. International Users</h2>
+  <p>ReplyTonic is operated from the United States. If you access the service from outside the US, your data is transferred to and processed in the US. By using ReplyTonic, you consent to this transfer.</p>
+
+  <h2>10. Changes to This Policy</h2>
+  <p>We may update this policy from time to time. When we do, we will update the "Last updated" date at the top and, for material changes, notify registered users by email. Continued use of ReplyTonic after changes constitutes acceptance of the updated policy.</p>
+
+  <h2>11. Contact Us</h2>
+  <div class="card">
+    <p><strong>ReplyTonic Privacy</strong><br>
+    Email: <a href="mailto:privacy@replytonic.com">privacy@replytonic.com</a><br>
+    Website: <a href="https://replytonic.com">replytonic.com</a></p>
+  </div>
+
+  <hr>
+  <p style="font-size:13px;color:var(--t3)">This privacy policy applies to replytonic.com and the ReplyTonic Chrome Extension.</p>
+</div>
+
+<footer>
+  <p>© 2026 ReplyTonic &nbsp;·&nbsp; <a href="/">Home</a> &nbsp;·&nbsp; <a href="/privacy.html">Privacy Policy</a></p>
+</footer>
+
+</body>
+</html>
