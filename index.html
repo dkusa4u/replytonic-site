@@ -121,6 +121,9 @@ textarea::placeholder{color:var(--t3)}
 .share-btn.sms{border-color:rgba(249,115,22,.3);color:var(--o4)}.share-btn.sms:hover{background:rgba(249,115,22,.12)}
 .share-btn.li{border-color:rgba(10,102,194,.4);color:#0a66c2}.share-btn.li:hover{background:rgba(10,102,194,.12)}
 .share-btn.sl{border-color:rgba(228,30,90,.3);color:#e01e5a}.share-btn.sl:hover{background:rgba(228,30,90,.1)}
+.share-btn.fb{border-color:rgba(24,119,242,.35);color:#1877f2}.share-btn.fb:hover{background:rgba(24,119,242,.12)}
+.share-btn.tg{border-color:rgba(0,136,204,.35);color:#0088cc}.share-btn.tg:hover{background:rgba(0,136,204,.12)}
+.share-btn.tw{border-color:rgba(0,0,0,.35);color:#e7e7e7}.share-btn.tw:hover{background:rgba(255,255,255,.08)}
 /* BEFORE/AFTER TOGGLE */
 .ba-toggle{background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--t3)}
 .ba-toggle:hover{background:rgba(99,102,241,.1);border-color:rgba(99,102,241,.3);color:var(--i4)}
@@ -1545,6 +1548,9 @@ function renderVersions(data,tone,tone2,original,lang){
 
 function buildShareRow(){
   return '<button class="share-btn wa" onclick="shareCard(this,\'wa\')">💬 WhatsApp</button>'
+    +'<button class="share-btn fb" onclick="shareCard(this,\'fb\')">📘 Facebook</button>'
+    +'<button class="share-btn tg" onclick="shareCard(this,\'tg\')">✈️ Telegram</button>'
+    +'<button class="share-btn tw" onclick="shareCard(this,\'tw\')">🐦 Twitter/X</button>'
     +'<button class="share-btn em" onclick="shareCard(this,\'em\')">📧 Email</button>'
     +'<button class="share-btn sms" onclick="shareCard(this,\'sms\')">📱 SMS</button>'
     +'<button class="share-btn li" onclick="shareCard(this,\'li\')">💼 LinkedIn</button>'
@@ -1559,14 +1565,20 @@ function shareCard(btn,platform){
   if(platform==='wa') window.open('https://api.whatsapp.com/send?text='+enc,'_blank');
   else if(platform==='em') window.location.href='mailto:?body='+enc;
   else if(platform==='sms') window.location.href='sms:?body='+enc;
-  else if(platform==='li'||platform==='sl'){
+  else if(platform==='tg') window.open('https://t.me/share/url?url=&text='+enc,'_blank');
+  else if(platform==='tw') window.open('https://twitter.com/intent/tweet?text='+enc,'_blank');
+  else if(platform==='fb'||platform==='li'||platform==='sl'){
     var origLbl=btn.textContent;
     navigator.clipboard.writeText(text).then(function(){
       btn.textContent='✓ Copied!';
       setTimeout(function(){btn.textContent=origLbl;},2000);
-      window.open(platform==='li'?'https://www.linkedin.com/messaging/compose/':'https://slack.com/','_blank');
+      if(platform==='fb') window.open('https://www.messenger.com/','_blank');
+      else if(platform==='li') window.open('https://www.linkedin.com/messaging/compose/','_blank');
+      else window.open('https://slack.com/','_blank');
     }).catch(function(){
-      window.open(platform==='li'?'https://www.linkedin.com/messaging/compose/':'https://slack.com/','_blank');
+      if(platform==='fb') window.open('https://www.messenger.com/','_blank');
+      else if(platform==='li') window.open('https://www.linkedin.com/messaging/compose/','_blank');
+      else window.open('https://slack.com/','_blank');
     });
   }
 }
