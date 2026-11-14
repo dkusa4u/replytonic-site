@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "ReplyTonic — AI Writing Toolkit",
   "version": "1.0.0",
-  "description": "Rewrite, improve tone, check grammar, craft perfect replies, summarize, humanize AI text — right where you type. Works on Gmail, LinkedIn, Slack, Twitter/X, Outlook, and anywhere else.",
+  "description": "7 AI tools in one click: rewrite, reply, summarize, grammar check, humanize AI text, detect AI content, and check plagiarism — right where you type. Works on Gmail, LinkedIn, Slack, Twitter/X, Outlook, and anywhere else.",
   "permissions": [
     "storage",
     "activeTab",

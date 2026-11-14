@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page Not Found — ReplyTonic</title>
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#0a0a0f;--t1:#f1f1f5;--t2:#a8a8b8;--t3:#6b6b80;--i5:#6366f1;--i6:#8b5cf6;--border:rgba(255,255,255,.07)}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;-webkit-font-smoothing:antialiased}
+  .glow{position:fixed;top:30%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(99,102,241,.12) 0%,transparent 70%);pointer-events:none}
+  .logo-wrap{display:flex;align-items:center;gap:10px;margin-bottom:48px;text-decoration:none}
+  .logo-mark{width:36px;height:36px;background:linear-gradient(135deg,var(--i5),var(--i6));border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#fff}
+  .logo-name{font-weight:700;font-size:18px;color:var(--t1)}
+  .code{font-size:clamp(80px,15vw,120px);font-weight:700;background:linear-gradient(135deg,var(--i5),var(--i6));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:16px}
+  h1{font-size:clamp(22px,4vw,30px);font-weight:700;margin-bottom:12px}
+  p{color:var(--t2);font-size:16px;margin-bottom:40px;max-width:400px}
+  .btn-wrap{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+  .btn{padding:12px 24px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;transition:all .2s}
+  .btn-primary{background:linear-gradient(135deg,var(--i5),var(--i6));color:#fff}
+  .btn-primary:hover{opacity:.9;transform:translateY(-1px)}
+  .btn-secondary{background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--t2)}
+  .btn-secondary:hover{background:rgba(255,255,255,.1);color:var(--t1)}
+</style>
+</head>
+<body>
+  <div class="glow"></div>
+  <a href="/" class="logo-wrap">
+    <div class="logo-mark">R</div>
+    <span class="logo-name">ReplyTonic</span>
+  </a>
+  <div class="code">404</div>
+  <h1>Page not found</h1>
+  <p>The page you're looking for doesn't exist or has moved. Let's get you back on track.</p>
+  <div class="btn-wrap">
+    <a href="/" class="btn btn-primary">Go Home</a>
+    <a href="/#pricing" class="btn btn-secondary">View Pricing</a>
+  </div>
+</body>
+</html>
