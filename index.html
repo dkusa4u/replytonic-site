@@ -180,6 +180,22 @@ textarea::placeholder{color:var(--t3)}
 .go-btn{width:100%;margin-top:16px;background:var(--o5);color:#fff;padding:16px 24px;border-radius:var(--r12);font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;box-shadow:var(--oshadow);letter-spacing:.2px}
 .go-btn:hover{background:var(--o4);transform:translateY(-2px);box-shadow:0 8px 32px rgba(249,115,22,.45)}
 .go-btn:active{transform:translateY(0)}
+/* SESQUIPEDALIANISM BUTTON */
+.sesq-btn{padding:7px 14px;background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.2);border-radius:100px;font-size:12px;font-weight:600;color:rgba(196,148,255,.8);cursor:pointer;transition:all .2s;white-space:nowrap}
+.sesq-btn:hover{background:rgba(168,85,247,.15);border-color:rgba(168,85,247,.4)}
+.sesq-btn.active{background:rgba(168,85,247,.22);border-color:rgba(168,85,247,.55);color:#c084fc;box-shadow:0 0 12px rgba(168,85,247,.18)}
+/* QUICK TEMPLATES */
+.quick-tmpl-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:9px}
+.quick-tmpl-btn{padding:5px 11px;background:rgba(99,102,241,.07);border:1px solid rgba(99,102,241,.18);border-radius:var(--r8);font-size:11px;font-weight:600;color:var(--i4);cursor:pointer;transition:all .2s}
+.quick-tmpl-btn:hover{background:rgba(99,102,241,.18);border-color:rgba(99,102,241,.38)}
+/* CUSTOM AI INSTRUCTIONS */
+.custom-instr-wrap{margin-top:12px}
+.custom-instr-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t3);margin-bottom:5px;display:flex;align-items:center;gap:5px}
+.custom-instr-inp{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--r8);padding:9px 12px;color:var(--t1);font-size:13px;font-family:inherit;box-sizing:border-box;transition:border-color .2s}
+.custom-instr-inp:focus{outline:none;border-color:rgba(99,102,241,.45)}
+.custom-instr-inp::placeholder{color:var(--t3)}
+/* VERSION CARD STATS */
+.ver-stats{font-size:10px;color:var(--t3);padding:5px 2px 2px;letter-spacing:.2px}
 .go-btn.busy{opacity:.7;pointer-events:none}
 /* MESSAGE SCORE */
 .score-sec{margin-top:20px;background:rgba(0,0,0,.28);border:1px solid var(--border);border-radius:var(--r12);padding:18px;display:none;animation:fadeUp .3s ease}
@@ -466,6 +482,14 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
     <!-- ===== MODE 1: REWRITE ===== -->
     <div class="mode-panel active" id="mode-rewrite">
       <div class="tool-label">Your Message</div>
+      <div class="quick-tmpl-row">
+        <button class="quick-tmpl-btn" onclick="applyQuickTmpl('Job Follow-Up')">📌 Job Follow-Up</button>
+        <button class="quick-tmpl-btn" onclick="applyQuickTmpl('Apology')">🙏 Apology</button>
+        <button class="quick-tmpl-btn" onclick="applyQuickTmpl('Meeting Request')">📅 Meeting Request</button>
+        <button class="quick-tmpl-btn" onclick="applyQuickTmpl('Thank You')">💛 Thank You</button>
+        <button class="quick-tmpl-btn" onclick="applyQuickTmpl('Introduction')">👋 Introduction</button>
+        <button class="quick-tmpl-btn" onclick="applyQuickTmpl('Check-In')">💬 Check-In</button>
+      </div>
       <div class="msg-voice-wrap"><textarea id="inp" rows="4" placeholder="Paste any message here — in any language. e.g. 'sorry i messed up the report can u just fix it' or type in Hindi, Spanish, Tamil..."></textarea><button id="mic-inp" class="mic-btn" onclick="startVoiceInput('inp','langSelect')" title="Speak your message">🎤</button></div>
       <div class="char-counter" id="cc-inp"></div>
 
@@ -637,6 +661,7 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
           <div class="toggle-sw" id="emojiToggle" onclick="toggleEmoji(this)"></div>
           <span class="emoji-toggle-lbl">Add emojis</span>
         </div>
+        <button class="sesq-btn" id="sesqBtn" onclick="toggleSesq(this)" title="Transform simple words into elaborate, sophisticated vocabulary">🎓 Sesquipedalianism</button>
         <button style="padding:6px 13px;background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.22);border-radius:var(--r8);font-size:12px;font-weight:600;color:var(--i4);cursor:pointer;margin-left:auto" onclick="openTmpl()">📌 My Templates</button>
       </div>
 
@@ -644,6 +669,12 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
       <div class="subject-sec" id="subjectSec">
         <div class="section-row-label">✉️ Subject Line Suggestions</div>
         <div class="subj-opts" id="subjectOpts"></div>
+      </div>
+
+      <!-- CUSTOM AI INSTRUCTIONS -->
+      <div class="custom-instr-wrap">
+        <div class="custom-instr-label">🤖 Custom AI Instructions <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:10px;color:var(--t3)">(optional)</span></div>
+        <input type="text" id="customInstr" class="custom-instr-inp" placeholder='e.g. "keep under 50 words", "mention the Friday deadline", "sound more confident"'>
       </div>
 
       <button class="go-btn" id="goBtn" onclick="rewrite()">
@@ -1361,6 +1392,77 @@ function toggleEmoji(el){
   el.classList.toggle('on',emojiOn);
 }
 
+// ===== SESQUIPEDALIANISM =====
+var sesqOn=false;
+function toggleSesq(btn){
+  sesqOn=!sesqOn;
+  btn.classList.toggle('active',sesqOn);
+  btn.title=sesqOn?'Active: AI will use elaborate, sophisticated vocabulary':'Transform simple words into elaborate, sophisticated vocabulary';
+}
+
+// ===== WORD / CHAR COUNT =====
+function wordCharCount(text){
+  var t=text?text.trim():'';
+  var words=t?t.split(/\s+/).length:0;
+  return 'Words: '+words+' · Chars: '+text.length;
+}
+
+// ===== QUICK STARTER TEMPLATES =====
+var quickTmplMap={
+  'Job Follow-Up':'Hi [Name], I wanted to follow up on my application for the [Position] role that I submitted on [Date]. I am very excited about this opportunity and would love to discuss how my experience aligns with your needs. Please let me know if you need any additional information from me.',
+  'Apology':'I sincerely apologize for [the issue]. I understand this caused inconvenience and I take full responsibility. Here is what I am doing to make it right: [action]. Thank you for your patience and understanding.',
+  'Meeting Request':'Hi [Name], I would love to schedule a [30-minute] meeting to discuss [topic]. I am available on [days/times]. Please let me know what works best for you, and I will send over a calendar invite.',
+  'Thank You':'Thank you so much for [reason]. Your [help/time/effort] means a great deal to me and I truly appreciate everything you have done. I look forward to staying in touch.',
+  'Introduction':'Hi [Name], I am [your name] from [company/context]. I wanted to reach out because [reason for connecting]. I would love the opportunity to [goal] and hope we can connect soon.',
+  'Check-In':'Hi [Name], just checking in to see how things are going with [topic/project]. Please let me know if there is anything I can help with or if you have any updates to share. Hope all is well!'
+};
+function applyQuickTmpl(key){
+  var ta=document.getElementById('inp');
+  if(ta&&quickTmplMap[key]){
+    ta.value=quickTmplMap[key];
+    ta.dispatchEvent(new Event('input'));
+    ta.focus();
+    ta.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+}
+
+// ===== REGENERATE SINGLE VERSION =====
+function regenVersion(btn,vNum){
+  var card=btn.closest('.ver-card');
+  var textDiv=card.querySelector('.ver-text');
+  var statsDiv=card.querySelector('.ver-stats');
+  var v=document.getElementById('inp').value.trim();
+  if(!v)return;
+  var tone=document.querySelector('#tones .tone-btn.active').dataset.tone||'Professional';
+  var tone2El=document.querySelector('#tone2Row .tone2-btn.active');
+  var tone2=tone2El?tone2El.dataset.tone2:'None';
+  var lang=document.getElementById('langSelect').value;
+  var len=currentLen;
+  var plat=(document.querySelector('#platBtns .plat-btn.active')||{}).dataset||{};
+  var platform=plat.plat||'Email';
+  var customInstr=document.getElementById('customInstr')?document.getElementById('customInstr').value.trim():'';
+  var origLbl=btn.textContent;
+  btn.textContent='⏳';
+  btn.disabled=true;
+  callAPI({message:v,platform:platform,tone:tone,tone2:tone2,language:lang,length:len,emoji:emojiOn,sesquipedalian:sesqOn,customInstructions:customInstr,mode:'rewrite'},
+    function(d){
+      var pick=['v1','v2','v3'][vNum-1]||'v1';
+      var newText=d[pick]||d.v1||'';
+      textDiv.innerHTML=escHtml(newText);
+      if(statsDiv)statsDiv.textContent=wordCharCount(newText);
+      var newEsc=newText.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      card.setAttribute('data-rewrite',newEsc);
+      btn.textContent=origLbl;
+      btn.disabled=false;
+    },
+    function(err){
+      btn.textContent=origLbl;
+      btn.disabled=false;
+      alert('⚠️ '+err);
+    }
+  );
+}
+
 // ===== MODE SWITCHING =====
 function switchMode(mode){
   document.querySelectorAll('.mode-tab').forEach(function(t){t.classList.remove('active')});
@@ -1505,7 +1607,8 @@ function rewrite(){
   },60);
   txt.textContent='Rewriting with AI...';
 
-  callAPI({message:v, platform:platform, tone:tone, tone2:tone2, language:lang, length:len, emoji:emojiOn, mode:'rewrite'},
+  var customInstr=document.getElementById('customInstr')?document.getElementById('customInstr').value.trim():'';
+  callAPI({message:v, platform:platform, tone:tone, tone2:tone2, language:lang, length:len, emoji:emojiOn, sesquipedalian:sesqOn, customInstructions:customInstr, mode:'rewrite'},
     function(d){
       var blendNote=(tone2&&tone2!=='None'&&tone2!==tone)?getBlendedNote(tone,tone2):'';
       renderVersions({v1:d.v1,v2:d.v2,v3:d.v3,blendNote:blendNote,lang:lang},tone,tone2,v,lang);
@@ -1532,14 +1635,17 @@ function renderVersions(data,tone,tone2,original,lang){
   grid.innerHTML=labels.map(function(lbl,i){
     var rewriteText=texts[i]||'';
     var rewriteEscAttr=rewriteText.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    var vNum=i+1;
     return '<div class="ver-card" data-orig="'+origEscAttr+'" data-rewrite="'+rewriteEscAttr+'">'
       +'<div class="ver-num"><span>'+lbl+'</span>'+blendInfo+'</div>'
       +'<div class="ver-text">'+escHtml(rewriteText)+'</div>'
+      +'<div class="ver-stats">'+wordCharCount(rewriteText)+'</div>'
       +'<div class="ver-actions">'
         +'<button class="ver-btn ver-copy-btn" onclick="copyVer(this)">📋 Copy</button>'
         +'<button class="ver-btn ver-speak-btn" onclick="speakText(this,this.closest(\'.ver-card\').querySelector(\'.ver-text\').textContent,document.getElementById(\'langSelect\').value)">🔊 Listen</button>'
         +'<button class="ver-btn ba-toggle" onclick="toggleBA(this)">👁 Original</button>'
         +'<button class="ver-btn ver-save-btn" onclick="saveVer(this)">📌 Save</button>'
+        +'<button class="ver-btn" onclick="regenVersion(this,'+vNum+')" title="Generate a fresh version">🔄 Regenerate</button>'
       +'</div>'
       +'<div class="share-row">'+buildShareRow()+'</div>'
     +'</div>';

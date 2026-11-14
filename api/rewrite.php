@@ -20,8 +20,10 @@ $tone            = $input['tone']      ?? 'Professional';
 $tone2           = $input['tone2']     ?? 'None';
 $language        = $input['language']  ?? 'English';
 $length          = $input['length']    ?? 'Same';
-$emoji           = $input['emoji']     ?? false;
-$mode            = $input['mode']      ?? 'rewrite';
+$emoji           = $input['emoji']          ?? false;
+$sesquipedalian  = $input['sesquipedalian'] ?? false;
+$customInstr     = trim($input['customInstructions'] ?? '');
+$mode            = $input['mode']           ?? 'rewrite';
 
 if (!$message) { http_response_code(400); echo json_encode(['error'=>'Message is required']); exit; }
 
@@ -59,6 +61,8 @@ $lengthInstruction = match($length) {
 };
 $emojiInstruction    = $emoji   ? 'Naturally weave in 1–2 relevant emojis per version.' : 'Do not use any emojis.';
 $languageInstruction = ($language && $language !== 'English') ? "Write all 3 versions in {$language}." : 'Write in English.';
+$sesqInstruction     = $sesquipedalian ? 'IMPORTANT: Use elaborate, sophisticated, sesquipedalian vocabulary — select the most impressive, uncommon, and intellectually formidable words available. Replace simple words with their grandiloquent equivalents. The output should sound erudite and intellectually formidable while still conveying the original meaning with perspicuity.' : '';
+$customInstrLine     = $customInstr ? "Additional user instructions: {$customInstr}" : '';
 
 // ── Build prompt ─────────────────────────────────────────────────────────────
 if ($mode === 'reply') {
@@ -77,6 +81,8 @@ if ($mode === 'reply') {
               . "Each version should sound different from the others while conveying the same core meaning. "
               . "{$lengthInstruction} {$emojiInstruction} {$languageInstruction}";
 }
+if ($sesqInstruction)  $userPrompt .= "\n\n" . $sesqInstruction;
+if ($customInstrLine)  $userPrompt .= "\n\n" . $customInstrLine;
 $userPrompt .= "\n\nRespond ONLY with valid JSON: {\"v1\":\"...\",\"v2\":\"...\",\"v3\":\"...\"}";
 
 // ── Call OpenAI ───────────────────────────────────────────────────────────────
