@@ -397,6 +397,46 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
 .foot-legal a{font-size:13px;color:var(--t3);transition:color .2s}
 .foot-legal a:hover{color:var(--t2)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* FEATURES GRID */
+.feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.feat-grid-row2{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:0}
+.feat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r20);padding:26px;position:relative;overflow:hidden;transition:all .3s;display:flex;flex-direction:column;gap:12px}
+.feat-card:hover{background:var(--card-h);border-color:var(--border-p);transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,.35)}
+.feat-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--card-accent,rgba(99,102,241,.06)),transparent 60%);pointer-events:none;border-radius:var(--r20)}
+.feat-card.c-green{--card-accent:rgba(74,222,128,.07);border-color:rgba(74,222,128,.12)}
+.feat-card.c-green:hover{border-color:rgba(74,222,128,.3)}
+.feat-card.c-orange{--card-accent:rgba(249,115,22,.07);border-color:rgba(249,115,22,.12)}
+.feat-card.c-orange:hover{border-color:rgba(249,115,22,.3)}
+.feat-card.c-purple{--card-accent:rgba(168,85,247,.07);border-color:rgba(168,85,247,.12)}
+.feat-card.c-purple:hover{border-color:rgba(168,85,247,.3)}
+.feat-card.c-teal{--card-accent:rgba(20,184,166,.07);border-color:rgba(20,184,166,.12)}
+.feat-card.c-teal:hover{border-color:rgba(20,184,166,.3)}
+.feat-card.c-red{--card-accent:rgba(239,68,68,.07);border-color:rgba(239,68,68,.12)}
+.feat-card.c-red:hover{border-color:rgba(239,68,68,.3)}
+.feat-card.c-yellow{--card-accent:rgba(250,204,21,.07);border-color:rgba(250,204,21,.12)}
+.feat-card.c-yellow:hover{border-color:rgba(250,204,21,.3)}
+.feat-icon-wrap{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.fc-indigo .feat-icon-wrap{background:rgba(99,102,241,.18)}
+.fc-green .feat-icon-wrap{background:rgba(74,222,128,.18)}
+.fc-orange .feat-icon-wrap{background:rgba(249,115,22,.18)}
+.fc-purple .feat-icon-wrap{background:rgba(168,85,247,.18)}
+.fc-teal .feat-icon-wrap{background:rgba(20,184,166,.18)}
+.fc-red .feat-icon-wrap{background:rgba(239,68,68,.18)}
+.fc-yellow .feat-icon-wrap{background:rgba(250,204,21,.15)}
+.feat-card h3{font-size:17px;font-weight:700;letter-spacing:-.3px;margin-bottom:0}
+.feat-card p{font-size:14px;color:var(--t2);line-height:1.6;flex:1}
+.feat-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:100px;font-size:12px;font-weight:600}
+.fp-indigo{background:rgba(99,102,241,.12);color:var(--i4);border:1px solid rgba(99,102,241,.2)}
+.fp-green{background:rgba(74,222,128,.1);color:#4ade80;border:1px solid rgba(74,222,128,.2)}
+.fp-orange{background:rgba(249,115,22,.1);color:var(--o4);border:1px solid rgba(249,115,22,.2)}
+.fp-purple{background:rgba(168,85,247,.12);color:#c084fc;border:1px solid rgba(168,85,247,.2)}
+.fp-teal{background:rgba(20,184,166,.1);color:#2dd4bf;border:1px solid rgba(20,184,166,.2)}
+.fp-red{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2)}
+.fp-yellow{background:rgba(250,204,21,.1);color:#fbbf24;border:1px solid rgba(250,204,21,.2)}
+.feat-try-link{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:600;color:var(--t3);transition:color .2s;margin-top:auto}
+.feat-try-link:hover{color:var(--t1)}
+@media(max-width:960px){.feat-grid{grid-template-columns:repeat(2,1fr)}.feat-grid-row2{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.feat-grid{grid-template-columns:1fr}.feat-grid-row2{grid-template-columns:1fr}}
 /* RESPONSIVE */
 @media(max-width:960px){
   .navlinks{display:none}
@@ -537,11 +577,11 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
 <nav>
   <div class="logo">ReplyTonic</div>
   <ul class="navlinks">
+    <li><a href="#features">Features</a></li>
     <li><a href="#how">How It Works</a></li>
     <li><a href="#examples">Examples</a></li>
-    <li><a href="#cases">Use Cases</a></li>
-    <li><a href="#teams">Teams</a></li>
     <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#faq">FAQ</a></li>
     <li><a href="#tool" class="nav-cta">Try It Free</a></li>
   </ul>
   <!-- Auth state: guest -->
@@ -565,10 +605,9 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
   <div class="hamburger" onclick="toggleNav()"><span></span><span></span><span></span></div>
 </nav>
 <div class="mob-menu" id="mobMenu">
+  <a href="#features" onclick="closeNav()">Features</a>
   <a href="#how" onclick="closeNav()">How It Works</a>
   <a href="#examples" onclick="closeNav()">Examples</a>
-  <a href="#cases" onclick="closeNav()">Use Cases</a>
-  <a href="#teams" onclick="closeNav()">Teams</a>
   <a href="#pricing" onclick="closeNav()">Pricing</a>
   <a href="#faq" onclick="closeNav()">FAQ</a>
   <a href="#tool" onclick="closeNav()">Try It Free</a>
@@ -576,9 +615,9 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
 
 <!-- HERO -->
 <section class="hero" id="tool">
-  <div class="badge"><span class="badge-dot"></span>AI-Powered &middot; 20+ Languages &middot; 10 Features</div>
-  <h1>Stop sending messages<br><span class="grad">you regret.</span></h1>
-  <p class="hero-sub">Rewrite, Reply, Follow Up, or Bulk process &mdash; in any language, any tone, any platform. 3 versions every time so you pick the perfect one.</p>
+  <div class="badge"><span class="badge-dot"></span>AI-Powered &middot; 20+ Languages &middot; 7 AI Tools</div>
+  <h1>7 AI tools to make<br><span class="grad">every message count.</span></h1>
+  <p class="hero-sub">Rewrite, Reply, Summarize, Grammar Check, Humanize, Detect AI content, and Check Plagiarism &mdash; all in one place. Any language, any tone, any platform.</p>
 
   <div class="tool-card">
 
@@ -1147,37 +1186,120 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
 
 <!-- PROOF BAR -->
 <div class="proof-bar">
-  <div class="proof-item"><div class="proof-num">2.4M+</div><div class="proof-txt">Messages Rewritten</div></div>
+  <div class="proof-item"><div class="proof-num">7</div><div class="proof-txt">AI Tools</div></div>
   <div class="proof-div"></div>
   <div class="proof-item"><div class="proof-num">20+</div><div class="proof-txt">Languages</div></div>
   <div class="proof-div"></div>
-  <div class="proof-item"><div class="proof-num">92%</div><div class="proof-txt">Send on First Try</div></div>
+  <div class="proof-item"><div class="proof-num">25+</div><div class="proof-txt">Platforms</div></div>
   <div class="proof-div"></div>
   <div class="proof-item"><div class="proof-num">90+</div><div class="proof-txt">Countries</div></div>
   <div class="proof-div"></div>
   <div class="proof-item"><div class="proof-num">4.9★</div><div class="proof-txt">Average Rating</div></div>
 </div>
 
+<!-- 7 AI TOOLS FEATURES SECTION -->
+<section class="sec" id="features">
+  <div class="eyebrow">7 AI Tools</div>
+  <h2>Everything you need to <span class="grad">communicate better.</span></h2>
+  <p class="sec-sub">One AI-powered suite to rewrite, reply, summarize, check grammar, humanize, detect AI content, and check plagiarism &mdash; for any platform, in any language.</p>
+
+  <div class="feat-grid">
+    <!-- Tool 1: Rewrite -->
+    <div class="feat-card fc-indigo">
+      <div class="feat-icon-wrap">✏️</div>
+      <span class="feat-pill fp-indigo">Tool 1</span>
+      <h3>Message Rewriter</h3>
+      <p>Paste any message and get 3 polished versions instantly. Choose from 6 tones, 25+ platforms, and 20+ languages. The core tool that started it all.</p>
+      <a href="#tool" class="feat-try-link">Try it free →</a>
+    </div>
+
+    <!-- Tool 2: Reply Generator -->
+    <div class="feat-card fc-green c-green">
+      <div class="feat-icon-wrap">💬</div>
+      <span class="feat-pill fp-green">Tool 2</span>
+      <h3>Reply Generator</h3>
+      <p>Paste a message you <em>received</em> and ReplyTonic writes 3 smart reply options — with the right tone, in the right language, for any platform.</p>
+      <a href="#tool" class="feat-try-link">Generate a reply →</a>
+    </div>
+
+    <!-- Tool 3: Summarize -->
+    <div class="feat-card fc-teal c-teal">
+      <div class="feat-icon-wrap">📋</div>
+      <span class="feat-pill fp-teal">Tool 3</span>
+      <h3>Message Summarizer</h3>
+      <p>Long thread? Wall of text? Paste it and get a crisp summary with key points, action items, and tone analysis — in seconds.</p>
+      <a href="#tool" class="feat-try-link">Summarize a message →</a>
+    </div>
+
+    <!-- Tool 4: Grammar Check -->
+    <div class="feat-card fc-yellow c-yellow">
+      <div class="feat-icon-wrap">✅</div>
+      <span class="feat-pill fp-yellow">Tool 4</span>
+      <h3>Grammar Checker</h3>
+      <p>Instant grammar, spelling, and punctuation fixes with clear explanations of every change. Write with confidence in any language.</p>
+      <a href="#tool" class="feat-try-link">Check grammar →</a>
+    </div>
+  </div>
+
+  <div class="feat-grid" style="margin-top:16px">
+    <!-- Tool 5: Humanize -->
+    <div class="feat-card fc-purple c-purple">
+      <div class="feat-icon-wrap">🤖</div>
+      <span class="feat-pill fp-purple">Tool 5</span>
+      <h3>Humanize AI Text</h3>
+      <p>AI-written text sounds robotic. ReplyTonic rewrites it to sound like a real person — natural, varied, and undetectable by AI content detectors.</p>
+      <a href="#tool" class="feat-try-link">Humanize your text →</a>
+    </div>
+
+    <!-- Tool 6: AI Content Detector -->
+    <div class="feat-card fc-orange c-orange">
+      <div class="feat-icon-wrap">🔍</div>
+      <span class="feat-pill fp-orange">Tool 6</span>
+      <h3>AI Content Detector</h3>
+      <p>Paste any text and get an AI probability score with phrase-level analysis. Know instantly whether a message, email, or document was written by a human or AI.</p>
+      <a href="#tool" class="feat-try-link">Detect AI content →</a>
+    </div>
+
+    <!-- Tool 7: Plagiarism Checker -->
+    <div class="feat-card fc-red c-red">
+      <div class="feat-icon-wrap">📄</div>
+      <span class="feat-pill fp-red">Tool 7</span>
+      <h3>Plagiarism Checker</h3>
+      <p>Get an originality score, flagged phrases with likely sources, risk level analysis, and actionable suggestions to make your content 100% original.</p>
+      <a href="#tool" class="feat-try-link">Check originality →</a>
+    </div>
+
+    <!-- Extension CTA card -->
+    <div class="feat-card" style="background:linear-gradient(135deg,rgba(99,102,241,.1),rgba(139,92,246,.07));border-color:rgba(99,102,241,.25)">
+      <div class="feat-icon-wrap" style="background:rgba(99,102,241,.18)">🧩</div>
+      <span class="feat-pill fp-indigo">Chrome Extension</span>
+      <h3>Use All 7 Tools Anywhere</h3>
+      <p>The ReplyTonic Chrome Extension brings all 7 tools to Gmail, LinkedIn, Slack, WhatsApp Web, and any text field — without leaving the page.</p>
+      <a href="https://chrome.google.com/webstore" target="_blank" class="feat-try-link" style="color:var(--i4)">Get the extension →</a>
+    </div>
+  </div>
+</section>
+
 <!-- HOW IT WORKS -->
 <section class="sec" id="how">
   <div class="eyebrow">How It Works</div>
-  <h2>4 steps. 2 seconds. Done.</h2>
-  <p class="sec-sub">No sign-up to try it. No complicated settings. Paste, pick your mode, platform, tone, and language — send.</p>
+  <h2>Pick a tool. Paste. Done in 2 seconds.</h2>
+  <p class="sec-sub">No sign-up needed to start. 7 tools, all in one tab. Each one takes plain text in and returns polished, professional output instantly.</p>
   <div class="steps">
     <div class="step">
       <div class="step-num">1</div>
-      <h3>Pick Your Mode</h3>
-      <p>Rewrite your own message, generate a reply to someone, create a follow-up, or batch-process multiple messages at once &mdash; all in the same tool.</p>
+      <h3>Choose Your Tool</h3>
+      <p>Select from 7 tools: Rewrite, Reply, Summarize, Grammar Check, Humanize, AI Detector, or Plagiarism Checker. Each is purpose-built for a specific communication need.</p>
     </div>
     <div class="step">
       <div class="step-num">2</div>
-      <h3>Set Platform &amp; Tone</h3>
-      <p>Select where the message is going and pick a tone. Blend two tones together for nuanced output. The AI adapts length and style for each platform automatically.</p>
+      <h3>Paste &amp; Configure</h3>
+      <p>Paste your text. For message tools, pick your platform (25+), tone (6+), and output language (20+). The AI adapts length and style automatically for every platform.</p>
     </div>
     <div class="step">
       <div class="step-num">3</div>
-      <h3>Get 3 Versions</h3>
-      <p>ReplyTonic returns 3 polished versions side by side. Pick the one you like, copy it, or save it to your templates library for later.</p>
+      <h3>Get Results Instantly</h3>
+      <p>ReplyTonic returns polished output in under 2 seconds. For rewrites and replies, you get 3 versions side by side so you always pick the perfect one.</p>
     </div>
   </div>
 </section>
@@ -1243,7 +1365,7 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
 <section class="sec" id="cases">
   <div class="eyebrow">Use Cases</div>
   <h2>Works for every situation.</h2>
-  <p class="sec-sub">Whatever you're trying to say — there's a right way to say it, in any language.</p>
+  <p class="sec-sub">7 tools, infinite use cases. Whether you're communicating at work, in class, or across languages — ReplyTonic has you covered.</p>
   <div class="bento">
     <div class="bc">
       <span class="b-tag">Work &amp; Career</span>
@@ -1269,19 +1391,19 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
       <span class="b-tag">Customer Service</span>
       <span class="b-icon">📞</span>
       <h3>Complaints &amp; Returns</h3>
-      <p>Write firm but polite complaint messages that actually get results. Escalate without burning bridges.</p>
+      <p>Write firm but polite complaint messages that actually get results. Escalate without burning bridges. Summarize long email threads before responding.</p>
     </div>
     <div class="bc">
       <span class="b-tag">Academic</span>
       <span class="b-icon">🎓</span>
       <h3>Students &amp; Educators</h3>
-      <p>Email professors confidently, ask for extensions gracefully, write peer feedback, and handle school admin with ease.</p>
+      <p>Email professors confidently, check grammar on submissions, verify originality before submitting, and detect AI-generated content in student work.</p>
     </div>
     <div class="bc">
-      <span class="b-tag">Global</span>
-      <span class="b-icon">🌍</span>
-      <h3>Non-Native Speakers</h3>
-      <p>Write in your own language — ReplyTonic polishes it into fluent, confident output in English or any other language you choose. No embarrassment, no guessing.</p>
+      <span class="b-tag">Content Creators</span>
+      <span class="b-icon">✍️</span>
+      <h3>Writers &amp; Marketers</h3>
+      <p>Humanize AI-generated drafts so they pass detection. Check content for unintentional plagiarism. Rewrite bland copy into 3 vibrant alternatives instantly.</p>
     </div>
     <div class="bc">
       <div class="b-wide-inner">
@@ -1324,10 +1446,11 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
       <div class="price">$0</div>
       <div class="period">forever</div>
       <ul class="feat-list">
-        <li>5 rewrites per day</li>
-        <li>All 6 tones</li>
-        <li>All 6 platforms</li>
-        <li>English output</li>
+        <li>5 uses per day across all 7 tools</li>
+        <li>All 6 tones &amp; 25+ platforms</li>
+        <li>Rewrite, Reply, Summarize</li>
+        <li>Grammar Check, AI Detector</li>
+        <li>Humanize &amp; Plagiarism Checker</li>
         <li>No credit card needed</li>
       </ul>
       <a href="#tool" class="p-btn p-free">Get Started Free</a>
@@ -1338,14 +1461,16 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
       <div class="price"><sup>$</sup>7</div>
       <div class="period">per month &middot; cancel anytime</div>
       <ul class="feat-list">
-        <li>Unlimited rewrites</li>
-        <li>All 6 tones + custom tone</li>
-        <li>All 6 platforms</li>
-        <li>20+ languages output</li>
-        <li>Reply Generator + Follow-Up AI</li>
+        <li>Unlimited uses across all 7 tools</li>
+        <li>All 6 tones + custom tone blend</li>
+        <li>25+ platforms &amp; 20+ languages</li>
+        <li>Rewrite, Reply, Summarize</li>
+        <li>Grammar Check, Humanize AI Text</li>
+        <li>AI Content Detector</li>
+        <li>Plagiarism Checker</li>
         <li>Bulk Rewrite (unlimited)</li>
-        <li>Message history (30 days)</li>
-        <li>Templates library</li>
+        <li>History, templates, My Voice</li>
+        <li>Chrome Extension included</li>
         <li>7-day free trial</li>
       </ul>
       <a href="#tool" class="p-btn p-hot">Start 7-Day Free Trial</a>
@@ -1356,6 +1481,7 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
       <div class="period">per month &middot; 5 seats included</div>
       <ul class="feat-list">
         <li>Everything in Premium</li>
+        <li>All 7 tools, unlimited</li>
         <li>5 team seats included</li>
         <li>Shared workspace &amp; history</li>
         <li>Shared templates library</li>
@@ -1374,14 +1500,11 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
 <div class="ext-wrap">
   <div class="ext-card">
     <div class="ext-left">
-      <div class="ext-soon">🚀 Coming Q1 2027</div>
-      <h2>ReplyTonic everywhere — without leaving the tab.</h2>
-      <p>The Chrome Extension lets you rewrite any message on any website — Gmail, WhatsApp Web, LinkedIn, Slack — in one click. No copy-paste. No tab switching. Just highlight and rewrite.</p>
+      <div class="ext-soon" style="background:rgba(74,222,128,.12);border-color:rgba(74,222,128,.28);color:#4ade80">✅ Available Now</div>
+      <h2>All 7 tools — without leaving the page.</h2>
+      <p>The ReplyTonic Chrome Extension brings all 7 AI tools to any website. Rewrite, reply, check grammar, detect AI content — all inside Gmail, LinkedIn, Slack, WhatsApp Web, and anywhere you type.</p>
       <div id="extFormWrap">
-        <form class="email-form" id="extForm" onsubmit="submitExt(event)">
-          <input class="email-input" id="extEmail" type="email" placeholder="Enter your email to get notified" required>
-          <button class="email-btn" type="submit">Notify Me</button>
-        </form>
+        <a href="https://chrome.google.com/webstore" target="_blank" class="email-btn" style="display:inline-block;text-decoration:none;padding:13px 24px;font-size:15px;border-radius:12px">🧩 Add to Chrome — Free</a>
       </div>
       <div class="ext-features" style="margin-top:16px">
         <span class="ext-feat">✓ Gmail</span>
@@ -1389,6 +1512,7 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
         <span class="ext-feat">✓ LinkedIn</span>
         <span class="ext-feat">✓ Slack</span>
         <span class="ext-feat">✓ Any text field</span>
+        <span class="ext-feat">✓ 7 AI tools included</span>
       </div>
     </div>
     <div class="ext-right">
