@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReplyTonic</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="rt-popup">
+
+    <!-- Header -->
+    <div class="rt-header">
+      <div class="rt-logo">
+        <div class="rt-logo-icon">RT</div>
+        <div class="rt-logo-text">
+          <span class="rt-title">ReplyTonic</span>
+          <span class="rt-tagline">AI Writing Assistant</span>
+        </div>
+      </div>
+      <div class="rt-user-badge" id="user-badge" style="display:none">
+        <span class="rt-plan-pill" id="plan-pill">Free</span>
+      </div>
+    </div>
+
+    <!-- Auth: Login view -->
+    <div id="view-login" class="rt-view">
+      <div class="rt-auth-hero">
+        <div class="rt-hero-icon">✍️</div>
+        <h2>Write Better, Everywhere</h2>
+        <p>ReplyTonic rewrites your messages in Gmail, LinkedIn, Slack, Twitter, and Outlook — in one click.</p>
+      </div>
+      <div class="rt-auth-form">
+        <div class="rt-field-group">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email">
+        </div>
+        <div class="rt-field-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+        </div>
+        <div class="rt-error-msg" id="login-error" style="display:none"></div>
+        <button class="rt-btn rt-btn-primary" id="btn-login">Sign In</button>
+        <div class="rt-auth-links">
+          <a href="https://replytonic.com/#pricing" target="_blank">Create account</a>
+          <span>·</span>
+          <a href="https://replytonic.com" target="_blank">Learn more</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main view (logged in) -->
+    <div id="view-main" class="rt-view" style="display:none">
+
+      <!-- Usage bar -->
+      <div class="rt-usage-section" id="usage-section">
+        <div class="rt-usage-header">
+          <span class="rt-usage-label">Daily Usage</span>
+          <span class="rt-usage-count" id="usage-count">0 / 5</span>
+        </div>
+        <div class="rt-usage-bar">
+          <div class="rt-usage-fill" id="usage-fill" style="width:0%"></div>
+        </div>
+        <div class="rt-usage-hint" id="usage-hint"></div>
+      </div>
+
+      <!-- Quick actions -->
+      <div class="rt-section-label">QUICK ACTIONS</div>
+      <div class="rt-quick-grid">
+        <button class="rt-quick-btn" data-tab="rewrite">
+          <span class="rt-quick-icon">⚡</span>
+          <span>Rewrite</span>
+        </button>
+        <button class="rt-quick-btn" data-tab="reply">
+          <span class="rt-quick-icon">💬</span>
+          <span>Reply</span>
+        </button>
+        <button class="rt-quick-btn" data-tab="summarize">
+          <span class="rt-quick-icon">📋</span>
+          <span>Summarize</span>
+        </button>
+        <button class="rt-quick-btn" data-tab="grammar">
+          <span class="rt-quick-icon">✅</span>
+          <span>Grammar</span>
+        </button>
+        <button class="rt-quick-btn" data-tab="humanize">
+          <span class="rt-quick-icon">🧑</span>
+          <span>Humanize</span>
+        </button>
+        <button class="rt-quick-btn" data-tab="detect">
+          <span class="rt-quick-icon">🔍</span>
+          <span>AI Detect</span>
+        </button>
+      </div>
+
+      <!-- Works on -->
+      <div class="rt-section-label">WORKS ON</div>
+      <div class="rt-platforms">
+        <div class="rt-platform-chip">📧 Gmail</div>
+        <div class="rt-platform-chip">💼 LinkedIn</div>
+        <div class="rt-platform-chip">💬 Slack</div>
+        <div class="rt-platform-chip">🐦 Twitter/X</div>
+        <div class="rt-platform-chip">📨 Outlook</div>
+      </div>
+
+      <!-- Keyboard shortcut -->
+      <div class="rt-shortcut-hint">
+        Press <kbd>Alt+Shift+R</kbd> on any page to open the panel
+      </div>
+
+      <!-- Upgrade prompt (free users) -->
+      <div class="rt-upgrade-strip" id="upgrade-strip" style="display:none">
+        <span>🚀 Upgrade to Premium — Unlimited rewrites</span>
+        <a href="https://replytonic.com/#pricing" target="_blank" class="rt-upgrade-link">Upgrade →</a>
+      </div>
+
+      <!-- Footer -->
+      <div class="rt-footer">
+        <span class="rt-user-email" id="footer-email"></span>
+        <button class="rt-btn-link" id="btn-logout">Sign out</button>
+      </div>
+    </div>
+
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

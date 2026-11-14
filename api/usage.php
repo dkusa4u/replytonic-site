@@ -1,137 +1,89 @@
 <?php
-// api/usage.php — check and increment daily usage
+/**
+ * ReplyTonic — Usage Stats Endpoint
+ * Returns the user's daily usage count and limit.
+ * Used by the Chrome extension popup.
+ */
+
+// CORS
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Auth-Token');
-header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(200); exit; }
 
-require_once __DIR__ . '/db.php';
+header('Content-Type: application/json');
 
-$body   = json_decode(file_get_contents('php://input'), true) ?: [];
-$action = $body['action'] ?? ($_GET['action'] ?? 'check');
+require_once __DIR__ . '/config.php';
 
-switch ($action) {
-
-    // ── Check remaining uses ───────────────────────────────────────────────
-    case 'check': {
-        $claims = get_auth_user();
-        $today  = date('Y-m-d');
-        $db     = get_db();
-
-        if ($claims) {
-            // Logged-in user
-            $uid = $claims['sub'];
-
-            // Check real plan in DB (token may be stale)
-            $userSt = $db->prepare('SELECT plan, plan_expires_at FROM users WHERE id = ?');
-            $userSt->execute([$uid]);
-            $userRow = $userSt->fetch();
-            $plan = $userRow ? $userRow['plan'] : 'free';
-            if ($plan === 'premium' && $userRow['plan_expires_at'] && strtotime($userRow['plan_expires_at']) < time()) {
-                $plan = 'free';
-            }
-
-            if ($plan === 'premium') {
-                json_out(['success' => true, 'plan' => 'premium', 'used' => 0, 'limit' => -1, 'remaining' => -1]);
-            }
-
-            $st = $db->prepare('SELECT rewrites_today FROM usage_log WHERE user_id = ? AND log_date = ?');
-            $st->execute([$uid, $today]);
-            $row = $st->fetch();
-            $used = $row ? (int)$row['rewrites_today'] : 0;
-            $limit = FREE_DAILY_LIMIT;
-            json_out(['success' => true, 'plan' => 'free', 'used' => $used, 'limit' => $limit, 'remaining' => max(0, $limit - $used)]);
-
-        } else {
-            // Guest (by IP)
-            $ip = get_client_ip();
-            $st = $db->prepare('SELECT rewrites_today FROM usage_log WHERE guest_ip = ? AND log_date = ? AND user_id IS NULL');
-            $st->execute([$ip, $today]);
-            $row = $st->fetch();
-            $used = $row ? (int)$row['rewrites_today'] : 0;
-            $limit = FREE_DAILY_LIMIT;
-            json_out(['success' => true, 'plan' => 'guest', 'used' => $used, 'limit' => $limit, 'remaining' => max(0, $limit - $used)]);
-        }
-    }
-
-    // ── Increment usage (called after successful rewrite) ──────────────────
-    case 'increment': {
-        $claims = get_auth_user();
-        $today  = date('Y-m-d');
-        $db     = get_db();
-
-        if ($claims) {
-            $uid = $claims['sub'];
-            // Upsert
-            $db->prepare('
-                INSERT INTO usage_log (user_id, log_date, rewrites_today)
-                VALUES (?, ?, 1)
-                ON DUPLICATE KEY UPDATE rewrites_today = rewrites_today + 1
-            ')->execute([$uid, $today]);
-        } else {
-            $ip = get_client_ip();
-            $db->prepare('
-                INSERT INTO usage_log (guest_ip, log_date, rewrites_today)
-                VALUES (?, ?, 1)
-                ON DUPLICATE KEY UPDATE rewrites_today = rewrites_today + 1
-            ')->execute([$ip, $today]);
-        }
-        json_out(['success' => true]);
-    }
-
-    default:
-        json_out(['error' => 'Unknown action.'], 400);
+// ── Auth ───────────────────────────────────────────────────────────────────────
+function getBearerToken() {
+    $h = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+    if (preg_match('/Bearer\s+(.+)/i', $h, $m)) return trim($m[1]);
+    return null;
 }
 
-// Helper: check if current caller can proceed (called from rewrite.php)
-function check_usage_gate() {
-    $claims = get_auth_user();
-    $today  = date('Y-m-d');
-    $db     = get_db();
-
-    if ($claims) {
-        $uid = $claims['sub'];
-        $userSt = $db->prepare('SELECT plan, plan_expires_at FROM users WHERE id = ?');
-        $userSt->execute([$uid]);
-        $userRow = $userSt->fetch();
-        $plan = $userRow ? $userRow['plan'] : 'free';
-        if ($plan === 'premium' && $userRow['plan_expires_at'] && strtotime($userRow['plan_expires_at']) < time()) {
-            $plan = 'free';
-        }
-        if ($plan === 'premium') return ['allowed' => true, 'plan' => 'premium', 'uid' => $uid];
-
-        $st = $db->prepare('SELECT rewrites_today FROM usage_log WHERE user_id = ? AND log_date = ?');
-        $st->execute([$uid, $today]);
-        $row = $st->fetch();
-        $used = $row ? (int)$row['rewrites_today'] : 0;
-        if ($used >= FREE_DAILY_LIMIT) return ['allowed' => false, 'plan' => 'free', 'used' => $used];
-        return ['allowed' => true, 'plan' => 'free', 'uid' => $uid, 'used' => $used];
-
-    } else {
-        $ip = get_client_ip();
-        $st = $db->prepare('SELECT rewrites_today FROM usage_log WHERE guest_ip = ? AND log_date = ? AND user_id IS NULL');
-        $st->execute([$ip, $today]);
-        $row = $st->fetch();
-        $used = $row ? (int)$row['rewrites_today'] : 0;
-        if ($used >= FREE_DAILY_LIMIT) return ['allowed' => false, 'plan' => 'guest', 'used' => $used];
-        return ['allowed' => true, 'plan' => 'guest', 'ip' => $ip, 'used' => $used];
-    }
+function verifyJWT($token, $secret) {
+    $parts = explode('.', $token);
+    if (count($parts) !== 3) return false;
+    $sig   = base64_decode(strtr($parts[2], '-_', '+/'));
+    $valid = hash_hmac('sha256', $parts[0] . '.' . $parts[1], $secret, true);
+    if (!hash_equals($valid, $sig)) return false;
+    $payload = json_decode(base64_decode(strtr($parts[1], '-_', '+/')), true);
+    if (!$payload || (isset($payload['exp']) && $payload['exp'] < time())) return false;
+    return $payload;
 }
 
-function increment_usage($uid = null, $ip = null) {
-    $today = date('Y-m-d');
-    $db    = get_db();
-    if ($uid) {
-        $db->prepare('
-            INSERT INTO usage_log (user_id, log_date, rewrites_today)
-            VALUES (?, ?, 1)
-            ON DUPLICATE KEY UPDATE rewrites_today = rewrites_today + 1
-        ')->execute([$uid, $today]);
-    } elseif ($ip) {
-        $db->prepare('
-            INSERT INTO usage_log (guest_ip, log_date, rewrites_today)
-            VALUES (?, ?, 1)
-            ON DUPLICATE KEY UPDATE rewrites_today = rewrites_today + 1
-        ')->execute([$ip, $today]);
-    }
+$token   = getBearerToken();
+$payload = $token ? verifyJWT($token, JWT_SECRET) : null;
+
+if (!$payload) {
+    http_response_code(401);
+    echo json_encode(['error' => 'unauthorized']);
+    exit;
 }
+
+$userId = (int)($payload['sub'] ?? 0);
+if (!$userId) {
+    http_response_code(401);
+    echo json_encode(['error' => 'invalid_token']);
+    exit;
+}
+
+// ── DB ─────────────────────────────────────────────────────────────────────────
+$pdo = new PDO(
+    'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4',
+    DB_USER, DB_PASS,
+    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+);
+
+// Get user plan
+$stmt = $pdo->prepare('SELECT plan FROM users WHERE id = ? LIMIT 1');
+$stmt->execute([$userId]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+if (!$user) {
+    http_response_code(401);
+    echo json_encode(['error' => 'user_not_found']);
+    exit;
+}
+
+$isPremium = ($user['plan'] ?? 'free') !== 'free';
+
+// Daily usage count
+$today = date('Y-m-d');
+$stmt  = $pdo->prepare(
+    "SELECT COUNT(*) FROM usage_log
+     WHERE user_id = ? AND DATE(created_at) = ?"
+);
+$stmt->execute([$userId, $today]);
+$used  = (int)$stmt->fetchColumn();
+
+$limit = $isPremium ? 999 : FREE_DAILY_LIMIT;
+
+echo json_encode([
+    'used'      => $used,
+    'limit'     => $limit,
+    'remaining' => max(0, $limit - $used),
+    'plan'      => $user['plan'] ?? 'free',
+    'is_premium'=> $isPremium,
+    'resets_at' => date('Y-m-d', strtotime('+1 day')) . ' 00:00:00',
+]);

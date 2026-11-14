@@ -4,3 +4,9 @@ api/config.php
 # OS files
 .DS_Store
 Thumbs.db
+
+# Node (icon generator — not needed in repo)
+node_modules/
+package-lock.json
+package.json
+make-icons.js
