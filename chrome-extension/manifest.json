@@ -62,6 +62,7 @@
       "description": "Open ReplyTonic panel"
     }
   },
+  "homepage_url": "https://replytonic.com",
   "web_accessible_resources": [
     {
       "resources": ["icons/*"],

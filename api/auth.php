@@ -7,6 +7,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }
 
 require_once __DIR__ . '/db.php';
 
+// ── MailerLite helper ─────────────────────────────────────────────────────────
+function mailerlite_add_subscriber(string $email): void {
+    if (!defined('MAILERLITE_API_KEY') || !MAILERLITE_API_KEY || !defined('MAILERLITE_GROUP_ID') || !MAILERLITE_GROUP_ID) return;
+    $payload = json_encode(['email' => $email, 'groups' => [MAILERLITE_GROUP_ID]]);
+    $ch = curl_init('https://connect.mailerlite.com/api/subscribers');
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST           => true,
+        CURLOPT_POSTFIELDS     => $payload,
+        CURLOPT_HTTPHEADER     => [
+            'Content-Type: application/json',
+            'Accept: application/json',
+            'Authorization: Bearer ' . MAILERLITE_API_KEY,
+        ],
+        CURLOPT_TIMEOUT        => 5,
+    ]);
+    curl_exec($ch);  // fire-and-forget; don't block registration on failure
+    curl_close($ch);
+}
+
 $body   = json_decode(file_get_contents('php://input'), true) ?: [];
 $action = $body['action'] ?? '';
 
@@ -36,6 +56,9 @@ switch ($action) {
             'iat'   => time(),
             'exp'   => time() + 60 * 60 * 24 * 90, // 90 days
         ], JWT_SECRET);
+
+        // Add new user to MailerLite onboarding sequence (fire-and-forget)
+        mailerlite_add_subscriber($email);
 
         json_out(['success' => true, 'token' => $token, 'user' => [
             'id' => $uid, 'email' => $email, 'plan' => 'free'
