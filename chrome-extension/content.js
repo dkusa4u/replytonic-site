@@ -226,6 +226,33 @@
   .rt-tone-mini{display:flex;gap:6px;align-items:center;flex:1}
   .rt-tone-pill{background:rgba(99,102,241,.18);color:#a5b4fc;padding:2px 7px;border-radius:100px;font-size:10px;font-weight:700}
 
+  /* Plagiarism checker */
+  .rt-plag-meter{margin-bottom:16px}
+  .rt-plag-ring{display:flex;align-items:center;justify-content:center;gap:16px;padding:16px;background:#1a1a24;border-radius:12px;margin-bottom:12px}
+  .rt-plag-circle{position:relative;width:80px;height:80px;flex-shrink:0}
+  .rt-plag-circle svg{transform:rotate(-90deg)}
+  .rt-plag-circle-num{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+  .rt-plag-circle-num .big{font-size:22px;font-weight:800;line-height:1}
+  .rt-plag-circle-num .lbl{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:.4px}
+  .rt-plag-info{flex:1}
+  .rt-plag-verdict{font-size:13px;font-weight:700;padding:8px 12px;border-radius:8px;margin-bottom:8px;text-align:center}
+  .rt-plag-verdict-clean{color:#22c55e;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25)}
+  .rt-plag-verdict-low{color:#86efac;background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.18)}
+  .rt-plag-verdict-moderate{color:#eab308;background:rgba(234,179,8,.1);border:1px solid rgba(234,179,8,.25)}
+  .rt-plag-verdict-high{color:#f97316;background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.25)}
+  .rt-plag-verdict-critical{color:#ef4444;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25)}
+  .rt-plag-phrase{padding:8px 10px;background:#1a1a24;border-radius:8px;margin-bottom:5px;font-size:11px}
+  .rt-plag-phrase-text{color:#fca5a5;font-style:italic;margin-bottom:3px}
+  .rt-plag-phrase-meta{color:#64748b;font-size:10px;display:flex;gap:6px;flex-wrap:wrap}
+  .rt-plag-phrase-source{color:#94a3b8}
+  .rt-plag-phrase-sev{padding:1px 6px;border-radius:100px;font-size:9px;font-weight:700}
+  .sev-low{background:rgba(234,179,8,.15);color:#fde047}
+  .sev-medium{background:rgba(249,115,22,.15);color:#fb923c}
+  .sev-high{background:rgba(239,68,68,.15);color:#fca5a5}
+  .rt-plag-orig{color:#86efac;font-size:11px;padding:6px 10px;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.15);border-radius:7px;margin-bottom:4px}
+  .rt-plag-suggestion{padding:8px 10px;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.18);border-radius:8px;margin-bottom:5px;font-size:11px;color:#a5b4fc}
+  .rt-plag-suggestion::before{content:'💡 ';}
+
   /* Upgrade nag */
   .rt-upgrade{background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.25);border-radius:10px;padding:12px;text-align:center;margin-bottom:10px}
   .rt-upgrade p{font-size:12px;color:#94a3b8;margin-bottom:8px}
@@ -272,6 +299,7 @@
       <button class="rt-tab" data-tab="grammar">✅ Grammar</button>
       <button class="rt-tab" data-tab="humanize">🧑 Humanize</button>
       <button class="rt-tab" data-tab="detect">🔍 AI Detect</button>
+      <button class="rt-tab" data-tab="plagiarism">📄 Plagiarism</button>
     </div>
 
     <div class="rt-settings" id="rt-settings">
@@ -349,6 +377,14 @@
         <div id="result-detect"></div>
       </div>
 
+      <!-- PLAGIARISM PANE -->
+      <div class="rt-pane" id="pane-plagiarism">
+        <div class="rt-run-row">
+          <button class="rt-btn rt-btn-primary" id="btn-plagiarism">📄 Check Plagiarism</button>
+        </div>
+        <div id="result-plagiarism"></div>
+      </div>
+
     </div><!-- /rt-content -->
 
     <div class="rt-footer">
@@ -392,6 +428,7 @@
     $('btn-grammar-check').addEventListener('click', () => runGrammar('check'));
     $('btn-humanize')     .addEventListener('click', () => runHumanize());
     $('btn-detect')       .addEventListener('click', () => runDetectAI());
+    $('btn-plagiarism')   .addEventListener('click', () => runPlagiarism());
 
     // Apply button
     $('btn-apply').addEventListener('click', () => applyToField());
@@ -449,8 +486,8 @@
   }
 
   function toggleSettings() {
-    // Hide settings for detect/grammar panes (no platform/tone needed)
-    const noSettings = ['detect'];
+    // Hide settings for detect/plagiarism panes (no platform/tone needed)
+    const noSettings = ['detect', 'plagiarism'];
     shadow.getElementById('rt-settings').style.display = noSettings.includes(activeTab) ? 'none' : '';
   }
 
@@ -896,6 +933,113 @@
       showError('result-detect', err.message);
     } finally {
       setRunning('btn-detect', false);
+    }
+  }
+
+  // ── PLAGIARISM ────────────────────────────────────────────────────────────────
+  async function runPlagiarism() {
+    if (!capturedText.trim()) { showError('result-plagiarism', 'No text captured. Focus on a text field first.'); return; }
+    if (capturedText.length < 30) { showError('result-plagiarism', 'Text too short for plagiarism analysis (need 30+ characters).'); return; }
+    setRunning('btn-plagiarism', true);
+    showLoading('result-plagiarism');
+    try {
+      const data = await callAPI('plagiarism.php', { text: capturedText });
+
+      const origScore = data.originality_score || 0;
+      const plagScore = data.plagiarism_score  || 0;
+
+      // Verdict CSS class
+      const risk = (data.risk_level || 'None').toLowerCase();
+      const verdictClass =
+        risk === 'critical' ? 'rt-plag-verdict-critical' :
+        risk === 'high'     ? 'rt-plag-verdict-high'     :
+        risk === 'moderate' ? 'rt-plag-verdict-moderate' :
+        risk === 'low'      ? 'rt-plag-verdict-low'      : 'rt-plag-verdict-clean';
+
+      // SVG circle for originality
+      const radius = 32, circ = 2 * Math.PI * radius;
+      const filled = circ * (origScore / 100);
+      const circleColor =
+        origScore >= 80 ? '#22c55e' :
+        origScore >= 60 ? '#eab308' :
+        origScore >= 40 ? '#f97316' : '#ef4444';
+
+      let html = `
+        <div class="rt-plag-ring">
+          <div class="rt-plag-circle">
+            <svg width="80" height="80" viewBox="0 0 80 80">
+              <circle cx="40" cy="40" r="${radius}" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="8"/>
+              <circle cx="40" cy="40" r="${radius}" fill="none" stroke="${circleColor}" stroke-width="8"
+                stroke-dasharray="${filled} ${circ}" stroke-linecap="round"/>
+            </svg>
+            <div class="rt-plag-circle-num">
+              <div class="big" style="color:${circleColor}">${origScore}%</div>
+              <div class="lbl">Original</div>
+            </div>
+          </div>
+          <div class="rt-plag-info">
+            <div style="font-size:12px;color:#94a3b8;margin-bottom:4px">Plagiarism Risk: <strong style="color:${circleColor}">${escHtml(data.risk_level || 'None')}</strong></div>
+            <div style="font-size:11px;color:#64748b">Confidence: ${escHtml(data.confidence || '')}</div>
+            <div style="font-size:11px;color:#64748b;margin-top:4px">${data.word_count || 0} words analyzed</div>
+          </div>
+        </div>
+        <div class="rt-plag-verdict ${verdictClass}">${escHtml(data.verdict || '')}</div>`;
+
+      if (data.explanation) {
+        html += `<div style="font-size:12px;color:#94a3b8;margin-bottom:12px;padding:10px;background:#1a1a24;border-radius:8px;line-height:1.5">${escHtml(data.explanation)}</div>`;
+      }
+
+      // Flagged phrases
+      if (data.flagged_phrases && data.flagged_phrases.length) {
+        html += `<div style="font-size:10px;color:#ef4444;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">⚠️ Flagged Phrases (${data.flagged_phrases.length})</div>`;
+        data.flagged_phrases.forEach(fp => {
+          const sevClass = fp.severity === 'High' ? 'sev-high' : fp.severity === 'Medium' ? 'sev-medium' : 'sev-low';
+          html += `<div class="rt-plag-phrase">
+            <div class="rt-plag-phrase-text">"${escHtml(fp.phrase || '')}"</div>
+            <div class="rt-plag-phrase-meta">
+              <span class="rt-plag-phrase-source">${escHtml(fp.reason || '')}</span>
+              <span class="rt-plag-phrase-sev ${sevClass}">${escHtml(fp.severity || '')}</span>
+              ${fp.likely_source ? `<span style="color:#475569">— ${escHtml(fp.likely_source)}</span>` : ''}
+            </div>
+          </div>`;
+        });
+      }
+
+      // Original phrases
+      if (data.original_phrases && data.original_phrases.length) {
+        html += `<div style="font-size:10px;color:#22c55e;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:10px 0 6px">✅ Original Phrases</div>`;
+        data.original_phrases.forEach(op => {
+          html += `<div class="rt-plag-orig">"${escHtml(op)}"</div>`;
+        });
+      }
+
+      // Source categories
+      if (data.source_categories && data.source_categories.length) {
+        html += `<div style="font-size:10px;color:#64748b;margin:10px 0 4px">Likely sources: ${data.source_categories.map(s => `<span style="color:#94a3b8">${escHtml(s)}</span>`).join(' · ')}</div>`;
+      }
+
+      // Suggestions
+      if (data.suggestions && data.suggestions.length) {
+        html += `<div style="font-size:10px;color:#6366f1;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:10px 0 6px">💡 Suggestions to Improve Originality</div>`;
+        data.suggestions.forEach(s => {
+          html += `<div class="rt-plag-suggestion">${escHtml(s)}</div>`;
+        });
+      }
+
+      // Cross-action: humanize if high plagiarism
+      if (plagScore >= 40) {
+        html += `<button class="rt-btn rt-btn-primary" id="btn-humanize-from-plag" style="width:100%;margin-top:12px">🧑 Humanize to Improve Originality</button>`;
+      }
+
+      shadow.getElementById('result-plagiarism').innerHTML = html;
+
+      if (plagScore >= 40) {
+        shadow.getElementById('btn-humanize-from-plag').onclick = () => { switchTab('humanize'); runHumanize(); };
+      }
+    } catch (err) {
+      showError('result-plagiarism', err.message);
+    } finally {
+      setRunning('btn-plagiarism', false);
     }
   }
 
