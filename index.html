@@ -425,6 +425,96 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
   .email-form{flex-direction:column}
   .ext-card{padding:28px 20px}
 }
+/* ===== AUTH / PREMIUM CSS ===== */
+.nav-auth{display:flex;align-items:center;gap:8px;margin-left:12px}
+.nav-auth-btn{padding:7px 16px;border-radius:var(--r8);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+.nav-login-btn{background:transparent;border:1px solid var(--border);color:var(--t2)}
+.nav-login-btn:hover{border-color:var(--i4);color:var(--i4)}
+.nav-upgrade-btn{background:var(--o5);border:none;color:#fff;box-shadow:0 2px 12px rgba(249,115,22,.35)}
+.nav-upgrade-btn:hover{background:var(--o4);transform:translateY(-1px)}
+.nav-user-wrap{position:relative;display:flex;align-items:center;gap:8px;margin-left:12px}
+.nav-user-btn{display:flex;align-items:center;gap:7px;padding:6px 12px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:100px;font-size:12px;font-weight:600;color:var(--t2);cursor:pointer;transition:all .2s}
+.nav-user-btn:hover{border-color:var(--i4);color:var(--i4)}
+.plan-badge{padding:2px 8px;border-radius:100px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.plan-badge.free{background:rgba(129,140,248,.12);color:var(--i4)}
+.plan-badge.premium{background:rgba(74,222,128,.15);color:#4ade80;box-shadow:0 0 8px rgba(74,222,128,.2)}
+.nav-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--card);border:1px solid var(--border);border-radius:var(--r12);padding:8px;min-width:200px;z-index:1000;display:none;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.nav-dropdown.open{display:block}
+.nav-dd-email{font-size:11px;color:var(--t3);padding:6px 10px 10px;border-bottom:1px solid var(--border);margin-bottom:6px;word-break:break-all}
+.nav-dd-item{display:block;width:100%;text-align:left;padding:8px 10px;border:none;background:none;border-radius:var(--r8);font-size:13px;font-weight:500;color:var(--t2);cursor:pointer;transition:background .15s}
+.nav-dd-item:hover{background:rgba(255,255,255,.06)}
+.nav-dd-item.danger{color:rgba(252,165,165,.85)}
+.nav-dd-item.danger:hover{background:rgba(239,68,68,.08)}
+/* Usage bar */
+.usage-bar-wrap{background:rgba(99,102,241,.07);border:1px solid rgba(99,102,241,.18);border-radius:var(--r8);padding:8px 12px;margin-bottom:12px;display:none}
+.usage-bar-wrap.show{display:block}
+.usage-bar-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.usage-bar-label{font-size:11px;font-weight:600;color:var(--t3)}
+.usage-bar-count{font-size:11px;font-weight:700;color:var(--i4)}
+.usage-bar-track{height:4px;background:rgba(255,255,255,.08);border-radius:100px;overflow:hidden}
+.usage-bar-fill{height:100%;border-radius:100px;background:var(--i5);transition:width .4s ease}
+.usage-bar-fill.warning{background:var(--o5)}
+/* Human Touch & My Voice toggles */
+.ht-wrap{display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none}
+.ht-label{font-size:12px;font-weight:600;color:var(--t3);white-space:nowrap;transition:color .2s}
+.ht-wrap.active .ht-label{color:#4ade80}
+.ht-wrap .toggle-sw{pointer-events:none}
+.premium-lock{font-size:9px;padding:2px 6px;background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.2);border-radius:100px;color:#4ade80;vertical-align:middle;margin-left:3px;white-space:nowrap}
+.mv-btn{padding:6px 13px;background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.22);border-radius:var(--r8);font-size:12px;font-weight:600;color:var(--i4);cursor:pointer;transition:all .2s;white-space:nowrap}
+.mv-btn:hover,.mv-btn.active{background:rgba(99,102,241,.22);border-color:rgba(99,102,241,.45)}
+/* Voice panel */
+.voice-panel{margin-top:12px;background:rgba(99,102,241,.05);border:1px solid rgba(99,102,241,.18);border-radius:var(--r12);padding:14px;display:none}
+.voice-panel.show{display:block}
+.voice-panel-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.voice-panel-title{font-size:13px;font-weight:700;color:var(--t1)}
+.voice-panel-actions{display:flex;gap:7px}
+.vp-btn{padding:5px 11px;border-radius:var(--r8);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;border:1px solid transparent}
+.vp-train-btn{background:rgba(99,102,241,.14);border-color:rgba(99,102,241,.25);color:var(--i4)}
+.vp-train-btn:hover{background:rgba(99,102,241,.25)}
+.vp-del-btn{background:rgba(239,68,68,.07);border-color:rgba(239,68,68,.15);color:rgba(252,165,165,.85)}
+.vp-del-btn:hover{background:rgba(239,68,68,.15)}
+.voice-summary{font-size:12px;color:var(--t2);line-height:1.65;white-space:pre-line}
+.voice-empty{font-size:12px;color:var(--t3);text-align:center;padding:14px 0}
+.voice-textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--r8);padding:9px 12px;color:var(--t1);font-size:12px;font-family:inherit;box-sizing:border-box;min-height:90px;resize:vertical;margin-top:8px}
+.voice-textarea:focus{outline:none;border-color:rgba(99,102,241,.45)}
+.voice-textarea::placeholder{color:var(--t3)}
+/* Auth modal */
+.rt-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);z-index:10000;display:flex;align-items:center;justify-content:center;padding:16px}
+.rt-modal-bg.hidden{display:none}
+.rt-modal{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;width:100%;max-width:400px;position:relative;animation:fadeInUp .2s ease}
+.rt-modal-close{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--t3);font-size:22px;cursor:pointer;line-height:1;padding:2px 6px;border-radius:6px;transition:color .15s}
+.rt-modal-close:hover{color:var(--t1)}
+.rt-modal-title{font-size:20px;font-weight:800;color:var(--t1);margin-bottom:4px}
+.rt-modal-sub{font-size:13px;color:var(--t3);margin-bottom:18px}
+.rt-tabs{display:flex;margin-bottom:18px;border:1px solid var(--border);border-radius:var(--r8);overflow:hidden;padding:3px;gap:3px}
+.rt-tab{flex:1;padding:8px;text-align:center;font-size:13px;font-weight:600;color:var(--t3);cursor:pointer;transition:all .2s;background:none;border:none;border-radius:6px}
+.rt-tab.active{background:rgba(99,102,241,.2);color:var(--i4)}
+.rt-field{margin-bottom:14px}
+.rt-field label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);margin-bottom:5px}
+.rt-field input{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:var(--r8);padding:10px 12px;color:var(--t1);font-size:14px;box-sizing:border-box;transition:border-color .2s}
+.rt-field input:focus{outline:none;border-color:rgba(99,102,241,.55)}
+.rt-field input::placeholder{color:var(--t3)}
+.rt-submit-btn{width:100%;padding:13px;background:var(--i5);border:none;border-radius:var(--r12);font-size:15px;font-weight:700;color:#fff;cursor:pointer;transition:all .2s;margin-top:4px;letter-spacing:.2px}
+.rt-submit-btn:hover{background:var(--i4);transform:translateY(-1px)}
+.rt-submit-btn:disabled{opacity:.6;pointer-events:none}
+.rt-msg{margin-top:11px;font-size:13px;text-align:center;min-height:18px}
+.rt-msg.error{color:rgba(252,165,165,.9)}
+.rt-msg.success{color:#4ade80}
+/* Upgrade modal */
+.upgrade-modal-inner{max-width:440px}
+.upgrade-features{list-style:none;padding:0;margin:12px 0 18px}
+.upgrade-features li{padding:7px 0;font-size:13px;color:var(--t2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px}
+.upgrade-features li:last-child{border:none}
+.upgrade-features li::before{content:'✓';color:#4ade80;font-weight:700;font-size:14px;flex-shrink:0}
+.upgrade-price-row{display:flex;gap:10px;margin-bottom:16px}
+.upgrade-plan-card{flex:1;padding:12px;border:2px solid var(--border);border-radius:var(--r12);cursor:pointer;text-align:center;transition:all .2s}
+.upgrade-plan-card:hover,.upgrade-plan-card.selected{border-color:var(--i5);background:rgba(99,102,241,.08)}
+.upgrade-plan-card .price-big{font-size:22px;font-weight:800;color:var(--t1)}
+.upgrade-plan-card .price-period{font-size:11px;color:var(--t3);margin-top:2px}
+.upgrade-plan-card .price-save{font-size:10px;font-weight:700;color:#4ade80;margin-top:3px}
+.upgrade-cta{width:100%;padding:14px;background:linear-gradient(135deg,var(--i5),var(--o5));border:none;border-radius:var(--r12);font-size:15px;font-weight:700;color:#fff;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(99,102,241,.35);letter-spacing:.2px}
+.upgrade-cta:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(99,102,241,.45)}
+.upgrade-cta:disabled{opacity:.6;pointer-events:none;transform:none}
 </style>
 </head>
 <body>
@@ -451,6 +541,24 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
     <li><a href="#pricing">Pricing</a></li>
     <li><a href="#tool" class="nav-cta">Try It Free</a></li>
   </ul>
+  <!-- Auth state: guest -->
+  <div class="nav-auth" id="navGuest">
+    <button class="nav-auth-btn nav-login-btn" onclick="openAuthModal('login')">Log In</button>
+    <button class="nav-auth-btn nav-upgrade-btn" onclick="openAuthModal('register')">Sign Up Free</button>
+  </div>
+  <!-- Auth state: logged in -->
+  <div class="nav-user-wrap" id="navUser" style="display:none">
+    <span class="plan-badge free" id="navPlanBadge">Free</span>
+    <button class="nav-user-btn" onclick="toggleNavDropdown()" id="navUserBtn">
+      <span id="navEmail" style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span> ▾
+    </button>
+    <div class="nav-dropdown" id="navDropdown">
+      <div class="nav-dd-email" id="navDdEmail"></div>
+      <button class="nav-dd-item" onclick="openManageSubscription()" id="navManageBtn" style="display:none">⚙️ Manage Subscription</button>
+      <button class="nav-dd-item" onclick="openUpgradeModal('nav')" id="navUpgradeBtn">⚡ Upgrade to Premium</button>
+      <button class="nav-dd-item danger" onclick="doLogout()">↩ Log Out</button>
+    </div>
+  </div>
   <div class="hamburger" onclick="toggleNav()"><span></span><span></span><span></span></div>
 </nav>
 <div class="mob-menu" id="mobMenu">
@@ -649,6 +757,15 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
         </div>
       </div>
 
+      <!-- USAGE BAR (free users) -->
+      <div class="usage-bar-wrap" id="usageBarWrap">
+        <div class="usage-bar-top">
+          <span class="usage-bar-label">✨ Daily Rewrites</span>
+          <span class="usage-bar-count" id="usageBarCount">0 / 15</span>
+        </div>
+        <div class="usage-bar-track"><div class="usage-bar-fill" id="usageBarFill" style="width:0%"></div></div>
+      </div>
+
       <!-- LENGTH + EMOJI -->
       <div class="extras-row">
         <div class="len-group">
@@ -663,6 +780,14 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
         </div>
         <button class="sesq-btn" id="sesqBtn" onclick="toggleSesq(this)" title="Transform simple words into elaborate, sophisticated vocabulary">🎓 Sesquipedalianism</button>
         <button style="padding:6px 13px;background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.22);border-radius:var(--r8);font-size:12px;font-weight:600;color:var(--i4);cursor:pointer;margin-left:auto" onclick="openTmpl()">📌 My Templates</button>
+        <!-- Human Touch -->
+        <div class="ht-wrap" id="htWrap" onclick="toggleHumanTouch()" title="Makes output bypass AI detectors — Premium">
+          <div class="toggle-sw" id="htToggle"></div>
+          <span class="ht-label">🛡️ Human Touch</span>
+          <span class="premium-lock" id="htLock">PRO</span>
+        </div>
+        <!-- My Voice -->
+        <button class="mv-btn" id="myVoiceBtn" onclick="toggleVoicePanel()" title="Apply your personal writing style — Premium">🎤 My Voice <span class="premium-lock" id="mvLock">PRO</span></button>
       </div>
 
       <!-- SUBJECT LINE (Email only) -->
@@ -675,6 +800,27 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
       <div class="custom-instr-wrap">
         <div class="custom-instr-label">🤖 Custom AI Instructions <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:10px;color:var(--t3)">(optional)</span></div>
         <input type="text" id="customInstr" class="custom-instr-inp" placeholder='e.g. "keep under 50 words", "mention the Friday deadline", "sound more confident"'>
+      </div>
+
+      <!-- MY VOICE PANEL -->
+      <div class="voice-panel" id="voicePanel">
+        <div class="voice-panel-hdr">
+          <span class="voice-panel-title">🎤 My Voice — Personal Style</span>
+          <div class="voice-panel-actions">
+            <button class="vp-btn vp-train-btn" onclick="openVoiceTrain()">✏️ Train / Update</button>
+            <button class="vp-btn vp-del-btn" id="vpDelBtn" onclick="deleteVoice()" style="display:none">🗑 Delete</button>
+          </div>
+        </div>
+        <div id="vpBody"><p class="voice-empty">No voice trained yet. Click "Train / Update" to teach ReplyTonic how you write.</p></div>
+        <div id="vpTrainArea" style="display:none">
+          <div class="rt-field-label" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);margin-bottom:4px">Paste 2–5 samples of YOUR writing:</div>
+          <textarea class="voice-textarea" id="vpSamples" placeholder="Paste examples of messages, emails, or posts you've written — the AI will learn your style from them."></textarea>
+          <div style="display:flex;gap:8px;margin-top:9px">
+            <button class="vp-btn vp-train-btn" onclick="submitVoiceTrain()" id="vpSubmitBtn">🧠 Train My Voice</button>
+            <button class="vp-btn" style="border:1px solid var(--border);color:var(--t3)" onclick="closeVoiceTrain()">Cancel</button>
+          </div>
+          <div class="rt-msg" id="vpMsg"></div>
+        </div>
       </div>
 
       <button class="go-btn" id="goBtn" onclick="rewrite()">
@@ -1560,15 +1706,26 @@ function getBlendedNote(t1,t2){
 // ===== MAIN REWRITE =====
 // ===== API HELPER =====
 function callAPI(payload, onSuccess, onError){
-  fetch('/api/rewrite.php',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify(payload)
+  var hdrs={'Content-Type':'application/json'};
+  var tok=localStorage.getItem('rt_token');
+  if(tok) hdrs['Authorization']='Bearer '+tok;
+  fetch('/api/rewrite.php',{method:'POST',headers:hdrs,body:JSON.stringify(payload)})
+  .then(function(r){
+    return r.json().then(function(d){return{status:r.status,data:d};});
   })
-  .then(function(r){return r.json();})
-  .then(function(d){
-    if(d.error) onError(d.error);
-    else onSuccess(d);
+  .then(function(res){
+    var d=res.data;
+    if(res.status===429 && d.error==='daily_limit'){
+      // Show upgrade modal instead of alert
+      openUpgradeModal('limit');
+      onError(null); // suppress generic alert
+    } else if(d.error){
+      onError(d.error);
+    } else {
+      // Update usage bar if counts returned
+      if(typeof d.used==='number') updateUsageBar(d.used, d.limit||15);
+      onSuccess(d);
+    }
   })
   .catch(function(){onError('Network error — please try again.');});
 }
@@ -1621,7 +1778,7 @@ function rewrite(){
     function(err){
       btn.classList.remove('busy');
       txt.textContent='✨ Rewrite My Message';
-      alert('⚠️ ' + err);
+      if(err) alert('⚠️ ' + err);
     }
   );
 }
@@ -2093,7 +2250,428 @@ function speakText(btn,text,langVal){
   utt.onerror=function(){btn.textContent='🔊 Listen';btn.classList.remove('speaking');};
   window.speechSynthesis.speak(utt);
 }
+
+// ===================================================================
+// ===== AUTH & PREMIUM SYSTEM =======================================
+// ===================================================================
+
+var RT = {
+  token: localStorage.getItem('rt_token') || null,
+  user: JSON.parse(localStorage.getItem('rt_user') || 'null'),
+  humanTouchOn: false,
+  voiceOn: false,
+  selectedPlan: 'monthly'
+};
+
+// ── Auth helpers ────────────────────────────────────────────────────
+function rtPost(url, payload, cb){
+  var hdrs={'Content-Type':'application/json'};
+  if(RT.token) hdrs['Authorization']='Bearer '+RT.token;
+  fetch(url,{method:'POST',headers:hdrs,body:JSON.stringify(payload)})
+  .then(function(r){return r.json();})
+  .then(cb)
+  .catch(function(e){cb({error:'Network error — '+e.message});});
+}
+
+function rtGet(url, cb){
+  var hdrs={'Content-Type':'application/json'};
+  if(RT.token) hdrs['Authorization']='Bearer '+RT.token;
+  fetch(url,{method:'GET',headers:hdrs})
+  .then(function(r){return r.json();})
+  .then(cb)
+  .catch(function(e){cb({error:'Network error'});});
+}
+
+// ── Init on page load ───────────────────────────────────────────────
+function initAuth(){
+  if(RT.token && RT.user){
+    renderNavLoggedIn(RT.user);
+    if(RT.user.plan==='free') loadUsageCount();
+  } else {
+    renderNavGuest();
+  }
+  // Always hide PRO locks for premium users
+  updatePremiumUI();
+}
+
+function renderNavLoggedIn(user){
+  document.getElementById('navGuest').style.display='none';
+  document.getElementById('navUser').style.display='flex';
+  var emailEl=document.getElementById('navEmail');
+  var ddEmail=document.getElementById('navDdEmail');
+  var shortEmail=(user.email||'').split('@')[0];
+  emailEl.textContent=shortEmail;
+  ddEmail.textContent=user.email;
+  var badge=document.getElementById('navPlanBadge');
+  badge.textContent=user.plan==='premium'?'Premium':'Free';
+  badge.className='plan-badge '+(user.plan==='premium'?'premium':'free');
+  document.getElementById('navManageBtn').style.display=user.plan==='premium'?'block':'none';
+  document.getElementById('navUpgradeBtn').style.display=user.plan==='premium'?'none':'block';
+}
+
+function renderNavGuest(){
+  document.getElementById('navGuest').style.display='flex';
+  document.getElementById('navUser').style.display='none';
+}
+
+function updatePremiumUI(){
+  var isPremium = RT.user && RT.user.plan==='premium';
+  // Show/hide PRO locks
+  var htLock=document.getElementById('htLock');
+  var mvLock=document.getElementById('mvLock');
+  if(htLock) htLock.style.display=isPremium?'none':'inline';
+  if(mvLock) mvLock.style.display=isPremium?'none':'inline';
+  // Usage bar: show for free users only
+  var usageWrap=document.getElementById('usageBarWrap');
+  if(usageWrap){
+    if(RT.user && !isPremium) usageWrap.classList.add('show');
+    else usageWrap.classList.remove('show');
+  }
+}
+
+// ── Usage bar ───────────────────────────────────────────────────────
+function loadUsageCount(){
+  rtGet('/api/usage.php?action=check', function(d){
+    if(!d.error && typeof d.used==='number') updateUsageBar(d.used, d.limit||15);
+  });
+}
+
+function updateUsageBar(used, limit){
+  var wrap=document.getElementById('usageBarWrap');
+  var fill=document.getElementById('usageBarFill');
+  var count=document.getElementById('usageBarCount');
+  if(!wrap||!fill||!count) return;
+  if(!RT.user || (RT.user && RT.user.plan==='premium')) return; // hide for premium
+  wrap.classList.add('show');
+  var pct=Math.min(100, Math.round((used/limit)*100));
+  fill.style.width=pct+'%';
+  fill.className='usage-bar-fill'+(pct>=80?' warning':'');
+  count.textContent=used+' / '+limit;
+}
+
+// ── Nav dropdown ────────────────────────────────────────────────────
+function toggleNavDropdown(){
+  document.getElementById('navDropdown').classList.toggle('open');
+}
+
+document.addEventListener('click',function(e){
+  var wrap=document.getElementById('navUser');
+  if(wrap && !wrap.contains(e.target)) document.getElementById('navDropdown').classList.remove('open');
+});
+
+// ── Auth modal ──────────────────────────────────────────────────────
+var _authMode='login';
+
+function openAuthModal(mode){
+  _authMode=mode||'login';
+  document.getElementById('authModal').classList.remove('hidden');
+  switchAuthTab(_authMode);
+  document.getElementById('authMsg').textContent='';
+  setTimeout(function(){document.getElementById('authEmail').focus();},100);
+}
+
+function closeAuthModal(){
+  document.getElementById('authModal').classList.add('hidden');
+}
+
+function authModalBgClick(e){
+  if(e.target.id==='authModal') closeAuthModal();
+}
+
+function switchAuthTab(tab){
+  _authMode=tab;
+  document.getElementById('tabLogin').className='rt-tab'+(tab==='login'?' active':'');
+  document.getElementById('tabRegister').className='rt-tab'+(tab==='register'?' active':'');
+  document.getElementById('authSubmitBtn').textContent=tab==='login'?'Log In':'Create Account';
+  document.getElementById('authMsg').textContent='';
+}
+
+function doAuth(){
+  var email=document.getElementById('authEmail').value.trim();
+  var pass=document.getElementById('authPass').value;
+  var btn=document.getElementById('authSubmitBtn');
+  var msg=document.getElementById('authMsg');
+  if(!email||!pass){msg.className='rt-msg error';msg.textContent='Please fill in all fields.';return;}
+  btn.disabled=true;
+  btn.textContent=_authMode==='login'?'Logging in…':'Creating account…';
+  msg.textContent='';
+  rtPost('/api/auth.php',{action:_authMode,email:email,password:pass},function(d){
+    btn.disabled=false;
+    btn.textContent=_authMode==='login'?'Log In':'Create Account';
+    if(d.error){
+      msg.className='rt-msg error';
+      msg.textContent=d.error;
+    } else {
+      RT.token=d.token;
+      RT.user=d.user;
+      localStorage.setItem('rt_token',d.token);
+      localStorage.setItem('rt_user',JSON.stringify(d.user));
+      msg.className='rt-msg success';
+      msg.textContent=_authMode==='login'?'Welcome back!':'Account created!';
+      setTimeout(function(){
+        closeAuthModal();
+        renderNavLoggedIn(d.user);
+        updatePremiumUI();
+        if(d.user.plan==='free') loadUsageCount();
+      },700);
+    }
+  });
+}
+
+// Allow Enter key in auth form
+document.addEventListener('keydown',function(e){
+  if(e.key==='Enter' && !document.getElementById('authModal').classList.contains('hidden')) doAuth();
+});
+
+function doLogout(){
+  RT.token=null; RT.user=null;
+  localStorage.removeItem('rt_token');
+  localStorage.removeItem('rt_user');
+  renderNavGuest();
+  updatePremiumUI();
+  document.getElementById('navDropdown').classList.remove('open');
+  // Reset Human Touch & Voice
+  RT.humanTouchOn=false; RT.voiceOn=false;
+  var htWrap=document.getElementById('htWrap');
+  var htToggle=document.getElementById('htToggle');
+  if(htWrap) htWrap.classList.remove('active');
+  if(htToggle) htToggle.classList.remove('on');
+  closeVoicePanel();
+}
+
+// ── Human Touch toggle ──────────────────────────────────────────────
+function toggleHumanTouch(){
+  if(!RT.user || RT.user.plan!=='premium'){
+    openUpgradeModal('humantouch');
+    return;
+  }
+  RT.humanTouchOn=!RT.humanTouchOn;
+  var wrap=document.getElementById('htWrap');
+  var tog=document.getElementById('htToggle');
+  if(RT.humanTouchOn){ wrap.classList.add('active'); tog.classList.add('on'); }
+  else { wrap.classList.remove('active'); tog.classList.remove('on'); }
+}
+
+// ── My Voice panel ──────────────────────────────────────────────────
+function toggleVoicePanel(){
+  if(!RT.user || RT.user.plan!=='premium'){
+    openUpgradeModal('voice');
+    return;
+  }
+  var panel=document.getElementById('voicePanel');
+  var btn=document.getElementById('myVoiceBtn');
+  if(panel.classList.contains('show')){
+    panel.classList.remove('show');
+    btn.classList.remove('active');
+    RT.voiceOn=false;
+  } else {
+    panel.classList.add('show');
+    btn.classList.add('active');
+    RT.voiceOn=true;
+    loadVoice();
+  }
+}
+
+function closeVoicePanel(){
+  document.getElementById('voicePanel').classList.remove('show');
+  var btn=document.getElementById('myVoiceBtn');
+  if(btn) btn.classList.remove('active');
+  RT.voiceOn=false;
+}
+
+function loadVoice(){
+  rtGet('/api/voice.php?action=get', function(d){
+    var body=document.getElementById('vpBody');
+    var delBtn=document.getElementById('vpDelBtn');
+    if(d.style_summary){
+      body.innerHTML='<p class="voice-summary">'+d.style_summary.replace(/</g,'&lt;')+'</p>';
+      if(delBtn) delBtn.style.display='inline-block';
+    } else {
+      body.innerHTML='<p class="voice-empty">No voice trained yet. Click "Train / Update" to teach ReplyTonic how you write.</p>';
+      if(delBtn) delBtn.style.display='none';
+    }
+  });
+}
+
+function openVoiceTrain(){
+  document.getElementById('vpTrainArea').style.display='block';
+  document.getElementById('vpMsg').textContent='';
+  document.getElementById('vpSamples').value='';
+  document.getElementById('vpSamples').focus();
+}
+
+function closeVoiceTrain(){
+  document.getElementById('vpTrainArea').style.display='none';
+}
+
+function submitVoiceTrain(){
+  var samples=document.getElementById('vpSamples').value.trim();
+  var msg=document.getElementById('vpMsg');
+  var btn=document.getElementById('vpSubmitBtn');
+  if(!samples||samples.length<30){
+    msg.className='rt-msg error'; msg.textContent='Please paste at least one writing sample (30+ chars).'; return;
+  }
+  btn.disabled=true; btn.textContent='Training…'; msg.textContent='';
+  rtPost('/api/voice.php',{action:'train',samples:samples},function(d){
+    btn.disabled=false; btn.textContent='🧠 Train My Voice';
+    if(d.error){ msg.className='rt-msg error'; msg.textContent=d.error; }
+    else {
+      msg.className='rt-msg success'; msg.textContent='Voice trained!';
+      closeVoiceTrain();
+      loadVoice();
+    }
+  });
+}
+
+function deleteVoice(){
+  if(!confirm('Delete your trained voice style?')) return;
+  rtPost('/api/voice.php',{action:'delete'},function(d){
+    if(!d.error) loadVoice();
+  });
+}
+
+// ── Upgrade modal ───────────────────────────────────────────────────
+function openUpgradeModal(source){
+  var sub=document.getElementById('upgradeModalSub');
+  if(source==='limit') sub.textContent="You've used all 15 free rewrites today. Upgrade for unlimited!";
+  else if(source==='humantouch') sub.textContent='🛡️ Human Touch is a Premium feature.';
+  else if(source==='voice') sub.textContent='🎤 My Voice is a Premium feature.';
+  else sub.textContent='Unlimited rewrites + powerful pro features.';
+  document.getElementById('upgradeModal').classList.remove('hidden');
+}
+
+function closeUpgradeModal(){
+  document.getElementById('upgradeModal').classList.add('hidden');
+}
+
+function upgradeModalBgClick(e){
+  if(e.target.id==='upgradeModal') closeUpgradeModal();
+}
+
+function selectPlan(plan){
+  RT.selectedPlan=plan;
+  document.getElementById('planMonthly').classList.toggle('selected',plan==='monthly');
+  document.getElementById('planYearly').classList.toggle('selected',plan==='yearly');
+  document.getElementById('upgradeCtaBtn').textContent=
+    plan==='monthly'?'Start Premium — $6.99/mo':'Start Premium — $49/yr';
+}
+
+function startCheckout(){
+  if(!RT.user){ closeUpgradeModal(); openAuthModal('register'); return; }
+  var btn=document.getElementById('upgradeCtaBtn');
+  var msg=document.getElementById('upgradeMsg');
+  btn.disabled=true; btn.textContent='Redirecting…'; msg.textContent='';
+  rtPost('/api/stripe.php',{action:'checkout',plan:RT.selectedPlan},function(d){
+    btn.disabled=false;
+    btn.textContent=RT.selectedPlan==='monthly'?'Start Premium — $6.99/mo':'Start Premium — $49/yr';
+    if(d.error){ msg.className='rt-msg error'; msg.textContent=d.error; }
+    else if(d.url){ window.location.href=d.url; }
+  });
+}
+
+function openManageSubscription(){
+  document.getElementById('navDropdown').classList.remove('open');
+  rtPost('/api/stripe.php',{action:'portal'},function(d){
+    if(d.url) window.location.href=d.url;
+    else alert('Could not open subscription portal. Please try again.');
+  });
+}
+
+// ── Handle ?upgrade=success in URL ──────────────────────────────────
+(function(){
+  if(window.location.search.indexOf('upgrade=success')!==-1){
+    // Refresh user plan from server
+    rtPost('/api/auth.php',{action:'verify'},function(d){
+      if(d.user){
+        RT.user=d.user;
+        localStorage.setItem('rt_user',JSON.stringify(d.user));
+        renderNavLoggedIn(d.user);
+        updatePremiumUI();
+      }
+    });
+    // Show a quick success toast
+    setTimeout(function(){
+      var t=document.createElement('div');
+      t.style.cssText='position:fixed;top:70px;left:50%;transform:translateX(-50%);background:rgba(74,222,128,.95);color:#0a0a0f;padding:11px 24px;border-radius:40px;font-weight:700;font-size:14px;z-index:99999;box-shadow:0 4px 24px rgba(74,222,128,.35)';
+      t.textContent='🎉 Welcome to Premium! Enjoy unlimited rewrites.';
+      document.body.appendChild(t);
+      setTimeout(function(){t.remove();},4500);
+    },600);
+    history.replaceState({},'',window.location.pathname);
+  }
+})();
+
+// ── Inject humanTouch + useVoice into rewrite payload ───────────────
+// Monkey-patch callAPI payload before sending (via rewrite override)
+var _origRewrite=rewrite;
+rewrite=function(){
+  // Store HT/voice state so callAPI can read them (we do it differently below)
+  _origRewrite.apply(this,arguments);
+};
+
+// Override the callAPI body building to inject humanTouch/useVoice
+// We do this by patching rewrite to append to payload before calling callAPI
+// Since rewrite() builds payload inline, we patch at callAPI level:
+var _callAPIBase=callAPI;
+callAPI=function(payload, onSuccess, onError){
+  if(payload && payload.mode==='rewrite'){
+    payload.humanTouch=RT.humanTouchOn;
+    payload.useVoice=RT.voiceOn;
+  }
+  _callAPIBase(payload, onSuccess, onError);
+};
+
+// ── Boot ────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', initAuth);
 </script>
+
+<!-- AUTH MODAL -->
+<div class="rt-modal-bg hidden" id="authModal" onclick="authModalBgClick(event)">
+  <div class="rt-modal">
+    <button class="rt-modal-close" onclick="closeAuthModal()">×</button>
+    <div class="rt-modal-title">Welcome to ReplyTonic</div>
+    <div class="rt-modal-sub" id="authModalSub">Save your history, unlock premium features.</div>
+    <div class="rt-tabs">
+      <button class="rt-tab active" id="tabLogin" onclick="switchAuthTab('login')">Log In</button>
+      <button class="rt-tab" id="tabRegister" onclick="switchAuthTab('register')">Sign Up</button>
+    </div>
+    <div id="authLoginForm">
+      <div class="rt-field"><label>Email</label><input type="email" id="authEmail" placeholder="you@example.com" autocomplete="email"></div>
+      <div class="rt-field"><label>Password</label><input type="password" id="authPass" placeholder="Your password" autocomplete="current-password"></div>
+      <button class="rt-submit-btn" id="authSubmitBtn" onclick="doAuth()">Log In</button>
+    </div>
+    <div class="rt-msg" id="authMsg"></div>
+  </div>
+</div>
+
+<!-- UPGRADE MODAL -->
+<div class="rt-modal-bg hidden" id="upgradeModal" onclick="upgradeModalBgClick(event)">
+  <div class="rt-modal upgrade-modal-inner">
+    <button class="rt-modal-close" onclick="closeUpgradeModal()">×</button>
+    <div class="rt-modal-title">⚡ Upgrade to Premium</div>
+    <div class="rt-modal-sub" id="upgradeModalSub">Unlimited rewrites + powerful pro features.</div>
+    <ul class="upgrade-features">
+      <li>Unlimited daily rewrites (free: 15/day)</li>
+      <li>🛡️ Human Touch — bypasses AI detectors</li>
+      <li>🎤 My Voice — rewrites in your personal style</li>
+      <li>📋 Bulk Rewrite — unlimited messages</li>
+      <li>☁️ Cloud history sync across all devices</li>
+    </ul>
+    <div class="upgrade-price-row">
+      <div class="upgrade-plan-card selected" id="planMonthly" onclick="selectPlan('monthly')">
+        <div class="price-big">$6.99</div>
+        <div class="price-period">per month</div>
+      </div>
+      <div class="upgrade-plan-card" id="planYearly" onclick="selectPlan('yearly')">
+        <div class="price-big">$49</div>
+        <div class="price-period">per year</div>
+        <div class="price-save">Save 41% 🎉</div>
+      </div>
+    </div>
+    <button class="upgrade-cta" id="upgradeCtaBtn" onclick="startCheckout()">Start Premium — $6.99/mo</button>
+    <div class="rt-msg" id="upgradeMsg"></div>
+  </div>
+</div>
 
 <script>
 // ── PWA Service Worker Registration ──────────────────────────────────────────
