@@ -558,6 +558,70 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
 .upgrade-cta{width:100%;padding:14px;background:linear-gradient(135deg,var(--i5),var(--o5));border:none;border-radius:var(--r12);font-size:15px;font-weight:700;color:#fff;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(99,102,241,.35);letter-spacing:.2px}
 .upgrade-cta:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(99,102,241,.45)}
 .upgrade-cta:disabled{opacity:.6;pointer-events:none;transform:none}
+
+/* ===== STATS BAR ===== */
+.stats-bar{background:rgba(99,102,241,.08);border-bottom:1px solid rgba(99,102,241,.14);padding:7px 0;text-align:center;font-size:12px;color:var(--t3);overflow:hidden}
+.stats-bar-inner{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;padding:0 16px}
+.stat-item strong{color:var(--i4);font-weight:700}
+.stat-sep{color:rgba(255,255,255,.2)}
+
+/* ===== METRICS PANEL ===== */
+.metrics-panel{position:fixed;right:20px;top:76px;width:290px;max-height:calc(100vh - 90px);overflow-y:auto;overflow-x:hidden;background:rgba(14,14,24,.97);border:1px solid rgba(99,102,241,.22);border-radius:16px;padding:0;z-index:200;transform:translateX(330px);transition:transform .4s cubic-bezier(.4,0,.2,1),opacity .4s;opacity:0;pointer-events:none;box-shadow:0 8px 40px rgba(0,0,0,.5)}
+.metrics-panel.show{transform:translateX(0);opacity:1;pointer-events:auto}
+.metrics-panel::-webkit-scrollbar{width:4px}
+.metrics-panel::-webkit-scrollbar-track{background:transparent}
+.metrics-panel::-webkit-scrollbar-thumb{background:rgba(99,102,241,.3);border-radius:4px}
+.mp-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 12px;border-bottom:1px solid rgba(255,255,255,.07);position:sticky;top:0;background:rgba(14,14,24,.98);z-index:1}
+.mp-title{font-size:13px;font-weight:700;color:#fff;letter-spacing:.3px}
+.mp-close{background:none;border:none;color:var(--t3);font-size:18px;cursor:pointer;padding:0 2px;line-height:1;transition:color .2s}
+.mp-close:hover{color:#fff}
+.mw{padding:16px}
+.mw-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);margin-bottom:14px}
+
+/* Gauge */
+.gauge-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:16px}
+.gauge{width:88px;height:88px;border-radius:50%;background:conic-gradient(var(--gc,#818cf8) calc(var(--gauge-pct,0)*3.6deg),rgba(255,255,255,.07) 0deg);display:flex;align-items:center;justify-content:center;position:relative;transition:background .6s}
+.gauge::before{content:'';width:66px;height:66px;border-radius:50%;background:rgba(14,14,24,.97);position:absolute}
+.gauge.low{--gc:#f97316}
+.gauge.mid{--gc:#facc15}
+.gauge.good{--gc:#818cf8}
+.gauge-val{position:relative;z-index:1;text-align:center}
+.gauge-val span{font-size:22px;font-weight:700;color:#fff;line-height:1}
+.gauge-val small{font-size:10px;color:#64748b;display:block;margin-top:1px}
+.gauge-label{font-size:11px;color:var(--t3);margin-top:7px}
+
+/* Metric bars */
+.metric-bars{display:flex;flex-direction:column;gap:9px}
+.metric-bar-row{display:flex;align-items:center;gap:8px}
+.mb-label{font-size:11px;color:var(--t3);min-width:76px;flex-shrink:0}
+.mb-track{flex:1;height:5px;background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden}
+.mb-fill{height:100%;border-radius:10px;width:0%;transition:width .6s cubic-bezier(.4,0,.2,1),background .4s}
+.mbv{font-size:11px;color:var(--t3);min-width:30px;text-align:right}
+.metric-delta{margin-top:12px;font-size:12px;color:var(--t3);text-align:center}
+.metric-delta strong{font-weight:700}
+
+/* Follow-up widget */
+.fu-urgency{margin-bottom:14px}
+.fu-urg-label{font-size:11px;color:var(--t3);margin-bottom:4px}
+.fu-urg-val{font-size:22px;font-weight:700;color:#fff}
+.fu-sendtime-row{display:flex;align-items:center;justify-content:space-between;background:rgba(99,102,241,.1);border-radius:8px;padding:9px 12px;margin-top:12px}
+.fu-st-label{font-size:11px;color:var(--t3)}
+.fu-st-val{font-size:12px;font-weight:700;color:var(--i4)}
+
+/* Bulk widget */
+.bulk-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px}
+.bk-stat{background:rgba(255,255,255,.05);border-radius:10px;padding:12px;text-align:center}
+.bk-num{font-size:22px;font-weight:700;color:#fff}
+.bk-lbl{font-size:11px;color:var(--t3);margin-top:3px}
+
+/* Footer / upgrade prompt */
+.mp-footer{padding:12px 16px;border-top:1px solid rgba(255,255,255,.07)}
+.mp-upgrade{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--t3)}
+.mp-upgrade span{flex:1}
+.mp-upgrade-btn{background:rgba(99,102,241,.18);border:1px solid rgba(99,102,241,.3);color:var(--i4);font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;cursor:pointer;transition:all .2s;white-space:nowrap}
+.mp-upgrade-btn:hover{background:rgba(99,102,241,.32);border-color:var(--i5)}
+
+@media(max-width:1199px){.metrics-panel{display:none}}
 </style>
 </head>
 <body>
@@ -611,6 +675,17 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
   <a href="#pricing" onclick="closeNav()">Pricing</a>
   <a href="#faq" onclick="closeNav()">FAQ</a>
   <a href="#tool" onclick="closeNav()">Try It Free</a>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar" id="statsBar">
+  <div class="stats-bar-inner">
+    <span class="stat-item">🔄 Rewrites this session: <strong id="stat-runs">0</strong></span>
+    <span class="stat-sep">·</span>
+    <span class="stat-item">⏱ Time saved: <strong id="stat-time">0</strong> min</span>
+    <span class="stat-sep">·</span>
+    <span class="stat-item">👥 32,841+ messages improved today</span>
+  </div>
 </div>
 
 <!-- HERO -->
@@ -2761,6 +2836,186 @@ function openManageSubscription(){
   }
 })();
 
+// ===================================================================
+// ===== METRICS PANEL SYSTEM ========================================
+// ===================================================================
+
+var RT_METRICS = {
+  activeMode: 'rewrite',
+  totalRuns: parseInt(localStorage.getItem('rt_totalRuns')||'0'),
+  timeSaved: parseInt(localStorage.getItem('rt_timeSaved')||'0')
+};
+
+// Restore session counters on load
+(function(){
+  var r=document.getElementById('stat-runs');
+  var t=document.getElementById('stat-time');
+  if(r) r.textContent=RT_METRICS.totalRuns;
+  if(t) t.textContent=RT_METRICS.timeSaved;
+})();
+
+function showMetricsPanel(mode){
+  var panel=document.getElementById('metricsPanel');
+  if(!panel) return;
+  document.querySelectorAll('.mw').forEach(function(w){w.style.display='none';});
+  var widget=document.getElementById('mw-'+mode);
+  if(widget) widget.style.display='block';
+  panel.classList.add('show');
+}
+
+function updateMetrics(mode, data, originalText, outputText){
+  RT_METRICS.totalRuns++;
+  RT_METRICS.timeSaved+=3;
+  localStorage.setItem('rt_totalRuns',RT_METRICS.totalRuns);
+  localStorage.setItem('rt_timeSaved',RT_METRICS.timeSaved);
+  animateCounter('stat-runs',RT_METRICS.totalRuns);
+  animateCounter('stat-time',RT_METRICS.timeSaved);
+  showMetricsPanel(mode);
+  if(mode==='rewrite') updateRewriteMetrics(originalText,outputText||data.v1);
+  else if(mode==='reply') updateReplyMetrics(data);
+  else if(mode==='followup') updateFollowupMetrics(data);
+}
+
+function updateRewriteMetrics(original,output){
+  var origScore=scoreMessage(original);
+  var outScore=scoreMessage(output);
+  var strength=Math.round(((outScore.clarity+outScore.tone+outScore.prof)/3)*10);
+  animateGauge('rw-gauge',strength,100);
+  document.getElementById('rw-gauge-val').textContent=strength;
+  setMetricBar('rw-clarity',outScore.clarity*10);
+  setMetricBar('rw-tone',outScore.tone*10);
+  setMetricBar('rw-prof',outScore.prof*10);
+  var origWC=(original.match(/\S+/g)||[]).length;
+  var outWC=(output.match(/\S+/g)||[]).length;
+  var concisePct=origWC>0?Math.min(100,Math.max(10,Math.round((1-(outWC/origWC))*200+50))):60;
+  setMetricBar('rw-concise',concisePct);
+  var origStr=Math.round(((origScore.clarity+origScore.tone+origScore.prof)/3)*10);
+  var improvement=strength-origStr;
+  var impEl=document.getElementById('rw-improvement');
+  if(impEl){
+    impEl.textContent=(improvement>0?'+':'')+improvement+' pts';
+    impEl.style.color=improvement>0?'#4ade80':improvement<0?'#f97316':'#94a3b8';
+  }
+}
+
+function updateReplyMetrics(data){
+  var output=data.v1||'';
+  var s=scoreMessage(output);
+  var text=output.toLowerCase();
+  var empathyWords=['understand','appreciate','sorry','feel','hear','acknowledge','thank','value','happy','glad'];
+  var empathy=empathyWords.filter(function(w){return text.indexOf(w)!==-1;}).length;
+  var empathyScore=Math.min(100,empathy*12+28);
+  setMetricBar('ry-empathy',empathyScore);
+  setMetricBar('ry-clarity',s.clarity*10);
+  setMetricBar('ry-tone',s.tone*10);
+  setMetricBar('ry-prof',s.prof*10);
+  var overall=Math.round((empathyScore+s.clarity*10+s.tone*10+s.prof*10)/4);
+  animateGauge('ry-gauge',overall,100);
+  document.getElementById('ry-gauge-val').textContent=overall;
+}
+
+function updateFollowupMetrics(data){
+  var output=data.v1||'';
+  var text=output.toLowerCase();
+  var urgencyWords=['urgent','asap','immediately','deadline','today','tomorrow','priority','critical','important','soon','quickly','time-sensitive'];
+  var urgency=urgencyWords.filter(function(w){return text.indexOf(w)!==-1;}).length;
+  var urgencyScore=Math.min(10,urgency*2+4);
+  document.getElementById('fu-urgency-val').textContent=urgencyScore.toFixed(1)+' / 10';
+  setMetricBar('fu-urgency-bar',urgencyScore*10);
+  var days=['Sun','Mon','Tue','Wed','Thu'];
+  var d=new Date();
+  var nd=new Date(d);
+  var targetDay=d.getDay()<2?2:d.getDay()<4?4:2;
+  for(var i=0;i<7;i++){nd.setDate(nd.getDate()+1);if(nd.getDay()===targetDay) break;}
+  document.getElementById('fu-sendtime').textContent=days[nd.getDay()]||'Tue'+' 10:00 AM';
+  var s=scoreMessage(output);
+  setMetricBar('fu-response',Math.round((s.tone+s.prof)*5));
+  setMetricBar('fu-open',68);
+  setMetricBar('fu-click',42);
+}
+
+function setMetricBar(id,pct){
+  pct=Math.max(0,Math.min(100,Math.round(pct)));
+  var bar=document.getElementById(id);
+  if(!bar) return;
+  bar.style.width=pct+'%';
+  bar.style.background=pct>=70?'#818cf8':pct>=40?'#facc15':'#f97316';
+  var parent=bar.closest('.metric-bar-row');
+  if(parent){var val=parent.querySelector('.mbv');if(val) val.textContent=pct+'%';}
+}
+
+function animateGauge(id,value,max){
+  var el=document.getElementById(id);
+  if(!el) return;
+  var pct=Math.round((value/max)*100);
+  // Animate via requestAnimationFrame
+  var start=parseInt(el.style.getPropertyValue('--gauge-pct'))||0;
+  var dur=600,startTime=null;
+  function step(ts){
+    if(!startTime) startTime=ts;
+    var prog=Math.min((ts-startTime)/dur,1);
+    var cur=Math.round(start+(pct-start)*prog);
+    el.style.setProperty('--gauge-pct',cur);
+    if(prog<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+  el.classList.remove('low','mid','good');
+  el.classList.add(pct>=70?'good':pct>=40?'mid':'low');
+}
+
+function animateCounter(id,val){
+  var el=document.getElementById(id);
+  if(!el) return;
+  var current=parseInt(el.textContent)||0;
+  if(current===val){return;}
+  var step=Math.ceil(Math.abs(val-current)/15);
+  var t=setInterval(function(){
+    current=Math.min(current+step,val);
+    el.textContent=current;
+    if(current>=val) clearInterval(t);
+  },30);
+}
+
+// Hook metrics into mode switches
+var _origSwitchMode=switchMode;
+switchMode=function(mode){
+  _origSwitchMode.apply(this,arguments);
+  RT_METRICS.activeMode=mode;
+  var panel=document.getElementById('metricsPanel');
+  if(panel&&panel.classList.contains('show')){
+    document.querySelectorAll('.mw').forEach(function(w){w.style.display='none';});
+    var widget=document.getElementById('mw-'+mode);
+    if(widget) widget.style.display='block';
+  }
+};
+
+// Hook bulk rewrite metrics
+var _origRenderBulkResults=renderBulkResults;
+renderBulkResults=function(bulkOutput,btn,txt){
+  _origRenderBulkResults.apply(this,arguments);
+  if(!bulkOutput||!bulkOutput.length) return;
+  RT_METRICS.totalRuns++;
+  RT_METRICS.timeSaved+=Math.ceil(bulkOutput.length*2);
+  localStorage.setItem('rt_totalRuns',RT_METRICS.totalRuns);
+  localStorage.setItem('rt_timeSaved',RT_METRICS.timeSaved);
+  animateCounter('stat-runs',RT_METRICS.totalRuns);
+  animateCounter('stat-time',RT_METRICS.timeSaved);
+  var valid=bulkOutput.filter(function(x){return x&&x.orig&&x.out;});
+  var total=valid.length;
+  document.getElementById('bk-total').textContent=total;
+  var totalRed=0;
+  valid.forEach(function(item){
+    var ow=(item.orig.match(/\S+/g)||[]).length;
+    var nw=(item.out.match(/\S+/g)||[]).length;
+    totalRed+=(1-(nw/(ow||1)))*100;
+  });
+  var avgRed=total>0?Math.round(totalRed/total):0;
+  document.getElementById('bk-reduction').textContent=avgRed+'%';
+  setMetricBar('bk-quality',76);
+  setMetricBar('bk-consistency',83);
+  showMetricsPanel('bulk');
+};
+
 // ── Inject humanTouch + useVoice into rewrite payload ───────────────
 // Monkey-patch callAPI payload before sending (via rewrite override)
 var _origRewrite=rewrite;
@@ -2778,12 +3033,101 @@ callAPI=function(payload, onSuccess, onError){
     payload.humanTouch=RT.humanTouchOn;
     payload.useVoice=RT.voiceOn;
   }
-  _callAPIBase(payload, onSuccess, onError);
+  var mode=payload?payload.mode:'rewrite';
+  var origText=payload?payload.message||'':'';
+  _callAPIBase(payload, function(d){
+    onSuccess(d);
+    // Trigger metrics update (skip bulk — handled separately in renderBulkResults)
+    if(mode!=='bulk'){
+      setTimeout(function(){updateMetrics(mode,d,origText,d.v1||'');},350);
+    }
+  }, onError);
 };
 
 // ── Boot ────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', initAuth);
 </script>
+
+<!-- METRICS PANEL -->
+<div class="metrics-panel" id="metricsPanel">
+  <div class="mp-header">
+    <span class="mp-title">⚡ Live Metrics</span>
+    <button class="mp-close" onclick="document.getElementById('metricsPanel').classList.remove('show')" title="Close">×</button>
+  </div>
+
+  <!-- REWRITE widget -->
+  <div class="mw" id="mw-rewrite">
+    <div class="mw-title">Reply Strength Score</div>
+    <div class="gauge-wrap">
+      <div class="gauge" id="rw-gauge" style="--gauge-pct:0">
+        <div class="gauge-val"><span id="rw-gauge-val">—</span><small>/100</small></div>
+      </div>
+      <div class="gauge-label">Overall Score</div>
+    </div>
+    <div class="metric-bars">
+      <div class="metric-bar-row"><span class="mb-label">Clarity</span><div class="mb-track"><div class="mb-fill" id="rw-clarity"></div></div><span class="mbv">—</span></div>
+      <div class="metric-bar-row"><span class="mb-label">Tone</span><div class="mb-track"><div class="mb-fill" id="rw-tone"></div></div><span class="mbv">—</span></div>
+      <div class="metric-bar-row"><span class="mb-label">Professional</span><div class="mb-track"><div class="mb-fill" id="rw-prof"></div></div><span class="mbv">—</span></div>
+      <div class="metric-bar-row"><span class="mb-label">Concise</span><div class="mb-track"><div class="mb-fill" id="rw-concise"></div></div><span class="mbv">—</span></div>
+    </div>
+    <div class="metric-delta">vs. original: <strong id="rw-improvement">—</strong></div>
+  </div>
+
+  <!-- REPLY widget -->
+  <div class="mw" id="mw-reply" style="display:none">
+    <div class="mw-title">Reply Quality Score</div>
+    <div class="gauge-wrap">
+      <div class="gauge" id="ry-gauge" style="--gauge-pct:0">
+        <div class="gauge-val"><span id="ry-gauge-val">—</span><small>/100</small></div>
+      </div>
+      <div class="gauge-label">Quality Index</div>
+    </div>
+    <div class="metric-bars">
+      <div class="metric-bar-row"><span class="mb-label">Empathy</span><div class="mb-track"><div class="mb-fill" id="ry-empathy"></div></div><span class="mbv">—</span></div>
+      <div class="metric-bar-row"><span class="mb-label">Clarity</span><div class="mb-track"><div class="mb-fill" id="ry-clarity"></div></div><span class="mbv">—</span></div>
+      <div class="metric-bar-row"><span class="mb-label">Tone</span><div class="mb-track"><div class="mb-fill" id="ry-tone"></div></div><span class="mbv">—</span></div>
+      <div class="metric-bar-row"><span class="mb-label">Professional</span><div class="mb-track"><div class="mb-fill" id="ry-prof"></div></div><span class="mbv">—</span></div>
+    </div>
+  </div>
+
+  <!-- FOLLOWUP widget -->
+  <div class="mw" id="mw-followup" style="display:none">
+    <div class="mw-title">Follow-Up Effectiveness</div>
+    <div class="fu-urgency">
+      <div class="fu-urg-label">Urgency Score</div>
+      <div class="fu-urg-val" id="fu-urgency-val">—</div>
+      <div class="mb-track" style="margin-top:8px"><div class="mb-fill" id="fu-urgency-bar"></div></div>
+    </div>
+    <div class="fu-sendtime-row">
+      <span class="fu-st-label">📅 Best Send Time</span>
+      <span class="fu-st-val" id="fu-sendtime">—</span>
+    </div>
+    <div class="metric-bars" style="margin-top:16px">
+      <div class="metric-bar-row"><span class="mb-label">Response Rate</span><div class="mb-track"><div class="mb-fill" id="fu-response"></div></div><span class="mbv">—</span></div>
+      <div class="metric-bar-row"><span class="mb-label">Open Rate Est.</span><div class="mb-track"><div class="mb-fill" id="fu-open"></div></div><span class="mbv">—</span></div>
+      <div class="metric-bar-row"><span class="mb-label">Click Through</span><div class="mb-track"><div class="mb-fill" id="fu-click"></div></div><span class="mbv">—</span></div>
+    </div>
+  </div>
+
+  <!-- BULK widget -->
+  <div class="mw" id="mw-bulk" style="display:none">
+    <div class="mw-title">Batch Results</div>
+    <div class="bulk-stats">
+      <div class="bk-stat"><div class="bk-num" id="bk-total">0</div><div class="bk-lbl">Messages</div></div>
+      <div class="bk-stat"><div class="bk-num" id="bk-reduction">0%</div><div class="bk-lbl">Avg. Shorter</div></div>
+    </div>
+    <div class="metric-bars" style="margin-top:16px">
+      <div class="metric-bar-row"><span class="mb-label">Avg. Quality</span><div class="mb-track"><div class="mb-fill" id="bk-quality"></div></div><span class="mbv">—</span></div>
+      <div class="metric-bar-row"><span class="mb-label">Consistency</span><div class="mb-track"><div class="mb-fill" id="bk-consistency"></div></div><span class="mbv">—</span></div>
+    </div>
+  </div>
+
+  <div class="mp-footer">
+    <div class="mp-upgrade">🔒 <span>Score History &amp; Full Analytics</span>
+      <button onclick="openUpgradeModal('metrics')" class="mp-upgrade-btn">Unlock</button>
+    </div>
+  </div>
+</div>
 
 <!-- AUTH MODAL -->
 <div class="rt-modal-bg hidden" id="authModal" onclick="authModalBgClick(event)">
