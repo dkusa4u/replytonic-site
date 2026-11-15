@@ -71,11 +71,12 @@ $isPremium = ($user['plan'] ?? 'free') !== 'free';
 // Daily usage count
 $today = date('Y-m-d');
 $stmt  = $pdo->prepare(
-    "SELECT COUNT(*) FROM usage_log
-     WHERE user_id = ? AND DATE(created_at) = ?"
+    "SELECT COALESCE(rewrites_today, 0) FROM usage_log
+     WHERE user_id = ? AND log_date = ?"
 );
 $stmt->execute([$userId, $today]);
-$used  = (int)$stmt->fetchColumn();
+$row  = $stmt->fetchColumn();
+$used = (int)($row !== false ? $row : 0);
 
 $limit = $isPremium ? 999 : FREE_DAILY_LIMIT;
 
