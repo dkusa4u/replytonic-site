@@ -66,7 +66,6 @@ switch ($action) {
 
         $session = stripe_post('/checkout/sessions', [
             'customer'                                              => $customerId,
-            'payment_method_types[]'                               => 'card',
             'line_items[0][price]'                                 => $priceId,
             'line_items[0][quantity]'                              => 1,
             'mode'                                                 => 'subscription',
