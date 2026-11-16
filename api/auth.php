@@ -123,6 +123,61 @@ switch ($action) {
     }
 
     // ── Delete account ─────────────────────────────────────────────────────
+
+    // ── Forgot password — generate token & email link ─────────────────────────────────────────
+    case 'forgot-password': {
+        $email = strtolower(trim($body['email'] ?? ''));
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) json_out(['error' => 'Invalid email address.'], 400);
+
+        $db = get_db();
+        $st = $db->prepare('SELECT id FROM users WHERE email = ?');
+        $st->execute([$email]);
+        $user = $st->fetch();
+
+        if ($user) {
+            $token   = bin2hex(random_bytes(32));                            // 64-char hex
+            $expires = date('Y-m-d H:i:s', time() + 3600);                  // 1 hour
+            $db->prepare('UPDATE users SET reset_token = ?, reset_token_expires = ? WHERE id = ?')
+               ->execute([$token, $expires, $user['id']]);
+
+            $link    = (defined('APP_URL') ? APP_URL : 'https://replytonic.com') . '/?reset_token=' . $token;
+            $subject = 'Reset your ReplyTonic password';
+            $message = "Hi,\n\nClick the link below to reset your ReplyTonic password.\nThis link expires in 1 hour.\n\n" . $link . "\n\nIf you didn't request this, you can safely ignore this email.\n\n— The ReplyTonic Team";
+            $headers = implode("\r\n", [
+                'From: noreply@replytonic.com',
+                'Reply-To: noreply@replytonic.com',
+                'Content-Type: text/plain; charset=UTF-8',
+                'X-Mailer: ReplyTonic',
+            ]);
+            mail($email, $subject, $message, $headers);
+        }
+
+        // Always return success — never reveal whether the email exists
+        json_out(['success' => true, 'message' => 'If that email is registered, a reset link has been sent.']);
+    }
+
+    // ── Reset password — verify token & update password ───────────────────────────
+    case 'reset-password': {
+        $token = trim($body['token'] ?? '');
+        $pass  = $body['password'] ?? '';
+
+        if (!$token) json_out(['error' => 'Reset token is missing.'], 400);
+        if (strlen($pass) < 6) json_out(['error' => 'Password must be at least 6 characters.'], 400);
+
+        $db = get_db();
+        $st = $db->prepare('SELECT id FROM users WHERE reset_token = ? AND reset_token_expires > NOW()');
+        $st->execute([$token]);
+        $user = $st->fetch();
+
+        if (!$user) json_out(['error' => 'This reset link is invalid or has expired. Please request a new one.'], 400);
+
+        $hash = password_hash($pass, PASSWORD_BCRYPT);
+        $db->prepare('UPDATE users SET password_hash = ?, reset_token = NULL, reset_token_expires = NULL WHERE id = ?')
+           ->execute([$hash, $user['id']]);
+
+        json_out(['success' => true, 'message' => 'Password updated! You can now log in with your new password.']);
+    }
+
     case 'delete': {
         $claims = get_auth_user();
         if (!$claims) json_out(['error' => 'Not authenticated.'], 401);

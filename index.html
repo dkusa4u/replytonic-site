@@ -2603,6 +2603,9 @@ var _authMode='login';
 function openAuthModal(mode){
   _authMode=mode||'login';
   document.getElementById('authModal').classList.remove('hidden');
+  document.getElementById('authForgotForm').style.display='none';
+  document.getElementById('authTabs').style.display='flex';
+  document.getElementById('authLoginForm').style.display='block';
   switchAuthTab(_authMode);
   document.getElementById('authMsg').textContent='';
   setTimeout(function(){document.getElementById('authEmail').focus();},100);
@@ -2622,6 +2625,41 @@ function switchAuthTab(tab){
   document.getElementById('tabRegister').className='rt-tab'+(tab==='register'?' active':'');
   document.getElementById('authSubmitBtn').textContent=tab==='login'?'Log In':'Create Account';
   document.getElementById('authMsg').textContent='';
+  document.getElementById('forgotLink').style.display=tab==='login'?'block':'none';
+  document.getElementById('authLoginForm').style.display='block';
+  document.getElementById('authForgotForm').style.display='none';
+  document.getElementById('authTabs').style.display='flex';
+}
+
+function showForgotView(){
+  document.getElementById('authLoginForm').style.display='none';
+  document.getElementById('authTabs').style.display='none';
+  document.getElementById('authForgotForm').style.display='block';
+  document.getElementById('authMsg').textContent='';
+  document.getElementById('forgotEmail').value=document.getElementById('authEmail').value||'';
+  setTimeout(function(){document.getElementById('forgotEmail').focus();},50);
+}
+
+function hideForgotView(){
+  document.getElementById('authForgotForm').style.display='none';
+  document.getElementById('authTabs').style.display='flex';
+  document.getElementById('authLoginForm').style.display='block';
+  document.getElementById('authMsg').textContent='';
+  document.getElementById('forgotLink').style.display='block';
+}
+
+function doForgotPassword(){
+  var email=document.getElementById('forgotEmail').value.trim();
+  var btn=document.getElementById('forgotSubmitBtn');
+  var msg=document.getElementById('authMsg');
+  if(!email){msg.className='rt-msg error';msg.textContent='Please enter your email address.';return;}
+  btn.disabled=true; btn.textContent='Sending…';
+  msg.textContent='';
+  rtPost('/api/auth.php',{action:'forgot-password',email:email},function(d){
+    btn.disabled=false; btn.textContent='Send Reset Link';
+    if(d.error){msg.className='rt-msg error';msg.textContent=d.error;}
+    else{msg.className='rt-msg success';msg.textContent='Check your email — a reset link is on its way!';}
+  });
 }
 
 function doAuth(){
@@ -2658,8 +2696,48 @@ function doAuth(){
 
 // Allow Enter key in auth form
 document.addEventListener('keydown',function(e){
-  if(e.key==='Enter' && !document.getElementById('authModal').classList.contains('hidden')) doAuth();
+  if(e.key==='Enter'){
+    if(!document.getElementById('authModal').classList.contains('hidden')){
+      if(document.getElementById('authForgotForm').style.display!=='none') doForgotPassword();
+      else doAuth();
+    }
+    if(!document.getElementById('resetModal').classList.contains('hidden')) doResetPassword();
+  }
 });
+
+// ── Reset password (token from URL) ──────────────────────────────────────
+function doResetPassword(){
+  var pass=document.getElementById('resetPass').value;
+  var confirm=document.getElementById('resetPassConfirm').value;
+  var btn=document.getElementById('resetSubmitBtn');
+  var msg=document.getElementById('resetMsg');
+  if(!pass||pass.length<6){msg.className='rt-msg error';msg.textContent='Password must be at least 6 characters.';return;}
+  if(pass!==confirm){msg.className='rt-msg error';msg.textContent='Passwords do not match.';return;}
+  var token=new URLSearchParams(window.location.search).get('reset_token')||'';
+  if(!token){msg.className='rt-msg error';msg.textContent='Reset token missing.';return;}
+  btn.disabled=true; btn.textContent='Updating…';
+  msg.textContent='';
+  rtPost('/api/auth.php',{action:'reset-password',token:token,password:pass},function(d){
+    btn.disabled=false; btn.textContent='Update Password';
+    if(d.error){msg.className='rt-msg error';msg.textContent=d.error;}
+    else{
+      msg.className='rt-msg success';msg.textContent=d.message||'Password updated!';
+      document.getElementById('resetForm').style.display='none';
+      // Clean URL and open login modal after 2s
+      setTimeout(function(){
+        window.history.replaceState({},'','/');
+        document.getElementById('resetModal').classList.add('hidden');
+        openAuthModal('login');
+      },2000);
+    }
+  });
+}
+
+// Auto-open reset modal if ?reset_token= is in URL
+(function(){
+  var token=new URLSearchParams(window.location.search).get('reset_token');
+  if(token) document.getElementById('resetModal').classList.remove('hidden');
+})();
 
 function doLogout(){
   RT.token=null; RT.user=null;
@@ -3151,7 +3229,7 @@ document.addEventListener('DOMContentLoaded', initAuth);
     <button class="rt-modal-close" onclick="closeAuthModal()">×</button>
     <div class="rt-modal-title">Welcome to ReplyTonic</div>
     <div class="rt-modal-sub" id="authModalSub">Save your history, unlock premium features.</div>
-    <div class="rt-tabs">
+    <div class="rt-tabs" id="authTabs">
       <button class="rt-tab active" id="tabLogin" onclick="switchAuthTab('login')">Log In</button>
       <button class="rt-tab" id="tabRegister" onclick="switchAuthTab('register')">Sign Up</button>
     </div>
@@ -3159,8 +3237,28 @@ document.addEventListener('DOMContentLoaded', initAuth);
       <div class="rt-field"><label>Email</label><input type="email" id="authEmail" placeholder="you@example.com" autocomplete="email"></div>
       <div class="rt-field"><label>Password</label><input type="password" id="authPass" placeholder="Your password" autocomplete="current-password"></div>
       <button class="rt-submit-btn" id="authSubmitBtn" onclick="doAuth()">Log In</button>
+      <div id="forgotLink" style="text-align:center;margin-top:10px;display:none"><a href="#" onclick="showForgotView();return false;" style="font-size:13px;color:var(--t3);text-decoration:none;border-bottom:1px dotted var(--border)">Forgot password?</a></div>
+    </div>
+    <div id="authForgotForm" style="display:none">
+      <div class="rt-field"><label>Email</label><input type="email" id="forgotEmail" placeholder="you@example.com" autocomplete="email"></div>
+      <button class="rt-submit-btn" id="forgotSubmitBtn" onclick="doForgotPassword()">Send Reset Link</button>
+      <div style="text-align:center;margin-top:10px"><a href="#" onclick="hideForgotView();return false;" style="font-size:13px;color:var(--t3);text-decoration:none;border-bottom:1px dotted var(--border)">← Back to login</a></div>
     </div>
     <div class="rt-msg" id="authMsg"></div>
+  </div>
+</div>
+
+<!-- RESET PASSWORD MODAL -->
+<div class="rt-modal-bg hidden" id="resetModal">
+  <div class="rt-modal">
+    <div class="rt-modal-title">Set New Password</div>
+    <div class="rt-modal-sub">Choose a new password for your account.</div>
+    <div id="resetForm">
+      <div class="rt-field"><label>New Password</label><input type="password" id="resetPass" placeholder="At least 6 characters" autocomplete="new-password"></div>
+      <div class="rt-field"><label>Confirm Password</label><input type="password" id="resetPassConfirm" placeholder="Repeat new password" autocomplete="new-password"></div>
+      <button class="rt-submit-btn" id="resetSubmitBtn" onclick="doResetPassword()">Update Password</button>
+    </div>
+    <div class="rt-msg" id="resetMsg"></div>
   </div>
 </div>
 
