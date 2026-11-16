@@ -881,7 +881,7 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
       <div class="usage-bar-wrap" id="usageBarWrap">
         <div class="usage-bar-top">
           <span class="usage-bar-label">✨ Daily Rewrites</span>
-          <span class="usage-bar-count" id="usageBarCount">0 / 15</span>
+          <span class="usage-bar-count" id="usageBarCount">0 / 5</span>
         </div>
         <div class="usage-bar-track"><div class="usage-bar-fill" id="usageBarFill" style="width:0%"></div></div>
       </div>
@@ -2771,7 +2771,7 @@ function deleteVoice(){
 // ── Upgrade modal ───────────────────────────────────────────────────
 function openUpgradeModal(source){
   var sub=document.getElementById('upgradeModalSub');
-  if(source==='limit') sub.textContent="You've used all 15 free rewrites today. Upgrade for unlimited!";
+  if(source==='limit') sub.textContent="You've used all 5 free rewrites today. Upgrade for unlimited!";
   else if(source==='humantouch') sub.textContent='🛡️ Human Touch is a Premium feature.';
   else if(source==='voice') sub.textContent='🎤 My Voice is a Premium feature.';
   else sub.textContent='Unlimited rewrites + powerful pro features.';
@@ -3171,7 +3171,7 @@ document.addEventListener('DOMContentLoaded', initAuth);
     <div class="rt-modal-title">⚡ Upgrade to Premium</div>
     <div class="rt-modal-sub" id="upgradeModalSub">Unlimited rewrites + powerful pro features.</div>
     <ul class="upgrade-features">
-      <li>Unlimited daily rewrites (free: 15/day)</li>
+      <li>Unlimited daily rewrites (free: 5/day)</li>
       <li>🛡️ Human Touch — bypasses AI detectors</li>
       <li>🎤 My Voice — rewrites in your personal style</li>
       <li>📋 Bulk Rewrite — unlimited messages</li>
