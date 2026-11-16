@@ -74,7 +74,116 @@ $customInstr     = trim($input['customInstructions'] ?? '');
 $mode            = $input['mode']            ?? 'rewrite';
 $useVoice        = $input['useVoice']        ?? false; // premium: inject personal voice
 
-if (!$message) { http_response_code(400); echo json_encode(['error'=>'Message is required']); exit; }
+$warmth   = isset($input['warmth'])   ? (int)$input['warmth']   : 0; // 1-5 or 0 = not set
+$firmness = isset($input['firmness']) ? (int)$input['firmness'] : 0; // 1-5 or 0 = not set
+
+if (!$message && $mode !== 'screenshot-reply') { http_response_code(400); echo json_encode(['error'=>'Message is required']); exit; }
+
+// ── Screenshot-to-Reply (GPT-4o Vision) ──────────────────────────────────────
+if ($mode === 'screenshot-reply') {
+    $imageData     = $input['imageData']     ?? '';
+    $imageMimeType = $input['imageMimeType'] ?? 'image/jpeg';
+    $srLang   = trim($input['language'] ?? 'English');
+    $srTone   = $input['tone'] ?? 'Professional';
+    $srPlat   = $input['platform'] ?? 'WhatsApp';
+    if (!$imageData) { http_response_code(400); echo json_encode(['error' => 'Image data is required.']); exit; }
+    $srToneDesc = $toneMap[$srTone] ?? strtolower($srTone);
+    $srPlatCtx  = $platMap[$srPlat] ?? $srPlat;
+    $srLangInstr = ($srLang && $srLang !== 'English') ? "Write all 3 replies in {$srLang}." : 'Write in English.';
+    $srUserText = "Look at this conversation screenshot. Generate 3 distinctly different {$srToneDesc} reply options for a {$srPlatCtx}. "
+        . "Each reply should take a different angle or approach. "
+        . "For each reply, provide a short 2-4 word label (e.g. 'Warm & Curious', 'Direct & Clear', 'Playful & Light'). "
+        . "{$srLangInstr}\n\n"
+        . "Respond ONLY with valid JSON: {\"v1\":\"...\",\"v1_label\":\"...\",\"v2\":\"...\",\"v2_label\":\"...\",\"v3\":\"...\",\"v3_label\":\"...\"}";
+    $srPayload = json_encode([
+        'model'           => 'gpt-4o',
+        'temperature'     => 0.82,
+        'max_tokens'      => 1100,
+        'response_format' => ['type' => 'json_object'],
+        'messages'        => [
+            ['role' => 'system', 'content' => 'You are ReplyTonic, an expert AI message assistant. Analyze the conversation screenshot and generate 3 smart, context-aware reply options. Always return exactly the JSON format requested — nothing else.'],
+            ['role' => 'user', 'content' => [
+                ['type' => 'image_url', 'image_url' => ['url' => "data:{$imageMimeType};base64,{$imageData}", 'detail' => 'low']],
+                ['type' => 'text', 'text' => $srUserText],
+            ]],
+        ],
+    ]);
+    $ch = curl_init('https://api.openai.com/v1/chat/completions');
+    curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_POST => true, CURLOPT_POSTFIELDS => $srPayload, CURLOPT_HTTPHEADER => ['Content-Type: application/json', "Authorization: Bearer {$OPENAI_API_KEY}"], CURLOPT_TIMEOUT => 45]);
+    $srResp = curl_exec($ch); $srCode = curl_getinfo($ch, CURLINFO_HTTP_CODE); curl_close($ch);
+    if (!$srResp || $srCode !== 200) { http_response_code(500); echo json_encode(['error' => 'Vision AI request failed. Please try again.']); exit; }
+    $srData = json_decode($srResp, true); $srContent = $srData['choices'][0]['message']['content'] ?? ''; $srResult = json_decode($srContent, true);
+    if (!isset($srResult['v1'], $srResult['v2'], $srResult['v3'])) { http_response_code(500); echo json_encode(['error' => 'Unexpected AI response. Please try again.']); exit; }
+    if (!$isPremium) {
+        if ($userId) { $db->prepare('INSERT INTO usage_log (user_id, log_date, rewrites_today) VALUES (?, ?, 1) ON DUPLICATE KEY UPDATE rewrites_today = rewrites_today + 1')->execute([$userId, $today]); }
+        else { $db->prepare('INSERT INTO usage_log (guest_ip, log_date, rewrites_today) VALUES (?, ?, 1) ON DUPLICATE KEY UPDATE rewrites_today = rewrites_today + 1')->execute([$guestIp, $today]); }
+    }
+    $srOut = ['success' => true, 'v1' => $srResult['v1'], 'v2' => $srResult['v2'], 'v3' => $srResult['v3']];
+    if (!empty($srResult['v1_label'])) $srOut['v1_label'] = $srResult['v1_label'];
+    if (!empty($srResult['v2_label'])) $srOut['v2_label'] = $srResult['v2_label'];
+    if (!empty($srResult['v3_label'])) $srOut['v3_label'] = $srResult['v3_label'];
+    echo json_encode($srOut); exit;
+}
+
+// ── Ghosting Recovery ─────────────────────────────────────────────────────────
+if ($mode === 'ghosting') {
+    $ghostCtx   = $input['ghostContext'] ?? 'General';
+    $timeGap    = $input['timeGap']      ?? '1 week';
+    $grLang     = trim($input['language'] ?? 'English');
+    $grLangInstr = ($grLang && $grLang !== 'English') ? "Write all 3 messages in {$grLang}." : 'Write in English.';
+    $ctxMap = ['Job/Client' => 'professional job application or client relationship', 'Friend' => 'friendship', 'Dating' => 'dating or romantic interest', 'Networking' => 'professional networking', 'General' => 'general communication'];
+    $ctxDesc   = $ctxMap[$ghostCtx] ?? $ghostCtx;
+    $lastMsgLine = $message ? "Their last message / what was sent:\n\"{$message}\"\n\n" : '';
+    $grPrompt = "Someone hasn't responded for {$timeGap} in a {$ctxDesc} context. "
+        . $lastMsgLine
+        . "Generate 3 distinct, natural follow-up messages that feel zero-awkward and prompt a response. "
+        . "Each should have a different angle: e.g. one casual/friendly, one light humor, one value-add or question. "
+        . "For each, provide a short 2-4 word label. {$grLangInstr}\n\n"
+        . "Respond ONLY with valid JSON: {\"v1\":\"...\",\"v1_label\":\"...\",\"v2\":\"...\",\"v2_label\":\"...\",\"v3\":\"...\",\"v3_label\":\"...\"}";
+    $grPayload = json_encode(['model' => 'gpt-4o', 'temperature' => 0.82, 'max_tokens' => 900, 'response_format' => ['type' => 'json_object'], 'messages' => [['role' => 'system', 'content' => 'You are ReplyTonic, an expert in human communication. You craft follow-up messages that feel genuine, non-desperate, and natural. Always return exactly the JSON format requested — nothing else.'], ['role' => 'user', 'content' => $grPrompt]]]);
+    $ch = curl_init('https://api.openai.com/v1/chat/completions');
+    curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_POST => true, CURLOPT_POSTFIELDS => $grPayload, CURLOPT_HTTPHEADER => ['Content-Type: application/json', "Authorization: Bearer {$OPENAI_API_KEY}"], CURLOPT_TIMEOUT => 30]);
+    $grResp = curl_exec($ch); $grCode = curl_getinfo($ch, CURLINFO_HTTP_CODE); curl_close($ch);
+    if (!$grResp || $grCode !== 200) { http_response_code(500); echo json_encode(['error' => 'AI request failed. Please try again.']); exit; }
+    $grData = json_decode($grResp, true); $grContent = $grData['choices'][0]['message']['content'] ?? ''; $grResult = json_decode($grContent, true);
+    if (!isset($grResult['v1'], $grResult['v2'], $grResult['v3'])) { http_response_code(500); echo json_encode(['error' => 'Unexpected AI response. Please try again.']); exit; }
+    if (!$isPremium) {
+        if ($userId) { $db->prepare('INSERT INTO usage_log (user_id, log_date, rewrites_today) VALUES (?, ?, 1) ON DUPLICATE KEY UPDATE rewrites_today = rewrites_today + 1')->execute([$userId, $today]); }
+        else { $db->prepare('INSERT INTO usage_log (guest_ip, log_date, rewrites_today) VALUES (?, ?, 1) ON DUPLICATE KEY UPDATE rewrites_today = rewrites_today + 1')->execute([$guestIp, $today]); }
+    }
+    $grOut = ['success' => true, 'v1' => $grResult['v1'], 'v2' => $grResult['v2'], 'v3' => $grResult['v3']];
+    if (!empty($grResult['v1_label'])) $grOut['v1_label'] = $grResult['v1_label'];
+    if (!empty($grResult['v2_label'])) $grOut['v2_label'] = $grResult['v2_label'];
+    if (!empty($grResult['v3_label'])) $grOut['v3_label'] = $grResult['v3_label'];
+    echo json_encode($grOut); exit;
+}
+
+// ── Troll Aikido ──────────────────────────────────────────────────────────────
+if ($mode === 'troll-aikido') {
+    $taLang     = trim($input['language'] ?? 'English');
+    $taLangInstr = ($taLang && $taLang !== 'English') ? "Write all 3 responses in {$taLang}." : 'Write in English.';
+    $taPrompt = "Here is a hostile, negative, or troll-like message:\n\"{$message}\"\n\n"
+        . "First, classify this message in 2-4 words (e.g. 'Passive-Aggressive', 'Outright Trolling', 'Angry Frustration', 'Bad Faith Criticism').\n\n"
+        . "Then generate 3 strategic response options:\n"
+        . "1. Witty Jujitsu — clever, disarming humor that makes you look calm and smart\n"
+        . "2. Calm Fact-Check — polite, factual correction without emotion\n"
+        . "3. Kill With Kindness — so gracious and warm it completely defuses the attack\n\n"
+        . "{$taLangInstr}\n\n"
+        . "Respond ONLY with valid JSON: {\"classification\":\"...\",\"v1\":\"...\",\"v1_label\":\"Witty Jujitsu\",\"v2\":\"...\",\"v2_label\":\"Calm Fact-Check\",\"v3\":\"...\",\"v3_label\":\"Kill With Kindness\"}";
+    $taPayload = json_encode(['model' => 'gpt-4o', 'temperature' => 0.82, 'max_tokens' => 900, 'response_format' => ['type' => 'json_object'], 'messages' => [['role' => 'system', 'content' => 'You are ReplyTonic, a master of de-escalation and graceful communication. You help people respond to negativity with intelligence and class. Always return exactly the JSON format requested — nothing else.'], ['role' => 'user', 'content' => $taPrompt]]]);
+    $ch = curl_init('https://api.openai.com/v1/chat/completions');
+    curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_POST => true, CURLOPT_POSTFIELDS => $taPayload, CURLOPT_HTTPHEADER => ['Content-Type: application/json', "Authorization: Bearer {$OPENAI_API_KEY}"], CURLOPT_TIMEOUT => 30]);
+    $taResp = curl_exec($ch); $taCode = curl_getinfo($ch, CURLINFO_HTTP_CODE); curl_close($ch);
+    if (!$taResp || $taCode !== 200) { http_response_code(500); echo json_encode(['error' => 'AI request failed. Please try again.']); exit; }
+    $taData = json_decode($taResp, true); $taContent = $taData['choices'][0]['message']['content'] ?? ''; $taResult = json_decode($taContent, true);
+    if (!isset($taResult['v1'], $taResult['v2'], $taResult['v3'])) { http_response_code(500); echo json_encode(['error' => 'Unexpected AI response. Please try again.']); exit; }
+    if (!$isPremium) {
+        if ($userId) { $db->prepare('INSERT INTO usage_log (user_id, log_date, rewrites_today) VALUES (?, ?, 1) ON DUPLICATE KEY UPDATE rewrites_today = rewrites_today + 1')->execute([$userId, $today]); }
+        else { $db->prepare('INSERT INTO usage_log (guest_ip, log_date, rewrites_today) VALUES (?, ?, 1) ON DUPLICATE KEY UPDATE rewrites_today = rewrites_today + 1')->execute([$guestIp, $today]); }
+    }
+    echo json_encode(['success' => true, 'classification' => $taResult['classification'] ?? 'Negative Message', 'v1' => $taResult['v1'], 'v2' => $taResult['v2'], 'v3' => $taResult['v3'], 'v1_label' => $taResult['v1_label'] ?? 'Witty Jujitsu', 'v2_label' => $taResult['v2_label'] ?? 'Calm Fact-Check', 'v3_label' => $taResult['v3_label'] ?? 'Kill With Kindness']);
+    exit;
+}
 
 // ── Tone & platform descriptions ──────────────────────────────────────────────
 $toneMap = [
@@ -112,6 +221,17 @@ $emojiInstruction    = $emoji          ? 'Naturally weave in 1–2 relevant emoj
 $languageInstruction = ($language && $language !== 'English') ? "Write all 3 versions in {$language}." : 'Write in English.';
 $sesqInstruction     = $sesquipedalian ? 'IMPORTANT: Use elaborate, sophisticated, sesquipedalian vocabulary — select the most impressive, uncommon, and intellectually formidable words available. Replace simple words with their grandiloquent equivalents. The output should sound erudite and intellectually formidable while still conveying the original meaning with perspicuity.' : '';
 $customInstrLine     = $customInstr    ? "Additional user instructions: {$customInstr}" : '';
+
+// Warmth / Firmness sliders instruction
+$sliderInstruction = '';
+if ($warmth >= 1 && $warmth <= 5) {
+    $wDesc = ['icy cold and detached', 'cool and minimal', 'neutral', 'warm and personable', 'very warm, caring, and heartfelt'][$warmth - 1];
+    $sliderInstruction .= "WARMTH LEVEL {$warmth}/5: Be {$wDesc}. ";
+}
+if ($firmness >= 1 && $firmness <= 5) {
+    $fDesc = ['very gentle, flexible, and accommodating', 'slightly firm but mostly open', 'balanced — firm yet friendly', 'firm, direct, and confident', 'very firm, assertive, and unwavering'][$firmness - 1];
+    $sliderInstruction .= "FIRMNESS LEVEL {$firmness}/5: Be {$fDesc}.";
+}
 
 // ── Human Touch (premium): make output bypass AI detectors ───────────────────
 $humanTouchInstruction = '';
@@ -154,6 +274,7 @@ if ($mode === 'reply') {
               . "{$lengthInstruction} {$emojiInstruction} {$languageInstruction}";
 }
 if ($sesqInstruction)       $userPrompt .= "\n\n" . $sesqInstruction;
+if ($sliderInstruction)     $userPrompt .= "\n\n" . $sliderInstruction;
 if ($customInstrLine)       $userPrompt .= "\n\n" . $customInstrLine;
 if ($humanTouchInstruction) $userPrompt .= "\n\n" . $humanTouchInstruction;
 if ($voiceInstruction)      $userPrompt .= "\n\n" . $voiceInstruction;

@@ -143,9 +143,9 @@ textarea::placeholder{color:var(--t3)}
 .tone-btn{padding:8px 15px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:100px;font-size:13px;font-weight:500;color:var(--t2);cursor:pointer;transition:all .2s}
 .tone-btn:hover{background:rgba(99,102,241,.1);border-color:rgba(99,102,241,.28);color:var(--t1)}
 .tone-btn.active{background:rgba(99,102,241,.18);border-color:rgba(99,102,241,.45);color:var(--i4)}
-.lang-select{appearance:none;-webkit-appearance:none;background:rgba(0,0,0,.35) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='rgba(255,255,255,0.4)' d='M5 6L0 0h10z'/%3E%3C/svg%3E") no-repeat right 12px center;border:1px solid var(--border);border-radius:var(--r12);padding:9px 34px 9px 14px;color:var(--t1);font-size:13px;font-family:inherit;font-weight:500;cursor:pointer;min-width:195px;transition:border-color .2s}
-.lang-select:focus{outline:none;border-color:rgba(99,102,241,.45)}
-.lang-select option,.lang-select optgroup{background:#0f0f1a;color:var(--t1)}
+.lang-select,.rt-select{appearance:none;-webkit-appearance:none;background:rgba(0,0,0,.35) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='rgba(255,255,255,0.4)' d='M5 6L0 0h10z'/%3E%3C/svg%3E") no-repeat right 12px center;border:1px solid var(--border);border-radius:var(--r12);padding:9px 34px 9px 14px;color:var(--t1);font-size:13px;font-family:inherit;font-weight:500;cursor:pointer;min-width:195px;transition:border-color .2s}
+.lang-select:focus,.rt-select:focus{outline:none;border-color:rgba(99,102,241,.45)}
+.lang-select option,.lang-select optgroup,.rt-select option,.rt-select optgroup{background:#0f0f1a;color:var(--t1)}
 /* TONE BLENDER */
 .blend-row{margin-top:12px}
 .blend-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(249,115,22,.75);margin-bottom:7px;display:flex;align-items:center;gap:7px}
@@ -468,6 +468,39 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
   .email-form{flex-direction:column}
   .ext-card{padding:28px 20px}
 }
+/* ===== WARMTH / FIRMNESS SLIDERS ===== */
+.sliders-row{display:flex;gap:20px;margin-top:14px;padding:14px 16px;background:rgba(99,102,241,.06);border:1px solid rgba(99,102,241,.14);border-radius:var(--r12)}
+.slider-block{flex:1;min-width:0}
+.slider-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.slider-name{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3)}
+.slider-val{font-size:12px;font-weight:700;color:var(--i4);min-width:60px;text-align:right}
+.slider-track{width:100%;height:6px;background:rgba(255,255,255,.08);border-radius:100px;position:relative;cursor:pointer}
+input[type=range].rt-slider{-webkit-appearance:none;appearance:none;width:100%;height:6px;background:transparent;cursor:pointer;margin:0}
+input[type=range].rt-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--i4);box-shadow:0 0 8px rgba(99,102,241,.5);border:2px solid #fff;cursor:pointer}
+input[type=range].rt-slider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--i4);box-shadow:0 0 8px rgba(99,102,241,.5);border:2px solid #fff;cursor:pointer}
+input[type=range].rt-slider::-webkit-slider-runnable-track{background:linear-gradient(to right,var(--i5) 0%,var(--i4) var(--fill,50%),rgba(255,255,255,.1) var(--fill,50%));border-radius:100px;height:6px}
+input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);border-radius:100px;height:6px}
+.slider-labels{display:flex;justify-content:space-between;font-size:9px;color:var(--t3);margin-top:3px}
+/* ===== SCREENSHOT UPLOAD ===== */
+.ss-upload-area{border:2px dashed rgba(99,102,241,.3);border-radius:var(--r12);padding:28px;text-align:center;cursor:pointer;transition:all .2s;position:relative;background:rgba(99,102,241,.03)}
+.ss-upload-area:hover,.ss-upload-area.drag-over{border-color:var(--i4);background:rgba(99,102,241,.08)}
+.ss-upload-icon{font-size:36px;margin-bottom:8px}
+.ss-upload-title{font-size:15px;font-weight:700;color:var(--t1);margin-bottom:4px}
+.ss-upload-hint{font-size:12px;color:var(--t3)}
+.ss-preview-wrap{position:relative;display:inline-block;max-width:100%}
+.ss-preview-img{max-width:100%;max-height:280px;border-radius:var(--r8);border:1px solid var(--border);display:block}
+.ss-remove-btn{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+/* ===== GHOST + TROLL PANELS ===== */
+.ghost-ctx-row,.troll-lang-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.ghost-ctx-btn,.troll-lang-btn{padding:7px 14px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--t2);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s}
+.ghost-ctx-btn.active,.troll-lang-btn.active{background:rgba(99,102,241,.18);color:var(--i4);border-color:rgba(99,102,241,.3)}
+.time-gap-wrap{margin-bottom:14px}
+.time-gap-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);margin-bottom:6px}
+.time-gap-row{display:flex;flex-wrap:wrap;gap:7px}
+.tg-btn{padding:5px 12px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--t2);font-size:11px;font-weight:600;cursor:pointer;transition:all .2s}
+.tg-btn.active{background:rgba(99,102,241,.18);color:var(--i4);border-color:rgba(99,102,241,.3)}
+.troll-classification{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:100px;background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.25);color:#fb923c;font-size:11px;font-weight:700;margin-bottom:14px}
+.new-tool-badge{display:inline-block;padding:2px 7px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-size:9px;font-weight:800;border-radius:100px;letter-spacing:.5px;vertical-align:middle;margin-left:4px}
 /* ===== AUTH / PREMIUM CSS ===== */
 .nav-auth{display:flex;align-items:center;gap:8px;margin-left:12px}
 .nav-auth-btn{padding:7px 16px;border-radius:var(--r8);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
@@ -701,9 +734,9 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
 
 <!-- HERO -->
 <section class="hero" id="tool">
-  <div class="badge"><span class="badge-dot"></span>AI-Powered &middot; 20+ Languages &middot; 7 AI Tools</div>
-  <h1>7 AI tools to make<br><span class="grad">every message count.</span></h1>
-  <p class="hero-sub">Rewrite, Reply, Summarize, Grammar Check, Humanize, Detect AI content, and Check Plagiarism &mdash; all in one place. Any language, any tone, any platform.</p>
+  <div class="badge"><span class="badge-dot"></span>AI-Powered &middot; 20+ Languages &middot; 11 AI Tools</div>
+  <h1>11 AI tools to make<br><span class="grad">every message count.</span></h1>
+  <p class="hero-sub">Rewrite, Reply, Screenshot-to-Reply, Ghosting Recovery, Troll Aikido, Summarize, Grammar Check, Humanize, Detect AI, and more &mdash; all in one place. Any language, any tone, any platform.</p>
 
   <div class="tool-card">
 
@@ -711,6 +744,9 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
     <div class="mode-tabs">
       <div class="mode-tab active" data-mode="rewrite" onclick="switchMode('rewrite')">✏️ Rewrite</div>
       <div class="mode-tab" data-mode="reply" onclick="switchMode('reply')">💬 Reply Generator</div>
+      <div class="mode-tab" data-mode="screenshot-reply" onclick="switchMode('screenshot-reply')">📸 Screenshot Reply <span class="new-tool-badge">NEW</span></div>
+      <div class="mode-tab" data-mode="ghosting" onclick="switchMode('ghosting')">👻 Ghosting Recovery <span class="new-tool-badge">NEW</span></div>
+      <div class="mode-tab" data-mode="troll-aikido" onclick="switchMode('troll-aikido')">🧘 Troll Aikido <span class="new-tool-badge">NEW</span></div>
       <div class="mode-tab" data-mode="followup" onclick="switchMode('followup')">↩️ Follow-Up</div>
       <div class="mode-tab" data-mode="bulk" onclick="switchMode('bulk')">📋 Bulk Rewrite</div>
     </div>
@@ -916,6 +952,26 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
         </div>
         <!-- My Voice -->
         <button class="mv-btn" id="myVoiceBtn" onclick="toggleVoicePanel()" title="Apply your personal writing style — Premium">🎤 My Voice <span class="premium-lock" id="mvLock">PRO</span></button>
+      </div>
+
+      <!-- WARMTH / FIRMNESS SLIDERS -->
+      <div class="sliders-row" id="slidersRow">
+        <div class="slider-block">
+          <div class="slider-hdr">
+            <span class="slider-name">❤️ Warmth</span>
+            <span class="slider-val" id="warmthVal">3 — Neutral</span>
+          </div>
+          <input type="range" class="rt-slider" id="warmthSlider" min="1" max="5" value="3" oninput="updateSlider('warmth',this.value)">
+          <div class="slider-labels"><span>Cold</span><span>Neutral</span><span>Warm</span></div>
+        </div>
+        <div class="slider-block">
+          <div class="slider-hdr">
+            <span class="slider-name">💪 Firmness</span>
+            <span class="slider-val" id="firmnessVal">3 — Balanced</span>
+          </div>
+          <input type="range" class="rt-slider" id="firmnessSlider" min="1" max="5" value="3" oninput="updateSlider('firmness',this.value)">
+          <div class="slider-labels"><span>Gentle</span><span>Balanced</span><span>Firm</span></div>
+        </div>
       </div>
 
       <!-- SUBJECT LINE (Email only) -->
@@ -1267,12 +1323,145 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
       <div class="bulk-results" id="bulkResults"></div>
     </div>
 
+    <!-- ===== SCREENSHOT REPLY PANEL ===== -->
+    <div class="mode-panel" id="mode-screenshot-reply">
+      <p class="mode-desc">Upload a WhatsApp, iMessage, or DM screenshot — get 3 smart, context-aware replies instantly.</p>
+
+      <div class="ss-upload-area" id="ssUploadArea" onclick="document.getElementById('ssFileInput').click()">
+        <div class="ss-upload-icon">📸</div>
+        <div class="ss-upload-text">Tap to upload screenshot</div>
+        <div class="ss-upload-sub">JPG, PNG, WEBP — max 5 MB</div>
+        <input type="file" id="ssFileInput" accept="image/*" style="display:none" onchange="handleSSFile(event)">
+      </div>
+      <div class="ss-preview-wrap" id="ssPreviewWrap" style="display:none">
+        <img class="ss-preview-img" id="ssPreviewImg" src="" alt="Screenshot preview">
+        <button class="ss-remove-btn" onclick="removeSSFile()">✕ Remove</button>
+      </div>
+
+      <div class="opts-row" style="margin-top:16px">
+        <div class="opt-group">
+          <label class="opt-label">🎭 Reply Tone</label>
+          <select class="rt-select" id="ssTone">
+            <option value="friendly">Friendly &amp; Natural</option>
+            <option value="professional">Professional</option>
+            <option value="funny">Funny &amp; Witty</option>
+            <option value="empathetic">Empathetic &amp; Warm</option>
+            <option value="concise">Brief &amp; Direct</option>
+          </select>
+        </div>
+        <div class="opt-group">
+          <label class="opt-label">🌐 Reply Language</label>
+          <select class="rt-select" id="ssLang">
+            <option value="English">🇺🇸 English</option>
+            <option value="Spanish">🇪🇸 Spanish</option>
+            <option value="French">🇫🇷 French</option>
+            <option value="German">🇩🇪 German</option>
+            <option value="Portuguese">🇧🇷 Portuguese</option>
+            <option value="Hindi">🇮🇳 Hindi</option>
+            <option value="Japanese">🇯🇵 Japanese</option>
+            <option value="Chinese (Simplified)">🇨🇳 Chinese</option>
+            <option value="Arabic">🇸🇦 Arabic</option>
+            <option value="Korean">🇰🇷 Korean</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="go-btn" id="ssBtn" onclick="generateScreenshotReply()">
+        <span id="ssTxt">📸 Generate Replies from Screenshot</span>
+      </button>
+      <div class="results" id="ssResults"></div>
+    </div>
+
+    <!-- ===== GHOSTING RECOVERY PANEL ===== -->
+    <div class="mode-panel" id="mode-ghosting">
+      <p class="mode-desc">Someone ghosted you? Pick the context and how long it's been — get a no-awkwardness follow-up message.</p>
+
+      <div class="opt-group" style="margin-bottom:12px">
+        <label class="opt-label">📋 Context</label>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
+          <button class="ghost-ctx-btn active" data-ctx="Job/Client" onclick="selectGhostCtx(this)">💼 Job / Client</button>
+          <button class="ghost-ctx-btn" data-ctx="Friend" onclick="selectGhostCtx(this)">👥 Friend</button>
+          <button class="ghost-ctx-btn" data-ctx="Dating" onclick="selectGhostCtx(this)">💕 Dating</button>
+          <button class="ghost-ctx-btn" data-ctx="Networking" onclick="selectGhostCtx(this)">🤝 Networking</button>
+          <button class="ghost-ctx-btn" data-ctx="General" onclick="selectGhostCtx(this)">📩 General</button>
+        </div>
+      </div>
+
+      <div class="opt-group" style="margin-bottom:12px">
+        <label class="opt-label">⏰ How long since last reply?</label>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
+          <button class="tg-btn active" data-gap="a few hours" onclick="selectTimeGap(this)">A few hours</button>
+          <button class="tg-btn" data-gap="1-2 days" onclick="selectTimeGap(this)">1–2 days</button>
+          <button class="tg-btn" data-gap="3-7 days" onclick="selectTimeGap(this)">3–7 days</button>
+          <button class="tg-btn" data-gap="1-2 weeks" onclick="selectTimeGap(this)">1–2 weeks</button>
+          <button class="tg-btn" data-gap="1+ months" onclick="selectTimeGap(this)">1+ months</button>
+        </div>
+      </div>
+
+      <div class="opt-group" style="margin-bottom:12px">
+        <label class="opt-label">💬 What was your last message? <span style="opacity:.6">(optional)</span></label>
+        <textarea class="msg-area" id="ghostMsg" rows="3" placeholder="e.g. Hey! Just following up on our call last week…"></textarea>
+      </div>
+
+      <div class="opt-group" style="margin-bottom:16px">
+        <label class="opt-label">🌐 Language</label>
+        <select class="rt-select" id="ghostLang">
+          <option value="English">🇺🇸 English</option>
+          <option value="Spanish">🇪🇸 Spanish</option>
+          <option value="French">🇫🇷 French</option>
+          <option value="German">🇩🇪 German</option>
+          <option value="Portuguese">🇧🇷 Portuguese</option>
+          <option value="Hindi">🇮🇳 Hindi</option>
+          <option value="Japanese">🇯🇵 Japanese</option>
+          <option value="Chinese (Simplified)">🇨🇳 Chinese</option>
+          <option value="Arabic">🇸🇦 Arabic</option>
+          <option value="Korean">🇰🇷 Korean</option>
+        </select>
+      </div>
+
+      <button class="go-btn" id="ghostBtn" onclick="generateGhostingRecovery()">
+        <span id="ghostTxt">👻 Generate Follow-Up Messages</span>
+      </button>
+      <div class="results" id="ghostResults"></div>
+    </div>
+
+    <!-- ===== TROLL AIKIDO PANEL ===== -->
+    <div class="mode-panel" id="mode-troll-aikido">
+      <p class="mode-desc">Paste a hostile, rude, or passive-aggressive message — get 3 strategic replies that defuse without losing face.</p>
+
+      <div class="opt-group" style="margin-bottom:12px">
+        <label class="opt-label">💬 Paste the hostile message</label>
+        <textarea class="msg-area" id="trollMsg" rows="4" placeholder="e.g. You clearly don't know what you're talking about. This is embarrassing."></textarea>
+      </div>
+
+      <div class="opt-group" style="margin-bottom:16px">
+        <label class="opt-label">🌐 Reply Language</label>
+        <select class="rt-select" id="trollLang">
+          <option value="English">🇺🇸 English</option>
+          <option value="Spanish">🇪🇸 Spanish</option>
+          <option value="French">🇫🇷 French</option>
+          <option value="German">🇩🇪 German</option>
+          <option value="Portuguese">🇧🇷 Portuguese</option>
+          <option value="Hindi">🇮🇳 Hindi</option>
+          <option value="Japanese">🇯🇵 Japanese</option>
+          <option value="Chinese (Simplified)">🇨🇳 Chinese</option>
+          <option value="Arabic">🇸🇦 Arabic</option>
+          <option value="Korean">🇰🇷 Korean</option>
+        </select>
+      </div>
+
+      <button class="go-btn" id="trollBtn" onclick="generateTrollAikido()">
+        <span id="trollTxt">🧘 Disarm with Aikido</span>
+      </button>
+      <div class="results" id="trollResults"></div>
+    </div>
+
   </div><!-- end tool-card -->
 </section>
 
 <!-- PROOF BAR -->
 <div class="proof-bar">
-  <div class="proof-item"><div class="proof-num">7</div><div class="proof-txt">AI Tools</div></div>
+  <div class="proof-item"><div class="proof-num">11</div><div class="proof-txt">AI Tools</div></div>
   <div class="proof-div"></div>
   <div class="proof-item"><div class="proof-num">20+</div><div class="proof-txt">Languages</div></div>
   <div class="proof-div"></div>
@@ -1285,7 +1474,7 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
 
 <!-- 7 AI TOOLS FEATURES SECTION -->
 <section class="sec" id="features">
-  <div class="eyebrow">7 AI Tools</div>
+  <div class="eyebrow">11 AI Tools</div>
   <h2>Everything you need to <span class="grad">communicate better.</span></h2>
   <p class="sec-sub">One AI-powered suite to rewrite, reply, summarize, check grammar, humanize, detect AI content, and check plagiarism &mdash; for any platform, in any language.</p>
 
@@ -2018,7 +2207,9 @@ function rewrite(){
   txt.textContent='Rewriting with AI...';
 
   var customInstr=document.getElementById('customInstr')?document.getElementById('customInstr').value.trim():'';
-  callAPI({message:v, platform:platform, tone:tone, tone2:tone2, language:lang, length:len, emoji:emojiOn, sesquipedalian:sesqOn, customInstructions:customInstr, mode:'rewrite'},
+  var warmth=parseInt(document.getElementById('warmthSlider').value)||3;
+  var firmness=parseInt(document.getElementById('firmnessSlider').value)||3;
+  callAPI({message:v, platform:platform, tone:tone, tone2:tone2, language:lang, length:len, emoji:emojiOn, sesquipedalian:sesqOn, customInstructions:customInstr, mode:'rewrite', warmth:warmth, firmness:firmness},
     function(d){
       var blendNote=(tone2&&tone2!=='None'&&tone2!==tone)?getBlendedNote(tone,tone2):'';
       renderVersions({v1:d.v1,v2:d.v2,v3:d.v3,blendNote:blendNote,lang:lang},tone,tone2,v,lang);
@@ -3154,6 +3345,133 @@ callAPI=function(payload, onSuccess, onError){
 
 // ── Boot ────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', initAuth);
+
+// ── Warmth / Firmness Sliders ────────────────────────────────────────
+var warmthLabels=['1 — Icy Cold','2 — Cool','3 — Neutral','4 — Warm','5 — Caring'];
+var firmnessLabels=['1 — Gentle','2 — Soft','3 — Balanced','4 — Firm','5 — Assertive'];
+function updateSlider(type,val){
+  val=parseInt(val);
+  if(type==='warmth'){
+    document.getElementById('warmthVal').textContent=warmthLabels[val-1]||val;
+  } else {
+    document.getElementById('firmnessVal').textContent=firmnessLabels[val-1]||val;
+  }
+}
+
+// ── Screenshot Reply ─────────────────────────────────────────────────
+var ssBase64=''; var ssMime='image/jpeg';
+function handleSSFile(e){
+  var file=e.target.files[0]; if(!file) return;
+  if(file.size>5*1024*1024){alert('Image must be under 5 MB.');return;}
+  ssMime=file.type||'image/jpeg';
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    ssBase64=ev.target.result.split(',')[1];
+    document.getElementById('ssPreviewImg').src=ev.target.result;
+    document.getElementById('ssPreviewWrap').style.display='flex';
+    document.getElementById('ssUploadArea').style.display='none';
+  };
+  reader.readAsDataURL(file);
+}
+function removeSSFile(){
+  ssBase64=''; ssMime='image/jpeg';
+  document.getElementById('ssFileInput').value='';
+  document.getElementById('ssPreviewWrap').style.display='none';
+  document.getElementById('ssUploadArea').style.display='flex';
+}
+function generateScreenshotReply(){
+  if(!ssBase64){alert('Please upload a screenshot first.');return;}
+  var tone=document.getElementById('ssTone').value;
+  var lang=document.getElementById('ssLang').value;
+  var btn=document.getElementById('ssBtn');
+  var txt=document.getElementById('ssTxt');
+  btn.classList.add('busy'); txt.textContent='Analyzing screenshot…';
+  callAPI({mode:'screenshot-reply',imageData:ssBase64,imageMimeType:ssMime,tone:tone,language:lang},
+    function(d){
+      btn.classList.remove('busy'); txt.textContent='📸 Generate Replies from Screenshot';
+      renderNewToolResults('ssResults',d,null);
+    },
+    function(err){
+      btn.classList.remove('busy'); txt.textContent='📸 Generate Replies from Screenshot';
+      if(err) alert('⚠️ '+err);
+    }
+  );
+}
+
+// ── Ghosting Recovery ────────────────────────────────────────────────
+var selectedGhostCtx='Job/Client'; var selectedTimeGap='a few hours';
+function selectGhostCtx(el){
+  document.querySelectorAll('.ghost-ctx-btn').forEach(function(b){b.classList.remove('active');});
+  el.classList.add('active'); selectedGhostCtx=el.dataset.ctx;
+}
+function selectTimeGap(el){
+  document.querySelectorAll('.tg-btn').forEach(function(b){b.classList.remove('active');});
+  el.classList.add('active'); selectedTimeGap=el.dataset.gap;
+}
+function generateGhostingRecovery(){
+  var msg=document.getElementById('ghostMsg').value.trim();
+  var lang=document.getElementById('ghostLang').value;
+  var btn=document.getElementById('ghostBtn');
+  var txt=document.getElementById('ghostTxt');
+  btn.classList.add('busy'); txt.textContent='Crafting follow-ups…';
+  callAPI({mode:'ghosting',ghostContext:selectedGhostCtx,timeGap:selectedTimeGap,message:msg,language:lang},
+    function(d){
+      btn.classList.remove('busy'); txt.textContent='👻 Generate Follow-Up Messages';
+      renderNewToolResults('ghostResults',d,null);
+    },
+    function(err){
+      btn.classList.remove('busy'); txt.textContent='👻 Generate Follow-Up Messages';
+      if(err) alert('⚠️ '+err);
+    }
+  );
+}
+
+// ── Troll Aikido ─────────────────────────────────────────────────────
+function generateTrollAikido(){
+  var msg=document.getElementById('trollMsg').value.trim();
+  if(!msg){alert('Paste the hostile message first.');return;}
+  var lang=document.getElementById('trollLang').value;
+  var btn=document.getElementById('trollBtn');
+  var txt=document.getElementById('trollTxt');
+  btn.classList.add('busy'); txt.textContent='Applying Aikido…';
+  callAPI({mode:'troll-aikido',message:msg,language:lang},
+    function(d){
+      btn.classList.remove('busy'); txt.textContent='🧘 Disarm with Aikido';
+      var html='';
+      if(d.classification){
+        html+='<div class="troll-classification">🎯 Detected: <strong>'+escHtml(d.classification)+'</strong></div>';
+      }
+      renderNewToolResults('trollResults',d,html);
+    },
+    function(err){
+      btn.classList.remove('busy'); txt.textContent='🧘 Disarm with Aikido';
+      if(err) alert('⚠️ '+err);
+    }
+  );
+}
+
+// ── Shared result renderer for new tools ────────────────────────────
+function renderNewToolResults(containerId,d,prependHtml){
+  var container=document.getElementById(containerId);
+  if(!container) return;
+  var labels=[d.v1_label||'Option 1',d.v2_label||'Option 2',d.v3_label||'Option 3'];
+  var texts=[d.v1,d.v2,d.v3];
+  var html=prependHtml||'';
+  for(var i=0;i<3;i++){
+    if(!texts[i]) continue;
+    var escaped=escHtml(texts[i]);
+    var escapedAttr=texts[i].replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    html+='<div class="ver-card">'
+      +'<div class="ver-num"><span>'+escHtml(labels[i])+'</span></div>'
+      +'<div class="ver-text">'+escaped+'</div>'
+      +'<div class="ver-actions">'
+        +'<button class="ver-btn ver-copy-btn" onclick="copyVer(this)">📋 Copy</button>'
+      +'</div>'
+      +'</div>';
+  }
+  container.innerHTML=html;
+  container.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
 </script>
 
 <!-- METRICS TOGGLE (shown on medium screens 900–1199px) -->
