@@ -185,6 +185,90 @@ if ($mode === 'troll-aikido') {
     exit;
 }
 
+// ── Thread-Extender & Growth Commenter ───────────────────────────────────────
+if ($mode === 'thread-extender') {
+    $modeType  = $input['modeType']  ?? 'thread-reply'; // thread-reply | growth-comment
+    $platform  = $input['platform']  ?? 'General';
+    $language  = $input['language']  ?? 'English';
+    if (!$message) { http_response_code(400); echo json_encode(['error' => 'Post or comment text is required.']); exit; }
+
+    if ($modeType === 'growth-comment') {
+        $tePrompt = "You are a social media growth strategist. A creator wants to leave a high-value comment on the following {$platform} post to build authority and spark a reply.\n\nPost:\n\"{$message}\"\n\nGenerate 3 distinct outbound comment options. Each comment must:\n- Add a genuine insight, stat, or perspective that makes the OP feel seen\n- Sound like a thoughtful human (NOT a bot or spam)\n- End with one natural, low-pressure question that invites a reply\n- Be 1-3 sentences max\n- Sound authentic, NOT salesy\n\nRespond ONLY in {$language}.\n\nReturn valid JSON: {\"v1\":\"...\",\"v1_label\":\"Insight Comment\",\"v2\":\"...\",\"v2_label\":\"Contrarian Take\",\"v3\":\"...\",\"v3_label\":\"Story Hook\"}";
+    } else {
+        $tePrompt = "You are a social media engagement expert. A creator received the following comment on their {$platform} post and wants to reply in a way that EXTENDS the thread and sparks more replies.\n\nComment received:\n\"{$message}\"\n\nGenerate 3 distinct reply options. Each reply must:\n- Genuinely acknowledge what the commenter said\n- Add a brief insight or personal angle\n- End with ONE natural follow-up question that keeps the conversation going\n- Sound warm and human, NOT formulaic\n- Be 1-3 sentences max\n\nRespond ONLY in {$language}.\n\nReturn valid JSON: {\"v1\":\"...\",\"v1_label\":\"Thread Extender\",\"v2\":\"...\",\"v2_label\":\"Story Hook\",\"v3\":\"...\",\"v3_label\":\"Curiosity Loop\"}";
+    }
+
+    $teMessages = [['role' => 'user', 'content' => $tePrompt]];
+    [$teResp, $teCode] = callOpenAI($teMessages, 600);
+    $teResult = extractJsonFromResponse($teResp);
+    if (!$teResp || $teCode !== 200) { http_response_code(500); echo json_encode(['error' => 'AI request failed. Please try again.']); exit; }
+    if (!isset($teResult['v1'], $teResult['v2'], $teResult['v3'])) { http_response_code(500); echo json_encode(['error' => 'Unexpected AI response. Please try again.']); exit; }
+    updateUsage($userId, $isPremium);
+    echo json_encode(['success' => true, 'v1' => $teResult['v1'], 'v2' => $teResult['v2'], 'v3' => $teResult['v3'], 'v1_label' => $teResult['v1_label'] ?? 'Option 1', 'v2_label' => $teResult['v2_label'] ?? 'Option 2', 'v3_label' => $teResult['v3_label'] ?? 'Option 3']);
+    exit;
+}
+
+// ── Corporate Translator ──────────────────────────────────────────────────────
+if ($mode === 'corporate-translator') {
+    $subMode  = $input['subMode']  ?? 'translate'; // translate | decode
+    $language = $input['language'] ?? 'English';
+    if (!$message) { http_response_code(400); echo json_encode(['error' => 'Message text is required.']); exit; }
+
+    if ($subMode === 'decode') {
+        $ctPrompt = "You are an executive communication analyst. Decode the following vague corporate email or Slack message and extract exactly what the sender actually wants.\n\nMessage:\n\"{$message}\"\n\nReturn valid JSON with these exact keys:\n{\"hidden_asks\":[\"ask1\",\"ask2\"],\"deadlines\":[\"deadline1\"],\"action_items\":[\"item1\",\"item2\"],\"subtext\":\"One sentence on the real emotional tone or unspoken concern\",\"urgency\":\"Low|Medium|High\"}";
+    } else {
+        $ctPrompt = "You are a workplace communication diplomat. Translate the following raw, unfiltered brain-dump into polished, professional diplomatic language suitable for Slack or email.\n\nRaw message:\n\"{$message}\"\n\nReturn valid JSON:\n{\"diplomatic\":\"The polished version of the message\",\"risk_level\":\"Low|Medium|High\",\"risk_reason\":\"One sentence explaining bridge-burning risk\",\"risk_tip\":\"One specific suggestion to reduce the risk\"}";
+    }
+
+    $ctMessages = [['role' => 'user', 'content' => $ctPrompt]];
+    [$ctResp, $ctCode] = callOpenAI($ctMessages, 500);
+    $ctResult = extractJsonFromResponse($ctResp);
+    if (!$ctResp || $ctCode !== 200) { http_response_code(500); echo json_encode(['error' => 'AI request failed. Please try again.']); exit; }
+    updateUsage($userId, $isPremium);
+    echo json_encode(array_merge(['success' => true, 'subMode' => $subMode], $ctResult));
+    exit;
+}
+
+// ── Code-Switch & Slang Mode ──────────────────────────────────────────────────
+if ($mode === 'code-switch') {
+    $switchStyle = $input['switchStyle'] ?? 'conversational'; // conversational | hinglish | spanglish | casual
+    $language    = $input['language']    ?? 'English';
+    if (!$message) { http_response_code(400); echo json_encode(['error' => 'Message text is required.']); exit; }
+
+    $styleDesc = [
+        'conversational' => 'everyday conversational English — relaxed, natural, like texting a close friend. No stiff phrasing.',
+        'hinglish'       => 'natural Hinglish (Hindi-English code-switching) the way young urban Indians actually text. Mix Hindi words naturally.',
+        'spanglish'      => 'natural Spanglish (Spanish-English code-switching) the way bilingual Latinos actually text. Mix Spanish words naturally.',
+        'casual'         => 'ultra-casual, lowercase, minimal punctuation, with natural slang — the way Gen Z actually texts.',
+    ][$switchStyle] ?? 'everyday conversational English';
+
+    $csPrompt = "You are a multilingual communication expert who understands how real people actually text. Rewrite the following message in {$styleDesc}\n\nOriginal message:\n\"{$message}\"\n\nGenerate 3 versions that feel completely natural for this style. Do NOT sound like a formal translation.\n\nReturn valid JSON: {\"v1\":\"...\",\"v1_label\":\"Version 1\",\"v2\":\"...\",\"v2_label\":\"Version 2\",\"v3\":\"...\",\"v3_label\":\"Version 3\"}";
+
+    $csMessages = [['role' => 'user', 'content' => $csPrompt]];
+    [$csResp, $csCode] = callOpenAI($csMessages, 600);
+    $csResult = extractJsonFromResponse($csResp);
+    if (!$csResp || $csCode !== 200) { http_response_code(500); echo json_encode(['error' => 'AI request failed. Please try again.']); exit; }
+    if (!isset($csResult['v1'], $csResult['v2'], $csResult['v3'])) { http_response_code(500); echo json_encode(['error' => 'Unexpected AI response. Please try again.']); exit; }
+    updateUsage($userId, $isPremium);
+    echo json_encode(['success' => true, 'v1' => $csResult['v1'], 'v2' => $csResult['v2'], 'v3' => $csResult['v3'], 'v1_label' => $csResult['v1_label'] ?? 'Version 1', 'v2_label' => $csResult['v2_label'] ?? 'Version 2', 'v3_label' => $csResult['v3_label'] ?? 'Version 3']);
+    exit;
+}
+
+// ── Voice DNA ─────────────────────────────────────────────────────────────────
+if ($mode === 'voice-dna') {
+    // message field holds all sample messages joined by \n---\n
+    if (!$message) { http_response_code(400); echo json_encode(['error' => 'Sample messages are required.']); exit; }
+
+    $vdPrompt = "You are a personal communication analyst. Analyze these sample text messages from one person and extract their unique texting DNA.\n\nSample messages:\n{$message}\n\nReturn valid JSON:\n{\"style_summary\":\"2-3 sentences describing their overall texting personality\",\"patterns\":[\"pattern1\",\"pattern2\",\"pattern3\",\"pattern4\"],\"vocabulary\":[\"word/phrase1\",\"word/phrase2\",\"word/phrase3\"],\"avoid_phrases\":[\"AI cliche1\",\"AI cliche2\",\"AI cliche3\"],\"formality_level\":\"Casual|Semi-Casual|Semi-Formal|Formal\",\"emoji_usage\":\"None|Rare|Moderate|Heavy\",\"profile_instruction\":\"A compact system-prompt instruction (max 60 words) that tells an AI how to write exactly like this person\"}";
+
+    $vdMessages = [['role' => 'user', 'content' => $vdPrompt]];
+    [$vdResp, $vdCode] = callOpenAI($vdMessages, 700);
+    $vdResult = extractJsonFromResponse($vdResp);
+    if (!$vdResp || $vdCode !== 200) { http_response_code(500); echo json_encode(['error' => 'AI request failed. Please try again.']); exit; }
+    echo json_encode(array_merge(['success' => true], $vdResult));
+    exit;
+}
+
 // ── Tone & platform descriptions ──────────────────────────────────────────────
 $toneMap = [
   'Professional' => 'professional and business-appropriate',
