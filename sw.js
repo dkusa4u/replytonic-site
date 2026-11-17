@@ -1,7 +1,7 @@
-// ReplyBetter Service Worker
+// ReplyTonic Service Worker
 // Caches the app shell for offline use and fast loading
 
-const CACHE_NAME = 'replybetter-v1';
+const CACHE_NAME = 'replytonic-v3';
 const OFFLINE_URL = '/';
 
 // Assets to pre-cache on install
@@ -93,7 +93,7 @@ self.addEventListener('fetch', event => {
 self.addEventListener('push', event => {
   if (!event.data) return;
   const data = event.data.json();
-  self.registration.showNotification(data.title || 'ReplyBetter', {
+  self.registration.showNotification(data.title || 'ReplyTonic', {
     body: data.body || 'Your rewrite is ready.',
     icon: '/icons/icon-192.png',
     badge: '/icons/icon-96.png',

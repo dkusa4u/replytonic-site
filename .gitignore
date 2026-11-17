@@ -1,6 +1,9 @@
 # API key config — keep off GitHub, edit directly on Hostinger
 api/config.php
 
+# Utility / temp scripts — delete from Hostinger after use
+api/reset-usage.php
+
 # OS files
 .DS_Store
 Thumbs.db
