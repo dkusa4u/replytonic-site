@@ -11,6 +11,53 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST')    { http_response_code(405); echo js
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/db.php';
 
+// ── Shared OpenAI helper (used by thread-extender, corporate-translator, code-switch, voice-dna) ──
+function callOpenAI(array $messages, int $maxTokens = 900): array {
+    global $OPENAI_API_KEY;
+    $payload = json_encode([
+        'model'           => 'gpt-4o',
+        'temperature'     => 0.82,
+        'max_tokens'      => $maxTokens,
+        'response_format' => ['type' => 'json_object'],
+        'messages'        => $messages,
+    ]);
+    $ch = curl_init('https://api.openai.com/v1/chat/completions');
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST           => true,
+        CURLOPT_POSTFIELDS     => $payload,
+        CURLOPT_HTTPHEADER     => [
+            'Content-Type: application/json',
+            "Authorization: Bearer {$OPENAI_API_KEY}",
+        ],
+        CURLOPT_TIMEOUT => 30,
+    ]);
+    $resp = curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    return [$resp, $code];
+}
+
+function extractJsonFromResponse($response): array {
+    if (!$response) return [];
+    $data    = json_decode($response, true);
+    $content = $data['choices'][0]['message']['content'] ?? '';
+    return json_decode($content, true) ?: [];
+}
+
+function updateUsage($userId, bool $isPremium): void {
+    if ($isPremium) return;
+    global $db, $guestIp;
+    $today = date('Y-m-d');
+    if ($userId) {
+        $db->prepare('INSERT INTO usage_log (user_id, log_date, rewrites_today) VALUES (?, ?, 1) ON DUPLICATE KEY UPDATE rewrites_today = rewrites_today + 1')
+           ->execute([$userId, $today]);
+    } else {
+        $db->prepare('INSERT INTO usage_log (guest_ip, log_date, rewrites_today) VALUES (?, ?, 1) ON DUPLICATE KEY UPDATE rewrites_today = rewrites_today + 1')
+           ->execute([$guestIp, $today]);
+    }
+}
+
 // ── Usage gate ────────────────────────────────────────────────────────────────
 $claims   = get_auth_user();
 $today    = date('Y-m-d');

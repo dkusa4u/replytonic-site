@@ -5,14 +5,17 @@ CREATE TABLE IF NOT EXISTS users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   email VARCHAR(255) UNIQUE NOT NULL,
   password_hash VARCHAR(255) NOT NULL,
-  plan ENUM('free','premium') DEFAULT 'free',
+  plan ENUM('free','premium','teams') DEFAULT 'free',
   stripe_customer_id VARCHAR(255) DEFAULT NULL,
   stripe_subscription_id VARCHAR(255) DEFAULT NULL,
   plan_expires_at TIMESTAMP NULL DEFAULT NULL,
+  reset_token VARCHAR(64) NULL DEFAULT NULL,
+  reset_token_expires DATETIME NULL DEFAULT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   INDEX idx_email (email),
   INDEX idx_stripe_customer (stripe_customer_id),
-  INDEX idx_stripe_sub (stripe_subscription_id)
+  INDEX idx_stripe_sub (stripe_subscription_id),
+  INDEX idx_reset_token (reset_token)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS usage_log (
