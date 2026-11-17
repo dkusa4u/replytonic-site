@@ -293,6 +293,51 @@ textarea::placeholder{color:var(--t3)}
 .bulk-actions{display:flex;gap:7px;margin-top:9px}
 .bulk-copy{padding:6px 11px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:var(--r8);font-size:12px;font-weight:600;color:var(--t2);cursor:pointer;transition:all .2s}
 .bulk-copy:hover{background:rgba(255,255,255,.12);color:var(--t1)}
+/* ===== TOOL RESULT CARDS (Grammar, Summarize, Humanize, AI Detector, Plagiarism) ===== */
+.tool-result-card{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--r12);padding:16px;margin-bottom:12px}
+.tool-result-card:last-child{margin-bottom:0}
+.trc-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);margin-bottom:6px}
+.trc-text{font-size:14px;color:var(--t1);line-height:1.65;white-space:pre-wrap}
+.trc-copy-btn{margin-top:10px;padding:7px 13px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:var(--r8);font-size:12px;font-weight:600;color:var(--t2);cursor:pointer;transition:all .2s}
+.trc-copy-btn:hover{background:rgba(255,255,255,.12);color:var(--t1)}
+/* Score meter */
+.score-meter-wrap{margin:10px 0}
+.score-bar-bg{background:rgba(255,255,255,.08);border-radius:99px;height:10px;overflow:hidden}
+.score-bar-fill{height:10px;border-radius:99px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.score-label-row{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+.score-num{font-size:24px;font-weight:800;line-height:1}
+.score-verdict{font-size:13px;color:var(--t2)}
+/* Signal chips */
+.chip-list{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.chip{font-size:11px;font-weight:600;padding:4px 10px;border-radius:99px;border:1px solid transparent}
+.chip-ai{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3);color:rgba(252,165,165,.9)}
+.chip-human{background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.25);color:#4ade80}
+/* Changes list */
+.change-list{margin:0;padding:0;list-style:none}
+.change-list li{font-size:13px;color:var(--t2);padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);line-height:1.5}
+.change-list li:last-child{border-bottom:none}
+.change-list li::before{content:'✓ ';color:#4ade80;font-weight:700}
+/* Grammar score badge */
+.grammar-score{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:var(--r8);padding:8px 14px;margin-bottom:12px}
+.grammar-score-num{font-size:22px;font-weight:800}
+/* Plagiarism flagged table */
+.flagged-list{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.flagged-item{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);border-radius:var(--r8);padding:10px 12px}
+.flagged-phrase{font-size:13px;font-weight:600;color:rgba(252,165,165,.9);margin-bottom:3px}
+.flagged-reason{font-size:12px;color:var(--t3);line-height:1.4}
+.risk-badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;margin-left:7px;vertical-align:middle}
+.risk-none,.risk-low{background:rgba(74,222,128,.12);color:#4ade80}
+.risk-moderate{background:rgba(251,191,36,.12);color:#fbbf24}
+.risk-high,.risk-critical{background:rgba(239,68,68,.14);color:rgba(252,165,165,.9)}
+/* Before/after comparison */
+.ba-compare{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+@media(max-width:540px){.ba-compare{grid-template-columns:1fr}}
+.ba-box{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--r8);padding:10px 12px}
+.ba-box-label{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px}
+.ba-box-label.before{color:rgba(252,165,165,.7)}
+.ba-box-label.after{color:#4ade80}
+.ba-pct{font-size:26px;font-weight:800;line-height:1}
+.ba-desc{font-size:12px;color:var(--t3);margin-top:2px}
 /* PROOF BAR */
 .proof-bar{position:relative;z-index:1;background:rgba(255,255,255,.02);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:22px 24px;display:flex;justify-content:center;align-items:center;gap:48px;flex-wrap:wrap}
 .proof-item{text-align:center}
@@ -815,7 +860,7 @@ input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);bo
 
 <!-- HERO -->
 <section class="hero" id="tool">
-  <div class="badge"><span class="badge-dot"></span>AI-Powered &middot; 20+ Languages &middot; 15 AI Tools</div>
+  <div class="badge"><span class="badge-dot"></span>AI-Powered &middot; 20+ Languages &middot; 20 AI Tools</div>
   <h1>15 AI tools to make<br><span class="grad">every message count.</span></h1>
   <p class="hero-sub">Rewrite, Reply, Thread-Extender, Corporate Translator, Code-Switch, Voice DNA, Screenshot-to-Reply, Ghosting Recovery, Troll Aikido, and more &mdash; all in one place. Any language, any tone, any platform.</p>
 
@@ -835,6 +880,11 @@ input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);bo
       <div class="mode-tab" data-mode="contacts" onclick="switchMode('contacts')">👥 Contacts <span class="new-tool-badge">NEW</span></div>
       <div class="mode-tab" data-mode="followup" onclick="switchMode('followup')">↩️ Follow-Up</div>
       <div class="mode-tab" data-mode="bulk" onclick="switchMode('bulk')">📋 Bulk Rewrite</div>
+      <div class="mode-tab" data-mode="grammar" onclick="switchMode('grammar')">📝 Grammar</div>
+      <div class="mode-tab" data-mode="summarize" onclick="switchMode('summarize')">📄 Summarize</div>
+      <div class="mode-tab" data-mode="humanize" onclick="switchMode('humanize')">🤖 Humanize</div>
+      <div class="mode-tab" data-mode="detect-ai" onclick="switchMode('detect-ai')">🔍 AI Detector</div>
+      <div class="mode-tab" data-mode="plagiarism" onclick="switchMode('plagiarism')">♻️ Plagiarism</div>
     </div>
 
     <!-- ===== MODE 1: REWRITE ===== -->
@@ -1773,13 +1823,89 @@ input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);bo
         <div id="contactList"><p style="font-size:13px;color:var(--t4);text-align:center;padding:16px 0">No contacts yet — add one above</p></div>
       </div>
     </div>
+    </div>
+
+    <!-- ===== MODE: GRAMMAR CHECK ===== -->
+    <div class="mode-panel" id="mode-grammar">
+      <p class="mode-desc">Instantly fix grammar, spelling, and punctuation. Get a list of every change made and a quality score.</p>
+      <div class="tool-label">Your Text</div>
+      <div class="msg-voice-wrap"><textarea id="grammarInp" rows="6" class="inp" placeholder="Paste the text you want to check for grammar errors…"></textarea><button class="mic-btn" onclick="startVoiceInput('grammarInp','')" title="Speak">🎤</button></div>
+      <div class="char-counter" id="cc-grammarInp"></div>
+      <div class="opts-row" style="margin-top:12px">
+        <div class="opt-group">
+          <label class="opt-label">Mode</label>
+          <select id="grammarMode" class="lang-select">
+            <option value="fix">Auto-fix everything</option>
+            <option value="check">Show changes only</option>
+          </select>
+        </div>
+      </div>
+      <button class="go-btn" id="grammarBtn" onclick="runGrammar()"><span id="grammarTxt">📝 Check Grammar</span></button>
+      <div class="rt-msg" id="grammarMsg"></div>
+      <div id="grammarResults" style="display:none;margin-top:16px"></div>
+    </div>
+
+    <!-- ===== MODE: SUMMARIZE ===== -->
+    <div class="mode-panel" id="mode-summarize">
+      <p class="mode-desc">Paste any long message, email, or thread and get a concise summary in the format you choose.</p>
+      <div class="tool-label">Text to Summarize</div>
+      <div class="msg-voice-wrap"><textarea id="summarizeInp" rows="7" class="inp" placeholder="Paste the message, email thread, or text you want summarized…"></textarea><button class="mic-btn" onclick="startVoiceInput('summarizeInp','')" title="Speak">🎤</button></div>
+      <div class="char-counter" id="cc-summarizeInp"></div>
+      <div class="opts-row" style="margin-top:12px">
+        <div class="opt-group">
+          <label class="opt-label">Output Format</label>
+          <select id="summarizeLength" class="lang-select">
+            <option value="medium">Short paragraph (3–4 sentences)</option>
+            <option value="short">One-liner (1–2 sentences)</option>
+            <option value="bullet">Bullet points</option>
+            <option value="actions">Action items</option>
+          </select>
+        </div>
+      </div>
+      <button class="go-btn" id="summarizeBtn" onclick="runSummarize()"><span id="summarizeTxt">📄 Summarize</span></button>
+      <div class="rt-msg" id="summarizeMsg"></div>
+      <div id="summarizeResults" style="display:none;margin-top:16px"></div>
+    </div>
+
+    <!-- ===== MODE: HUMANIZE ===== -->
+    <div class="mode-panel" id="mode-humanize">
+      <p class="mode-desc">Transform AI-generated text into natural, human-sounding writing. See your AI-score drop from before to after.</p>
+      <div class="tool-label">AI Text to Humanize</div>
+      <div class="msg-voice-wrap"><textarea id="humanizeInp" rows="7" class="inp" placeholder="Paste AI-generated text here to make it sound more human…"></textarea><button class="mic-btn" onclick="startVoiceInput('humanizeInp','')" title="Speak">🎤</button></div>
+      <div class="char-counter" id="cc-humanizeInp"></div>
+      <button class="go-btn" id="humanizeBtn" onclick="runHumanize()" style="margin-top:16px"><span id="humanizeTxt">🤖 Humanize Text</span></button>
+      <div class="rt-msg" id="humanizeMsg"></div>
+      <div id="humanizeResults" style="display:none;margin-top:16px"></div>
+    </div>
+
+    <!-- ===== MODE: AI DETECTOR ===== -->
+    <div class="mode-panel" id="mode-detect-ai">
+      <p class="mode-desc">Analyze any text and get an AI-score with detailed signals explaining what gave it away.</p>
+      <div class="tool-label">Text to Analyze</div>
+      <div class="msg-voice-wrap"><textarea id="detectInp" rows="7" class="inp" placeholder="Paste text to check if it was written by AI…" style="min-height:150px"></textarea><button class="mic-btn" onclick="startVoiceInput('detectInp','')" title="Speak">🎤</button></div>
+      <div class="char-counter" id="cc-detectInp"></div>
+      <button class="go-btn" id="detectBtn" onclick="runDetectAI()" style="margin-top:16px"><span id="detectTxt">🔍 Analyze Text</span></button>
+      <div class="rt-msg" id="detectMsg"></div>
+      <div id="detectResults" style="display:none;margin-top:16px"></div>
+    </div>
+
+    <!-- ===== MODE: PLAGIARISM CHECK ===== -->
+    <div class="mode-panel" id="mode-plagiarism">
+      <p class="mode-desc">Check your writing for plagiarism risk. Flags overused phrases, clichés, and patterns that may match common sources.</p>
+      <div class="tool-label">Text to Check</div>
+      <div class="msg-voice-wrap"><textarea id="plagiarismInp" rows="7" class="inp" placeholder="Paste the text you want to check for plagiarism…" style="min-height:150px"></textarea><button class="mic-btn" onclick="startVoiceInput('plagiarismInp','')" title="Speak">🎤</button></div>
+      <div class="char-counter" id="cc-plagiarismInp"></div>
+      <button class="go-btn" id="plagiarismBtn" onclick="runPlagiarism()" style="margin-top:16px"><span id="plagiarismTxt">♻️ Check Plagiarism</span></button>
+      <div class="rt-msg" id="plagiarismMsg"></div>
+      <div id="plagiarismResults" style="display:none;margin-top:16px"></div>
+    </div>
 
   </div><!-- end tool-card -->
 </section>
 
 <!-- PROOF BAR -->
 <div class="proof-bar">
-  <div class="proof-item"><div class="proof-num">15</div><div class="proof-txt">AI Tools</div></div>
+  <div class="proof-item"><div class="proof-num">20</div><div class="proof-txt">AI Tools</div></div>
   <div class="proof-div"></div>
   <div class="proof-item"><div class="proof-num">20+</div><div class="proof-txt">Languages</div></div>
   <div class="proof-div"></div>
@@ -1792,7 +1918,7 @@ input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);bo
 
 <!-- 7 AI TOOLS FEATURES SECTION -->
 <section class="sec" id="features">
-  <div class="eyebrow">15 AI Tools</div>
+  <div class="eyebrow">20 AI Tools</div>
   <h2>Everything you need to <span class="grad">communicate better.</span></h2>
   <p class="sec-sub">One AI-powered suite to rewrite, reply, summarize, check grammar, humanize, detect AI content, and check plagiarism &mdash; for any platform, in any language.</p>
 
@@ -1866,8 +1992,8 @@ input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);bo
     <div class="feat-card" style="background:linear-gradient(135deg,rgba(99,102,241,.1),rgba(139,92,246,.07));border-color:rgba(99,102,241,.25)">
       <div class="feat-icon-wrap" style="background:rgba(99,102,241,.18)">🧩</div>
       <span class="feat-pill fp-indigo">Chrome Extension</span>
-      <h3>Use All 7 Tools Anywhere</h3>
-      <p>The ReplyTonic Chrome Extension brings all 7 tools to Gmail, LinkedIn, Slack, WhatsApp Web, and any text field — without leaving the page.</p>
+      <h3>Use All 20 Tools Anywhere</h3>
+      <p>The ReplyTonic Chrome Extension brings all 20 AI tools to Gmail, LinkedIn, Slack, WhatsApp Web, and any text field — without leaving the page.</p>
       <a href="https://chrome.google.com/webstore" target="_blank" class="feat-try-link" style="color:var(--i4)">Get the extension →</a>
     </div>
   </div>
@@ -1877,12 +2003,12 @@ input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);bo
 <section class="sec" id="how">
   <div class="eyebrow">How It Works</div>
   <h2>Pick a tool. Paste. Done in 2 seconds.</h2>
-  <p class="sec-sub">No sign-up needed to start. 7 tools, all in one tab. Each one takes plain text in and returns polished, professional output instantly.</p>
+  <p class="sec-sub">No sign-up needed to start. 20 AI tools, all in one tab. Each one takes plain text in and returns polished, professional output instantly.</p>
   <div class="steps">
     <div class="step">
       <div class="step-num">1</div>
       <h3>Choose Your Tool</h3>
-      <p>Select from 7 tools: Rewrite, Reply, Summarize, Grammar Check, Humanize, AI Detector, or Plagiarism Checker. Each is purpose-built for a specific communication need.</p>
+      <p>Select from 20 AI tools: Rewrite, Reply, Summarize, Grammar Check, Humanize, AI Detector, Plagiarism Checker, and more. Each is purpose-built for a specific communication need.</p>
     </div>
     <div class="step">
       <div class="step-num">2</div>
@@ -1958,7 +2084,7 @@ input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);bo
 <section class="sec" id="cases">
   <div class="eyebrow">Use Cases</div>
   <h2>Works for every situation.</h2>
-  <p class="sec-sub">7 tools, infinite use cases. Whether you're communicating at work, in class, or across languages — ReplyTonic has you covered.</p>
+  <p class="sec-sub">20 AI tools, infinite use cases. Whether you're communicating at work, in class, or across languages — ReplyTonic has you covered.</p>
   <div class="bento">
     <div class="bc">
       <span class="b-tag">Work &amp; Career</span>
@@ -2039,7 +2165,7 @@ input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);bo
       <div class="price">$0</div>
       <div class="period">forever</div>
       <ul class="feat-list">
-        <li>5 uses per day across all 7 tools</li>
+        <li>5 uses per day across all 20 tools</li>
         <li>All 6 tones &amp; 25+ platforms</li>
         <li>Rewrite, Reply, Summarize</li>
         <li>Grammar Check, AI Detector</li>
@@ -2054,7 +2180,7 @@ input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);bo
       <div class="price"><sup>$</sup>7</div>
       <div class="period">per month &middot; cancel anytime</div>
       <ul class="feat-list">
-        <li>Unlimited uses across all 7 tools</li>
+        <li>Unlimited uses across all 20 tools</li>
         <li>All 6 tones + custom tone blend</li>
         <li>25+ platforms &amp; 20+ languages</li>
         <li>Rewrite, Reply, Summarize</li>
@@ -2074,7 +2200,7 @@ input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);bo
       <div class="period">per month &middot; 5 seats included</div>
       <ul class="feat-list">
         <li>Everything in Premium</li>
-        <li>All 7 tools, unlimited</li>
+        <li>All 20 tools, unlimited</li>
         <li>5 team seats included</li>
         <li>Shared workspace &amp; history</li>
         <li>Shared templates library</li>
@@ -2094,8 +2220,8 @@ input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);bo
   <div class="ext-card">
     <div class="ext-left">
       <div class="ext-soon" style="background:rgba(74,222,128,.12);border-color:rgba(74,222,128,.28);color:#4ade80">✅ Available Now</div>
-      <h2>All 7 tools — without leaving the page.</h2>
-      <p>The ReplyTonic Chrome Extension brings all 7 AI tools to any website. Rewrite, reply, check grammar, detect AI content — all inside Gmail, LinkedIn, Slack, WhatsApp Web, and anywhere you type.</p>
+      <h2>All 20 tools — without leaving the page.</h2>
+      <p>The ReplyTonic Chrome Extension brings all 20 AI tools to any website. Rewrite, reply, check grammar, detect AI content — all inside Gmail, LinkedIn, Slack, WhatsApp Web, and anywhere you type.</p>
       <div id="extFormWrap">
         <a href="https://chrome.google.com/webstore" target="_blank" class="email-btn" style="display:inline-block;text-decoration:none;padding:13px 24px;font-size:15px;border-radius:12px">🧩 Add to Chrome — Free</a>
       </div>
@@ -2105,7 +2231,7 @@ input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);bo
         <span class="ext-feat">✓ LinkedIn</span>
         <span class="ext-feat">✓ Slack</span>
         <span class="ext-feat">✓ Any text field</span>
-        <span class="ext-feat">✓ 7 AI tools included</span>
+        <span class="ext-feat">✓ 20 AI tools included</span>
       </div>
     </div>
     <div class="ext-right">
@@ -2985,7 +3111,12 @@ function updateCharCount(taId,ccId,getLimitFn){
     {ta:'replyInp',cc:'cc-replyInp',fn:null},
     {ta:'fuInp1',cc:'cc-fuInp1',fn:null},
     {ta:'fuInp2',cc:'cc-fuInp2',fn:null},
-    {ta:'bulkInp',cc:'cc-bulkInp',fn:null}
+    {ta:'bulkInp',cc:'cc-bulkInp',fn:null},
+    {ta:'grammarInp',cc:'cc-grammarInp',fn:null},
+    {ta:'summarizeInp',cc:'cc-summarizeInp',fn:null},
+    {ta:'humanizeInp',cc:'cc-humanizeInp',fn:null},
+    {ta:'detectInp',cc:'cc-detectInp',fn:null},
+    {ta:'plagiarismInp',cc:'cc-plagiarismInp',fn:null}
   ];
   pairs.forEach(function(p){
     var ta=document.getElementById(p.ta);
@@ -4181,6 +4312,228 @@ function loadVoiceDNABadge(){
 // Expose voice DNA for rewrite helper (future use)
 function getVoiceDNAInstruction(){
   return localStorage.getItem('rt_voice_dna')||null;
+}
+
+// ===== GRAMMAR CHECK =====
+function runGrammar(){
+  var text=(document.getElementById('grammarInp').value||'').trim();
+  var mode=document.getElementById('grammarMode').value;
+  var btn=document.getElementById('grammarBtn');
+  var txt=document.getElementById('grammarTxt');
+  var msg=document.getElementById('grammarMsg');
+  var results=document.getElementById('grammarResults');
+  if(!text){msg.className='rt-msg error';msg.textContent='Please paste some text first.';return;}
+  if(text.length<10){msg.className='rt-msg error';msg.textContent='Text is too short to check.';return;}
+  btn.disabled=true;txt.textContent='Checking…';msg.className='rt-msg';msg.textContent='';results.style.display='none';
+  rtPost('api/grammar.php',{text:text,mode:mode},function(res){
+    btn.disabled=false;txt.textContent='📝 Check Grammar';
+    if(res&&res.error==='daily_limit'){openUpgradeModal('limit');return;}
+    if(res&&(res.corrected!==undefined||res.changes)){
+      var score=res.score!=null?res.score:null;
+      var scoreColor=score>=80?'#4ade80':score>=50?'#fbbf24':'rgba(252,165,165,.9)';
+      var html='';
+      if(score!=null){
+        html+='<div class="grammar-score"><span class="grammar-score-num" style="color:'+scoreColor+'">'+score+'<span style="font-size:14px;font-weight:400">/100</span></span><span style="font-size:13px;color:var(--t2)">Grammar Score</span></div>';
+      }
+      if(res.corrected){
+        html+='<div class="tool-result-card"><div class="trc-label">'+(mode==='fix'?'Corrected Text':'Original — issues highlighted')+'</div>'
+          +'<div class="trc-text" id="grammarOut">'+escHtml(res.corrected)+'</div>'
+          +'<button class="trc-copy-btn" onclick="navigator.clipboard.writeText(document.getElementById(\'grammarOut\').textContent).then(function(){this.textContent=\'✓ Copied!\';var t=this;setTimeout(function(){t.textContent=\'📋 Copy\'},2000)}.bind(this)).catch(function(){})">📋 Copy</button></div>';
+      }
+      if(res.changes&&res.changes.length){
+        html+='<div class="tool-result-card"><div class="trc-label">'+res.changes.length+' Change'+(res.changes.length!==1?'s':'')+'</div>'
+          +'<ul class="change-list">'+res.changes.map(function(c){return'<li>'+escHtml(c)+'</li>';}).join('')+'</ul></div>';
+      }
+      results.innerHTML=html;results.style.display='block';
+      msg.className='rt-msg success';msg.textContent='Done!';
+    } else {
+      msg.className='rt-msg error';msg.textContent=(res&&res.error)?res.error:'Something went wrong. Please try again.';
+    }
+  },function(err){
+    btn.disabled=false;txt.textContent='📝 Check Grammar';
+    if(err&&err.error==='daily_limit'){openUpgradeModal('limit');return;}
+    msg.className='rt-msg error';msg.textContent=(err&&err.error)?err.error:'Something went wrong. Please try again.';
+  });
+}
+
+// ===== SUMMARIZE =====
+function runSummarize(){
+  var text=(document.getElementById('summarizeInp').value||'').trim();
+  var length=document.getElementById('summarizeLength').value;
+  var btn=document.getElementById('summarizeBtn');
+  var txt=document.getElementById('summarizeTxt');
+  var msg=document.getElementById('summarizeMsg');
+  var results=document.getElementById('summarizeResults');
+  if(!text){msg.className='rt-msg error';msg.textContent='Please paste some text to summarize.';return;}
+  if(text.length<40){msg.className='rt-msg error';msg.textContent='Text is too short to summarize.';return;}
+  btn.disabled=true;txt.textContent='Summarizing…';msg.className='rt-msg';msg.textContent='';results.style.display='none';
+  rtPost('api/summarize.php',{text:text,length:length},function(res){
+    btn.disabled=false;txt.textContent='📄 Summarize';
+    if(res&&res.error==='daily_limit'){openUpgradeModal('limit');return;}
+    if(res&&(res.summary||res.bullets||res.actions)){
+      var html='';
+      if(res.topic){html+='<div class="tool-result-card"><div class="trc-label">Topic</div><div class="trc-text">'+escHtml(res.topic)+'</div></div>';}
+      if(res.summary){
+        html+='<div class="tool-result-card"><div class="trc-label">Summary</div>'
+          +'<div class="trc-text" id="summarizeOut">'+escHtml(res.summary)+'</div>'
+          +'<button class="trc-copy-btn" onclick="navigator.clipboard.writeText(document.getElementById(\'summarizeOut\').textContent).then(function(){this.textContent=\'✓ Copied!\';var t=this;setTimeout(function(){t.textContent=\'📋 Copy\'},2000)}.bind(this)).catch(function(){})">📋 Copy</button></div>';
+      }
+      if(res.bullets&&res.bullets.length){
+        html+='<div class="tool-result-card"><div class="trc-label">Key Points</div>'
+          +'<ul class="change-list">'+res.bullets.map(function(b){return'<li>'+escHtml(b)+'</li>';}).join('')+'</ul></div>';
+      }
+      if(res.actions&&res.actions.length){
+        html+='<div class="tool-result-card"><div class="trc-label">Action Items</div>'
+          +'<ul class="change-list">'+res.actions.map(function(a){return'<li>'+escHtml(a)+'</li>';}).join('')+'</ul></div>';
+      }
+      results.innerHTML=html;results.style.display='block';
+      msg.className='rt-msg success';msg.textContent='Done!';
+    } else {
+      msg.className='rt-msg error';msg.textContent=(res&&res.error)?res.error:'Something went wrong. Please try again.';
+    }
+  },function(err){
+    btn.disabled=false;txt.textContent='📄 Summarize';
+    if(err&&err.error==='daily_limit'){openUpgradeModal('limit');return;}
+    msg.className='rt-msg error';msg.textContent=(err&&err.error)?err.error:'Something went wrong. Please try again.';
+  });
+}
+
+// ===== HUMANIZE =====
+function runHumanize(){
+  var text=(document.getElementById('humanizeInp').value||'').trim();
+  var btn=document.getElementById('humanizeBtn');
+  var txt=document.getElementById('humanizeTxt');
+  var msg=document.getElementById('humanizeMsg');
+  var results=document.getElementById('humanizeResults');
+  if(!text){msg.className='rt-msg error';msg.textContent='Please paste some AI-generated text.';return;}
+  if(text.length<30){msg.className='rt-msg error';msg.textContent='Text is too short to humanize.';return;}
+  btn.disabled=true;txt.textContent='Humanizing…';msg.className='rt-msg';msg.textContent='';results.style.display='none';
+  rtPost('api/humanize.php',{text:text},function(res){
+    btn.disabled=false;txt.textContent='🤖 Humanize Text';
+    if(res&&res.error==='daily_limit'){openUpgradeModal('limit');return;}
+    if(res&&res.humanized){
+      var before=res.ai_score_before!=null?res.ai_score_before:null;
+      var after=res.ai_score_after!=null?res.ai_score_after:null;
+      var html='';
+      if(before!=null&&after!=null){
+        html+='<div class="tool-result-card"><div class="trc-label">AI Score: Before → After</div>'
+          +'<div class="ba-compare">'
+          +'<div class="ba-box"><div class="ba-box-label before">AI Score Before</div><div class="ba-pct" style="color:rgba(252,165,165,.9)">'+before+'%</div><div class="ba-desc">Likely AI-generated</div></div>'
+          +'<div class="ba-box"><div class="ba-box-label after">AI Score After</div><div class="ba-pct" style="color:#4ade80">'+after+'%</div><div class="ba-desc">Sounds human</div></div>'
+          +'</div></div>';
+      }
+      html+='<div class="tool-result-card"><div class="trc-label">Humanized Text</div>'
+        +'<div class="trc-text" id="humanizeOut">'+escHtml(res.humanized)+'</div>'
+        +'<button class="trc-copy-btn" onclick="navigator.clipboard.writeText(document.getElementById(\'humanizeOut\').textContent).then(function(){this.textContent=\'✓ Copied!\';var t=this;setTimeout(function(){t.textContent=\'📋 Copy\'},2000)}.bind(this)).catch(function(){})">📋 Copy</button></div>';
+      if(res.changes&&res.changes.length){
+        html+='<div class="tool-result-card"><div class="trc-label">Changes Made</div>'
+          +'<ul class="change-list">'+res.changes.map(function(c){return'<li>'+escHtml(c)+'</li>';}).join('')+'</ul></div>';
+      }
+      results.innerHTML=html;results.style.display='block';
+      msg.className='rt-msg success';msg.textContent='Done!';
+    } else {
+      msg.className='rt-msg error';msg.textContent=(res&&res.error)?res.error:'Something went wrong. Please try again.';
+    }
+  },function(err){
+    btn.disabled=false;txt.textContent='🤖 Humanize Text';
+    if(err&&err.error==='daily_limit'){openUpgradeModal('limit');return;}
+    msg.className='rt-msg error';msg.textContent=(err&&err.error)?err.error:'Something went wrong. Please try again.';
+  });
+}
+
+// ===== AI DETECTOR =====
+function runDetectAI(){
+  var text=(document.getElementById('detectInp').value||'').trim();
+  var btn=document.getElementById('detectBtn');
+  var txt=document.getElementById('detectTxt');
+  var msg=document.getElementById('detectMsg');
+  var results=document.getElementById('detectResults');
+  if(!text){msg.className='rt-msg error';msg.textContent='Please paste some text to analyze.';return;}
+  if(text.length<50){msg.className='rt-msg error';msg.textContent='Text must be at least 50 characters for analysis.';return;}
+  btn.disabled=true;txt.textContent='Analyzing…';msg.className='rt-msg';msg.textContent='';results.style.display='none';
+  rtPost('api/detect-ai.php',{text:text},function(res){
+    btn.disabled=false;txt.textContent='🔍 Analyze Text';
+    if(res&&res.error==='daily_limit'){openUpgradeModal('limit');return;}
+    if(res&&res.score!=null){
+      var score=res.score;
+      var color=score>=70?'rgba(252,165,165,.9)':score>=40?'#fbbf24':'#4ade80';
+      var fillColor=score>=70?'linear-gradient(90deg,#ef4444,#f87171)':score>=40?'linear-gradient(90deg,#f59e0b,#fbbf24)':'linear-gradient(90deg,#22c55e,#4ade80)';
+      var html='<div class="tool-result-card">'
+        +'<div class="trc-label">AI Probability Score</div>'
+        +'<div class="score-meter-wrap">'
+        +'<div class="score-bar-bg"><div class="score-bar-fill" style="width:'+score+'%;background:'+fillColor+'"></div></div>'
+        +'<div class="score-label-row"><span class="score-num" style="color:'+color+'">'+score+'%</span>'
+        +'<span class="score-verdict">'+(res.verdict?escHtml(res.verdict):'')+(res.confidence?' · '+escHtml(res.confidence)+' confidence':'')+'</span></div>'
+        +'</div></div>';
+      if(res.explanation){
+        html+='<div class="tool-result-card"><div class="trc-label">Analysis</div><div class="trc-text">'+escHtml(res.explanation)+'</div></div>';
+      }
+      if(res.signals&&res.signals.length){
+        html+='<div class="tool-result-card"><div class="trc-label">AI Signals Detected</div>'
+          +'<div class="chip-list">'+res.signals.map(function(s){return'<span class="chip chip-ai">'+escHtml(s)+'</span>';}).join('')+'</div></div>';
+      }
+      if(res.human_signals&&res.human_signals.length){
+        html+='<div class="tool-result-card"><div class="trc-label">Human Signals Found</div>'
+          +'<div class="chip-list">'+res.human_signals.map(function(s){return'<span class="chip chip-human">'+escHtml(s)+'</span>';}).join('')+'</div></div>';
+      }
+      results.innerHTML=html;results.style.display='block';
+      msg.className='rt-msg success';msg.textContent='Done!';
+    } else {
+      msg.className='rt-msg error';msg.textContent=(res&&res.error)?res.error:'Something went wrong. Please try again.';
+    }
+  },function(err){
+    btn.disabled=false;txt.textContent='🔍 Analyze Text';
+    if(err&&err.error==='daily_limit'){openUpgradeModal('limit');return;}
+    msg.className='rt-msg error';msg.textContent=(err&&err.error)?err.error:'Something went wrong. Please try again.';
+  });
+}
+
+// ===== PLAGIARISM CHECK =====
+function runPlagiarism(){
+  var text=(document.getElementById('plagiarismInp').value||'').trim();
+  var btn=document.getElementById('plagiarismBtn');
+  var txt=document.getElementById('plagiarismTxt');
+  var msg=document.getElementById('plagiarismMsg');
+  var results=document.getElementById('plagiarismResults');
+  if(!text){msg.className='rt-msg error';msg.textContent='Please paste some text to check.';return;}
+  if(text.length<30){msg.className='rt-msg error';msg.textContent='Text must be at least 30 characters.';return;}
+  btn.disabled=true;txt.textContent='Checking…';msg.className='rt-msg';msg.textContent='';results.style.display='none';
+  rtPost('api/plagiarism.php',{text:text},function(res){
+    btn.disabled=false;txt.textContent='♻️ Check Plagiarism';
+    if(res&&res.error==='daily_limit'){openUpgradeModal('limit');return;}
+    if(res&&res.originality_score!=null){
+      var orig=res.originality_score;
+      var plag=res.plagiarism_score!=null?res.plagiarism_score:(100-orig);
+      var origColor=orig>=80?'#4ade80':orig>=50?'#fbbf24':'rgba(252,165,165,.9)';
+      var origFill=orig>=80?'linear-gradient(90deg,#22c55e,#4ade80)':orig>=50?'linear-gradient(90deg,#f59e0b,#fbbf24)':'linear-gradient(90deg,#ef4444,#f87171)';
+      var risk=(res.risk_level||'').toLowerCase().replace(/\s+/g,'-');
+      var riskClass='risk-'+risk;
+      var html='<div class="tool-result-card">'
+        +'<div class="trc-label">Originality Score <span class="risk-badge '+riskClass+'">'+(res.risk_level||'')+'</span></div>'
+        +'<div class="score-meter-wrap">'
+        +'<div class="score-bar-bg"><div class="score-bar-fill" style="width:'+orig+'%;background:'+origFill+'"></div></div>'
+        +'<div class="score-label-row"><span class="score-num" style="color:'+origColor+'">'+orig+'%</span>'
+        +'<span class="score-verdict">'+(res.verdict?escHtml(res.verdict):'')+(res.confidence?' · '+escHtml(res.confidence)+' confidence':'')+'</span></div>'
+        +'</div></div>';
+      if(res.flagged_phrases&&res.flagged_phrases.length){
+        html+='<div class="tool-result-card"><div class="trc-label">'+res.flagged_phrases.length+' Flagged Phrase'+(res.flagged_phrases.length!==1?'s':'')+'</div>'
+          +'<div class="flagged-list">'+res.flagged_phrases.map(function(fp){
+            var sev=(fp.severity||'').toLowerCase();
+            var sevColor=sev==='high'?'rgba(252,165,165,.9)':sev==='medium'?'#fbbf24':'#4ade80';
+            return'<div class="flagged-item"><div class="flagged-phrase" style="color:'+sevColor+'">'+escHtml(fp.phrase||'')+'</div>'
+              +'<div class="flagged-reason">'+(fp.reason?escHtml(fp.reason):'')+(fp.likely_source?' — likely source: '+escHtml(fp.likely_source):'')+'</div></div>';
+          }).join('')+'</div></div>';
+      }
+      results.innerHTML=html;results.style.display='block';
+      msg.className='rt-msg success';msg.textContent='Done!';
+    } else {
+      msg.className='rt-msg error';msg.textContent=(res&&res.error)?res.error:'Something went wrong. Please try again.';
+    }
+  },function(err){
+    btn.disabled=false;txt.textContent='♻️ Check Plagiarism';
+    if(err&&err.error==='daily_limit'){openUpgradeModal('limit');return;}
+    msg.className='rt-msg error';msg.textContent=(err&&err.error)?err.error:'Something went wrong. Please try again.';
+  });
 }
 </script>
 
