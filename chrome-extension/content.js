@@ -65,9 +65,11 @@
     watchSelections();
     setupMutationObserver();
 
-    if (isGmail())   { setTimeout(setupGmail,   800); }
-    if (isSlack())   { setTimeout(setupSlack,   800); }
-    if (isLinkedIn()){ setTimeout(setupLinkedIn,800); }
+    if (isGmail())     { setTimeout(setupGmail,     800); }
+    if (isSlack())     { setTimeout(setupSlack,     800); }
+    if (isLinkedIn())  { setTimeout(setupLinkedIn,  800); }
+    if (isInstagram()) { setTimeout(setupInstagram, 800); }
+    if (isWhatsApp())  { setTimeout(setupWhatsApp,  800); }
   }
 
   // ── CSS ───────────────────────────────────────────────────────────────────────
@@ -270,6 +272,13 @@
     transition:opacity .15s;letter-spacing:.5px;user-select:none;
   }
   #rt-trigger:hover{background:#818cf8}
+  .rt-contact-chip{display:flex;align-items:center;gap:8px;padding:7px 10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;cursor:pointer;transition:all .15s;}
+  .rt-contact-chip:hover{border-color:rgba(99,102,241,.4);background:rgba(99,102,241,.08);}
+  .rt-contact-chip.selected{border-color:#6366f1;background:rgba(99,102,241,.14);}
+  .rt-contact-av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;flex-shrink:0;}
+  .rt-contact-info{display:flex;flex-direction:column;gap:1px;min-width:0;}
+  .rt-contact-info strong{font-size:12px;font-weight:700;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .rt-contact-info small{font-size:10px;color:#64748b;}
   `;
 
   // ── Panel HTML ────────────────────────────────────────────────────────────────
@@ -300,6 +309,7 @@
       <button class="rt-tab" data-tab="humanize">🧑 Humanize</button>
       <button class="rt-tab" data-tab="detect">🔍 AI Detect</button>
       <button class="rt-tab" data-tab="plagiarism">📄 Plagiarism</button>
+      <button class="rt-tab" data-tab="contacts">👥 Contacts</button>
     </div>
 
     <div class="rt-settings" id="rt-settings">
@@ -385,6 +395,13 @@
         <div id="result-plagiarism"></div>
       </div>
 
+      <!-- CONTACTS PANE -->
+      <div class="rt-pane" id="pane-contacts">
+        <div style="font-size:11px;color:#94a3b8;margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">👥 Contact Memory</div>
+        <div id="rt-contacts-list" style="display:flex;flex-direction:column;gap:6px;max-height:260px;overflow-y:auto;"></div>
+        <div id="rt-contacts-empty" style="display:none;text-align:center;padding:20px 0;color:#64748b;font-size:12px;">No contacts saved yet.<br>Add them on <a href="https://replytonic.com" target="_blank" style="color:#6366f1;">replytonic.com</a></div>
+      </div>
+
     </div><!-- /rt-content -->
 
     <div class="rt-footer">
@@ -408,6 +425,7 @@
       activeTab = btn.dataset.tab;
       shadow.querySelectorAll('.rt-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === activeTab));
       shadow.querySelectorAll('.rt-pane').forEach(p => p.classList.toggle('active', p.id === `pane-${activeTab}`));
+      if (activeTab === 'contacts') loadContactsInPanel();
       toggleSettings();
     });
 
@@ -552,11 +570,13 @@
     const url = window.location.hostname;
     const sel = shadow.getElementById('rt-platform');
     if (!sel) return;
-    if (url.includes('mail.google'))  { sel.value = 'Email';     settings.platform = 'Email'; }
-    else if (url.includes('linkedin')){ sel.value = 'LinkedIn';  settings.platform = 'LinkedIn'; }
-    else if (url.includes('slack'))   { sel.value = 'Slack';     settings.platform = 'Slack'; }
+    if (url.includes('mail.google'))      { sel.value = 'Email';     settings.platform = 'Email'; }
+    else if (url.includes('linkedin'))   { sel.value = 'LinkedIn';  settings.platform = 'LinkedIn'; }
+    else if (url.includes('slack'))      { sel.value = 'Slack';     settings.platform = 'Slack'; }
     else if (url.includes('twitter') || url.includes('x.com')){ sel.value = 'Twitter/X'; settings.platform = 'Twitter/X'; }
-    else if (url.includes('outlook')) { sel.value = 'Email';     settings.platform = 'Email'; }
+    else if (url.includes('outlook'))    { sel.value = 'Email';     settings.platform = 'Email'; }
+    else if (url.includes('instagram'))  { sel.value = 'WhatsApp';  settings.platform = 'WhatsApp'; }
+    else if (url.includes('whatsapp'))   { sel.value = 'WhatsApp';  settings.platform = 'WhatsApp'; }
   }
 
   // ── Selection Trigger ─────────────────────────────────────────────────────────
@@ -676,12 +696,13 @@
     shadow.getElementById('btn-copy-rewrite').style.display = 'none';
     try {
       const data = await callAPI('rewrite.php', {
-        message : capturedText,
-        platform: settings.platform,
-        tone    : settings.tone,
-        length  : settings.length,
-        emoji   : settings.emoji,
-        mode    : 'rewrite',
+        message       : capturedText,
+        platform      : settings.platform,
+        tone          : settings.tone,
+        length        : settings.length,
+        emoji         : settings.emoji,
+        mode          : 'rewrite',
+        contactContext: shadow._rtContactCtx || '',
       });
       const result = data.rewritten || data.v1 || '';
       storeResult(result);
@@ -712,6 +733,7 @@
         length         : settings.length,
         emoji          : settings.emoji,
         mode           : 'reply',
+        contactContext : shadow._rtContactCtx || '',
       });
       const replies = [
         { text: data.v1, label: data.v1_label || 'Strategy 1' },
@@ -1075,10 +1097,12 @@
   }
 
   // ── Platform Detection ────────────────────────────────────────────────────────
-  function isGmail()   { return window.location.hostname.includes('mail.google.com'); }
-  function isSlack()   { return window.location.hostname.includes('app.slack.com');  }
-  function isLinkedIn(){ return window.location.hostname.includes('linkedin.com');   }
-  function isTwitter() { return window.location.hostname.includes('twitter.com') || window.location.hostname.includes('x.com'); }
+  function isGmail()     { return window.location.hostname.includes('mail.google.com'); }
+  function isSlack()     { return window.location.hostname.includes('app.slack.com');  }
+  function isLinkedIn()  { return window.location.hostname.includes('linkedin.com');   }
+  function isTwitter()   { return window.location.hostname.includes('twitter.com') || window.location.hostname.includes('x.com'); }
+  function isInstagram() { return window.location.hostname.includes('instagram.com');  }
+  function isWhatsApp()  { return window.location.hostname.includes('web.whatsapp.com'); }
 
   // ── Gmail-Specific Integration ────────────────────────────────────────────────
   function setupGmail() {
@@ -1184,18 +1208,133 @@
     });
   }
 
+  // ── Instagram-Specific ───────────────────────────────────────────────────────
+  function setupInstagram() {
+    const observer = new MutationObserver(() => { injectInstagramButtons(); });
+    observer.observe(document.body, { childList: true, subtree: true });
+    injectInstagramButtons();
+  }
+
+  function injectInstagramButtons() {
+    // DMs and comment boxes
+    const editors = document.querySelectorAll('div[contenteditable="true"][data-rt-injected!="true"]');
+    editors.forEach(editor => {
+      editor.dataset.rtInjected = 'true';
+      editor.addEventListener('focus', () => { lastFocused = editor; });
+
+      const wrapper = editor.parentElement;
+      if (!wrapper || wrapper.querySelector('.rt-ig-btn')) return;
+      const btn = document.createElement('button');
+      btn.className = 'rt-ig-btn';
+      btn.style.cssText = 'padding:3px 8px;background:#6366f1;color:#fff;border:none;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;margin-left:4px;vertical-align:middle;';
+      btn.textContent = 'RT';
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        captureText(editor.innerText || editor.textContent || '');
+        lastFocused = editor;
+        openPanel();
+      });
+      wrapper.style.position = 'relative';
+      wrapper.appendChild(btn);
+    });
+  }
+
+  // ── WhatsApp Web-Specific ─────────────────────────────────────────────────────
+  function setupWhatsApp() {
+    const observer = new MutationObserver(() => { injectWhatsAppButtons(); });
+    observer.observe(document.body, { childList: true, subtree: true });
+    injectWhatsAppButtons();
+  }
+
+  function injectWhatsAppButtons() {
+    // WhatsApp Web main input box
+    const editors = document.querySelectorAll('div[contenteditable="true"][data-tab="10"][data-rt-injected!="true"], footer div[contenteditable="true"][data-rt-injected!="true"]');
+    editors.forEach(editor => {
+      editor.dataset.rtInjected = 'true';
+      editor.addEventListener('focus', () => { lastFocused = editor; });
+
+      const wrapper = editor.closest('footer') || editor.parentElement;
+      if (!wrapper || wrapper.querySelector('.rt-wa-btn')) return;
+      const btn = document.createElement('button');
+      btn.className = 'rt-wa-btn';
+      btn.style.cssText = 'padding:4px 9px;background:#6366f1;color:#fff;border:none;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;margin:0 4px;flex-shrink:0;';
+      btn.textContent = 'RT';
+      btn.title = 'Open ReplyTonic';
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        captureText(editor.innerText || editor.textContent || '');
+        lastFocused = editor;
+        openPanel();
+      });
+      wrapper.appendChild(btn);
+    });
+  }
+
   // ── SPA MutationObserver ──────────────────────────────────────────────────────
   function setupMutationObserver() {
-    // For Twitter/X, Slack, LinkedIn — DOM changes without page loads
+    // For Twitter/X, Slack, LinkedIn, Instagram, WhatsApp — DOM changes without page loads
     const observer = new MutationObserver(() => {
-      if (isGmail())    injectGmailButtons();
-      if (isSlack())    injectSlackButtons();
-      if (isLinkedIn()) injectLinkedInButtons();
+      if (isGmail())     injectGmailButtons();
+      if (isSlack())     injectSlackButtons();
+      if (isLinkedIn())  injectLinkedInButtons();
+      if (isInstagram()) injectInstagramButtons();
+      if (isWhatsApp())  injectWhatsAppButtons();
     });
     observer.observe(document.body, {
       childList: true,
       subtree  : true,
     });
+  }
+
+  // ── Contact Memory (reads rt_contacts from main-site localStorage via same origin) ──
+  function loadContactsInPanel() {
+    const listEl  = shadow.getElementById('rt-contacts-list');
+    const emptyEl = shadow.getElementById('rt-contacts-empty');
+    if (!listEl || !emptyEl) return;
+
+    let contacts = [];
+    try { contacts = JSON.parse(localStorage.getItem('rt_contacts') || '[]'); } catch(e) {}
+
+    if (!Array.isArray(contacts) || contacts.length === 0) {
+      listEl.innerHTML  = '';
+      listEl.style.display   = 'none';
+      emptyEl.style.display  = 'block';
+      return;
+    }
+
+    emptyEl.style.display = 'none';
+    listEl.style.display  = 'flex';
+    listEl.innerHTML = contacts.map((c, i) => {
+      const initials = (c.name || '?').trim().split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+      const formal   = c.formality === 'formal' ? ' · formal' : c.formality === 'informal' ? ' · informal' : '';
+      return `<div class="rt-contact-chip" data-idx="${i}" title="Click to use context in next request">
+        <span class="rt-contact-av">${initials}</span>
+        <span class="rt-contact-info"><strong>${escHtml2(c.name)}</strong><small>${escHtml2(c.relationship||'')}${formal}</small></span>
+      </div>`;
+    }).join('');
+
+    listEl.querySelectorAll('.rt-contact-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const idx = parseInt(chip.dataset.idx, 10);
+        const c   = contacts[idx];
+        if (!c) return;
+        let ctx = `The recipient is "${c.name}"`;
+        if (c.relationship) ctx += ` (${c.relationship})`;
+        if (c.formality && c.formality !== 'neutral') ctx += `, use ${c.formality} language`;
+        if (c.toneNotes) ctx += `. Tone notes: ${c.toneNotes}`;
+        // Store for use in next API call
+        shadow._rtContactCtx = ctx;
+        listEl.querySelectorAll('.rt-contact-chip').forEach(el => el.classList.remove('selected'));
+        chip.classList.add('selected');
+        // Switch to rewrite tab
+        const rewTab = shadow.querySelector('.rt-tab[data-tab="rewrite"]');
+        if (rewTab) rewTab.click();
+      });
+    });
+  }
+
+  function escHtml2(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
   // ── Boot ──────────────────────────────────────────────────────────────────────

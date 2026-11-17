@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "ReplyTonic — AI Writing Toolkit",
-  "version": "1.0.0",
-  "description": "7 AI tools in one click: rewrite, reply, summarize, grammar check, humanize AI text, detect AI content, and check plagiarism — right where you type. Works on Gmail, LinkedIn, Slack, Twitter/X, Outlook, and anywhere else.",
+  "version": "2.0.0",
+  "description": "7 AI tools in one click: rewrite, reply, summarize, grammar check, humanize AI text, detect AI content, and check plagiarism — right where you type. Works on Gmail, LinkedIn, Slack, Twitter/X, Outlook, Instagram, WhatsApp, and anywhere else.",
   "permissions": [
     "storage",
     "activeTab",
@@ -18,6 +18,8 @@
     "https://outlook.live.com/*",
     "https://outlook.office.com/*",
     "https://outlook.office365.com/*",
+    "https://www.instagram.com/*",
+    "https://web.whatsapp.com/*",
     "https://*.replytonic.com/*"
   ],
   "background": {
@@ -33,7 +35,9 @@
         "https://x.com/*",
         "https://outlook.live.com/*",
         "https://outlook.office.com/*",
-        "https://outlook.office365.com/*"
+        "https://outlook.office365.com/*",
+        "https://www.instagram.com/*",
+        "https://web.whatsapp.com/*"
       ],
       "js": ["content.js"],
       "run_at": "document_idle",
