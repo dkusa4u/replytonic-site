@@ -72,6 +72,7 @@ $sesquipedalian  = $input['sesquipedalian']  ?? false;
 $humanTouch      = $input['humanTouch']      ?? false; // premium: bypass AI detectors
 $customInstr     = trim($input['customInstructions'] ?? '');
 $mode            = $input['mode']            ?? 'rewrite';
+$contactContext  = trim($input['contactContext'] ?? ''); // Phase 3A: recipient context
 $useVoice        = $input['useVoice']        ?? false; // premium: inject personal voice
 
 $warmth   = isset($input['warmth'])   ? (int)$input['warmth']   : 0; // 1-5 or 0 = not set
@@ -346,7 +347,6 @@ if ($mode === 'reply') {
               . "{$lengthInstruction} {$emojiInstruction} {$languageInstruction}\n\n"
               . "Respond ONLY with valid JSON: {\"v1\":\"...\",\"v1_label\":\"...\",\"v2\":\"...\",\"v2_label\":\"...\",\"v3\":\"...\",\"v3_label\":\"...\"}";
 } elseif ($mode === 'followup') {
-} elseif ($mode === 'followup') {
   $src = $originalMessage ?: $message;
   $userPrompt = "Original message sent:\n\"{$src}\"\n\n"
               . "Generate 3 distinct {$blendedToneDesc} follow-up message versions for a {$platCtx}. "
@@ -374,7 +374,8 @@ $payload = json_encode([
   'response_format' => ['type' => 'json_object'],
   'messages'        => [
     ['role' => 'system', 'content' =>
-      'You are ReplyTonic, an expert AI message rewriter. '
+      ($contactContext ? "RECIPIENT CONTEXT: {$contactContext}\n\n" : '')
+    . 'You are ReplyTonic, an expert AI message rewriter. '
     . 'You produce polished, context-aware message rewrites that feel natural and human. '
     . 'Always return exactly the JSON format requested — nothing else.'],
     ['role' => 'user', 'content' => $userPrompt],

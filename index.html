@@ -55,6 +55,8 @@
   --r8:8px;--r12:12px;--r20:20px;--r28:28px;
   --glow:0 0 50px rgba(99,102,241,.14);
   --oshadow:0 4px 20px rgba(249,115,22,.3);
+  --accent:#6366f1;--accent-rgb:99,102,241;--accent-bg:rgba(99,102,241,.1);
+  --surface2:rgba(255,255,255,.06);--text1:#fff;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -533,6 +535,34 @@ input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);bo
 .dna-tag-avoid{background:rgba(239,68,68,.12);color:#f87171}
 .dna-saved-note{font-size:12px;color:#4ade80;margin-top:10px;font-weight:600}
 .dna-active-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25);border-radius:100px;font-size:11px;font-weight:700;color:#4ade80;margin-bottom:12px}
+/* ===== CONTACT MEMORY ===== */
+.contact-form-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r12);padding:16px;margin-bottom:4px}
+.contact-form-title{font-size:13px;font-weight:700;color:var(--text1);margin-bottom:14px}
+.contact-input{width:100%;background:var(--surface3);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text1);font-size:13px;outline:none;font-family:inherit}
+.contact-input:focus{border-color:var(--accent)}
+.contact-textarea{resize:vertical;min-height:52px;line-height:1.5}
+.contact-rel-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.contact-rel-btn{padding:5px 10px;border-radius:20px;border:1px solid var(--border);background:var(--surface3);color:var(--t3);font-size:11px;font-weight:600;cursor:pointer;transition:all .15s}
+.contact-rel-btn.active{background:var(--accent-bg);border-color:var(--accent);color:var(--accent)}
+.contact-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r12);padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .15s}
+.contact-card:hover{border-color:var(--accent);background:var(--accent-bg)}
+.contact-card.selected{border-color:var(--accent);background:var(--accent-bg)}
+.contact-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0}
+.contact-info{flex:1;min-width:0}
+.contact-name{font-size:13px;font-weight:700;color:var(--text1);margin-bottom:2px}
+.contact-meta{font-size:11px;color:var(--t3);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.contact-rel-tag{background:var(--accent-bg);color:var(--accent);padding:1px 6px;border-radius:100px;font-size:10px;font-weight:700}
+.contact-actions{display:flex;gap:6px}
+.contact-action-btn{background:none;border:none;color:var(--t4);font-size:14px;cursor:pointer;padding:4px;border-radius:6px;transition:all .15s;line-height:1}
+.contact-action-btn:hover{color:var(--text1);background:var(--surface3)}
+.contact-sel-wrap{background:var(--accent-bg);border:1px solid rgba(var(--accent-rgb),.3);border-radius:var(--r12);padding:10px 12px;margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.contact-sel-label{font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;flex-shrink:0}
+.contact-sel-row{display:flex;flex-wrap:wrap;gap:5px;flex:1}
+.contact-sel-chip{padding:4px 10px;border-radius:100px;border:1px solid rgba(var(--accent-rgb),.4);background:var(--surface2);color:var(--text1);font-size:11px;font-weight:600;cursor:pointer;transition:all .15s}
+.contact-sel-chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.contact-sel-chip.none{color:var(--t4);border-style:dashed}
+.contact-clear-btn{background:none;border:none;color:var(--t4);font-size:11px;cursor:pointer;padding:4px 6px;flex-shrink:0}
+.contact-clear-btn:hover{color:var(--text1)}
 .urgency-low{background:rgba(34,197,94,.12);color:#4ade80}
 .urgency-medium{background:rgba(251,191,36,.12);color:#fbbf24}
 .urgency-high{background:rgba(239,68,68,.12);color:#f87171}
@@ -789,6 +819,7 @@ input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);bo
       <div class="mode-tab" data-mode="corporate-translator" onclick="switchMode('corporate-translator')">🏢 Corporate Translator <span class="new-tool-badge">NEW</span></div>
       <div class="mode-tab" data-mode="code-switch" onclick="switchMode('code-switch')">🌍 Code-Switch <span class="new-tool-badge">NEW</span></div>
       <div class="mode-tab" data-mode="voice-dna" onclick="switchMode('voice-dna')">🧬 Voice DNA <span class="new-tool-badge">NEW</span></div>
+      <div class="mode-tab" data-mode="contacts" onclick="switchMode('contacts')">👥 Contacts <span class="new-tool-badge">NEW</span></div>
       <div class="mode-tab" data-mode="followup" onclick="switchMode('followup')">↩️ Follow-Up</div>
       <div class="mode-tab" data-mode="bulk" onclick="switchMode('bulk')">📋 Bulk Rewrite</div>
     </div>
@@ -1049,6 +1080,13 @@ input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);bo
         </div>
       </div>
 
+      <!-- CONTACT SELECTOR -->
+      <div class="contact-sel-wrap" id="contactSelWrap" style="display:none">
+        <div class="contact-sel-label">👥 Writing to…</div>
+        <div class="contact-sel-row" id="contactSelRow"></div>
+        <button class="contact-clear-btn" onclick="clearContactSel('rewrite')">✕ Clear</button>
+      </div>
+
       <button class="go-btn" id="goBtn" onclick="rewrite()">
         <span id="goTxt">✨ Rewrite My Message</span>
       </button>
@@ -1201,6 +1239,13 @@ input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);bo
         </div>
       </div>
 
+      <!-- CONTACT SELECTOR -->
+      <div class="contact-sel-wrap" id="contactSelWrapReply" style="display:none">
+        <div class="contact-sel-label">👥 Replying to…</div>
+        <div class="contact-sel-row" id="contactSelRowReply"></div>
+        <button class="contact-clear-btn" onclick="clearContactSel('reply')">✕ Clear</button>
+      </div>
+
       <button class="go-btn" id="replyBtn" onclick="generateReply()">
         <span id="replyTxt">💬 Generate 3 Reply Options</span>
       </button>
@@ -1278,6 +1323,13 @@ input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);bo
             </optgroup>
           </select>
         </div>
+      </div>
+
+      <!-- CONTACT SELECTOR -->
+      <div class="contact-sel-wrap" id="contactSelWrapFu" style="display:none">
+        <div class="contact-sel-label">👥 Following up with…</div>
+        <div class="contact-sel-row" id="contactSelRowFu"></div>
+        <button class="contact-clear-btn" onclick="clearContactSel('followup')">✕ Clear</button>
       </div>
 
       <button class="go-btn" id="fuBtn" onclick="generateFollowUp()">
@@ -1649,6 +1701,64 @@ input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);bo
       </div>
 
       <div class="results" id="dnaResults"></div>
+    </div>
+
+    <!-- ===== MODE 17: CONTACTS ===== -->
+    <div class="mode-panel" id="mode-contacts">
+      <p class="mode-desc">Save contacts with relationship context — tone notes, how you know them, formality level. The AI adapts every rewrite to fit who you're talking to.</p>
+
+      <!-- Add / Edit Form -->
+      <div class="contact-form-card" id="contactFormCard">
+        <div class="contact-form-title" id="contactFormTitle">➕ Add New Contact</div>
+        <div class="opt-group" style="margin-bottom:8px">
+          <label class="opt-label">Name / Label</label>
+          <input type="text" id="contactName" class="contact-input" placeholder="e.g. Boss, Sarah from HR, Mom, Dr. Chen…" maxlength="60">
+        </div>
+        <div class="opt-group" style="margin-bottom:8px">
+          <label class="opt-label">Relationship</label>
+          <div class="contact-rel-row" id="contactRelRow">
+            <button class="contact-rel-btn active" data-rel="Colleague">🤝 Colleague</button>
+            <button class="contact-rel-btn" data-rel="Manager">📋 Manager</button>
+            <button class="contact-rel-btn" data-rel="Client">💼 Client</button>
+            <button class="contact-rel-btn" data-rel="Friend">😊 Friend</button>
+            <button class="contact-rel-btn" data-rel="Family">🏠 Family</button>
+            <button class="contact-rel-btn" data-rel="Recruiter">🔍 Recruiter</button>
+            <button class="contact-rel-btn" data-rel="Partner">🤲 Partner</button>
+            <button class="contact-rel-btn" data-rel="Other">✳️ Other</button>
+          </div>
+        </div>
+        <div class="opt-group" style="margin-bottom:8px">
+          <label class="opt-label">Tone Notes <span style="opacity:.6">(optional)</span></label>
+          <textarea id="contactNotes" class="contact-input contact-textarea" rows="2" placeholder="e.g. Very formal, never use slang. Gets annoyed by vague requests. Prefers bullet points."></textarea>
+        </div>
+        <div class="opt-group" style="margin-bottom:12px">
+          <label class="opt-label">Preferred Formality</label>
+          <select id="contactFormality" class="lang-select" style="max-width:220px">
+            <option value="auto">Auto-detect from relationship</option>
+            <option value="very formal">Very Formal</option>
+            <option value="formal">Formal</option>
+            <option value="semi-formal">Semi-Formal</option>
+            <option value="casual">Casual</option>
+            <option value="very casual">Very Casual</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="go-btn" id="saveContactBtn" onclick="saveContact()" style="flex:1;margin-top:0;font-size:14px;padding:12px 16px">
+            <span id="saveContactTxt">💾 Save Contact</span>
+          </button>
+          <button class="go-btn" id="cancelEditBtn" onclick="cancelContactEdit()" style="display:none;flex:0 0 auto;margin-top:0;background:var(--surface2);color:var(--text2);padding:12px 20px">Cancel</button>
+        </div>
+        <div class="rt-msg" id="contactSaveMsg" style="margin-top:8px"></div>
+      </div>
+
+      <!-- Contact List -->
+      <div style="margin-top:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div style="font-size:12px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.6px">Saved Contacts</div>
+          <div style="font-size:11px;color:var(--t4)" id="contactCountLabel">0 contacts</div>
+        </div>
+        <div id="contactList"><p style="font-size:13px;color:var(--t4);text-align:center;padding:16px 0">No contacts yet — add one above</p></div>
+      </div>
     </div>
 
   </div><!-- end tool-card -->
@@ -2404,7 +2514,7 @@ function rewrite(){
   var customInstr=document.getElementById('customInstr')?document.getElementById('customInstr').value.trim():'';
   var warmth=parseInt(document.getElementById('warmthSlider').value)||3;
   var firmness=parseInt(document.getElementById('firmnessSlider').value)||3;
-  callAPI({message:v, platform:platform, tone:tone, tone2:tone2, language:lang, length:len, emoji:emojiOn, sesquipedalian:sesqOn, customInstructions:customInstr, mode:'rewrite', warmth:warmth, firmness:firmness},
+  callAPI({message:v, platform:platform, tone:tone, tone2:tone2, language:lang, length:len, emoji:emojiOn, sesquipedalian:sesqOn, customInstructions:customInstr, mode:'rewrite', warmth:warmth, firmness:firmness, contactContext:getContactContext('rewrite')},
     function(d){
       var blendNote=(tone2&&tone2!=='None'&&tone2!==tone)?getBlendedNote(tone,tone2):'';
       renderVersions({v1:d.v1,v2:d.v2,v3:d.v3,blendNote:blendNote,lang:lang},tone,tone2,v,lang);
@@ -2634,7 +2744,7 @@ function generateReply(){
   txt.textContent='Generating with AI...';
   document.getElementById('replyCards').classList.remove('show');
 
-  callAPI({message:v, platform:platform, tone:tone, language:lang, mode:'reply'},
+  callAPI({message:v, platform:platform, tone:tone, language:lang, mode:'reply', contactContext:getContactContext('reply')},
     function(d){
       var labels=['Reply Option 1','Reply Option 2','Reply Option 3'];
       var apiLabels=[d.v1_label,d.v2_label,d.v3_label];
@@ -2689,7 +2799,7 @@ function generateFollowUp(){
   txt.textContent='Generating with AI...';
   document.getElementById('fuVersionsWrap').classList.remove('show');
 
-  callAPI({message:msg, originalMessage:v1, tone:tone, mode:'followup'},
+  callAPI({message:msg, originalMessage:v1, tone:tone, mode:'followup', contactContext:getContactContext('followup')},
     function(d){
       var grid=document.getElementById('fuVersionsGrid');
       var labels=['Version 1','Version 2','Version 3'];
@@ -3816,6 +3926,176 @@ function updateDNACount(){
   var el=document.getElementById('dnaSampleCount');
   if(el) el.textContent=filled+' / '+samples.length+' samples filled';
 }
+/* ===== CONTACT MEMORY TAGS ===== */
+let _contacts = [];
+let _selectedContact = { rewrite: null, reply: null, followup: null };
+let _editingContactIdx = -1;
+let _contactRel = 'Colleague';
+
+function loadContacts(){
+  try { _contacts = JSON.parse(localStorage.getItem('rt_contacts') || '[]'); } catch(e){ _contacts = []; }
+  renderContactList();
+  renderAllContactSelectors();
+}
+
+function saveContact(){
+  const name = document.getElementById('contactName').value.trim();
+  if(!name){ showContactMsg('Please enter a name or label.', 'error'); return; }
+  const contact = {
+    name,
+    rel: _contactRel,
+    notes: document.getElementById('contactNotes').value.trim(),
+    formality: document.getElementById('contactFormality').value,
+    created: Date.now()
+  };
+  if(_editingContactIdx >= 0){
+    _contacts[_editingContactIdx] = { ..._contacts[_editingContactIdx], ...contact };
+    showContactMsg('✅ Contact updated!', 'ok');
+    cancelContactEdit();
+  } else {
+    _contacts.push(contact);
+    showContactMsg('✅ Contact saved!', 'ok');
+    document.getElementById('contactName').value = '';
+    document.getElementById('contactNotes').value = '';
+    document.getElementById('contactFormality').value = 'auto';
+    setContactRel('Colleague');
+  }
+  localStorage.setItem('rt_contacts', JSON.stringify(_contacts));
+  renderContactList();
+  renderAllContactSelectors();
+}
+
+function deleteContact(idx){
+  _contacts.splice(idx, 1);
+  localStorage.setItem('rt_contacts', JSON.stringify(_contacts));
+  // Clear any selection pointing to this index
+  ['rewrite','reply','followup'].forEach(k => {
+    if(_selectedContact[k] === idx) _selectedContact[k] = null;
+    else if(_selectedContact[k] > idx) _selectedContact[k]--;
+  });
+  renderContactList();
+  renderAllContactSelectors();
+}
+
+function editContact(idx){
+  const c = _contacts[idx];
+  _editingContactIdx = idx;
+  document.getElementById('contactName').value = c.name;
+  document.getElementById('contactNotes').value = c.notes || '';
+  document.getElementById('contactFormality').value = c.formality || 'auto';
+  setContactRel(c.rel || 'Colleague');
+  document.getElementById('contactFormTitle').textContent = '✏️ Edit Contact';
+  document.getElementById('saveContactTxt').textContent = '💾 Save Changes';
+  document.getElementById('cancelEditBtn').style.display = '';
+  document.getElementById('contactFormCard').scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+function cancelContactEdit(){
+  _editingContactIdx = -1;
+  document.getElementById('contactName').value = '';
+  document.getElementById('contactNotes').value = '';
+  document.getElementById('contactFormality').value = 'auto';
+  setContactRel('Colleague');
+  document.getElementById('contactFormTitle').textContent = '➕ Add New Contact';
+  document.getElementById('saveContactTxt').textContent = '💾 Save Contact';
+  document.getElementById('cancelEditBtn').style.display = 'none';
+  document.getElementById('contactSaveMsg').textContent = '';
+}
+
+function setContactRel(val){
+  _contactRel = val;
+  document.querySelectorAll('#contactRelRow .contact-rel-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.rel === val);
+  });
+}
+
+function showContactMsg(msg, type){
+  const el = document.getElementById('contactSaveMsg');
+  el.textContent = msg;
+  el.style.color = type === 'error' ? '#f87171' : '#4ade80';
+  setTimeout(() => { if(el.textContent === msg) el.textContent = ''; }, 2500);
+}
+
+function renderContactList(){
+  const listEl = document.getElementById('contactList');
+  const countEl = document.getElementById('contactCountLabel');
+  if(!listEl) return;
+  countEl.textContent = _contacts.length + ' contact' + (_contacts.length !== 1 ? 's' : '');
+  if(!_contacts.length){
+    listEl.innerHTML = '<p style="font-size:13px;color:var(--t4);text-align:center;padding:16px 0">No contacts yet — add one above</p>';
+    return;
+  }
+  listEl.innerHTML = _contacts.map((c, i) => {
+    const initials = c.name.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
+    const formalityLabel = c.formality && c.formality !== 'auto' ? ` · ${c.formality}` : '';
+    return `<div class="contact-card" id="ccard-${i}">
+      <div class="contact-avatar">${initials.substring(0,2)}</div>
+      <div class="contact-info">
+        <div class="contact-name">${escHtml(c.name)}</div>
+        <div class="contact-meta"><span class="contact-rel-tag">${escHtml(c.rel)}</span>${escHtml(formalityLabel)}${c.notes ? ' · <em style="color:var(--t4)">' + escHtml(c.notes.substring(0,40)) + (c.notes.length > 40 ? '…' : '') + '</em>' : ''}</div>
+      </div>
+      <div class="contact-actions">
+        <button class="contact-action-btn" onclick="editContact(${i})" title="Edit">✏️</button>
+        <button class="contact-action-btn" onclick="deleteContact(${i})" title="Delete">🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderAllContactSelectors(){
+  renderContactSelector('contactSelRow', 'contactSelWrap', 'rewrite');
+  renderContactSelector('contactSelRowReply', 'contactSelWrapReply', 'reply');
+  renderContactSelector('contactSelRowFu', 'contactSelWrapFu', 'followup');
+}
+
+function renderContactSelector(rowId, wrapId, panel){
+  const wrap = document.getElementById(wrapId);
+  const row = document.getElementById(rowId);
+  if(!wrap || !row) return;
+  if(!_contacts.length){ wrap.style.display = 'none'; return; }
+  wrap.style.display = '';
+  row.innerHTML = _contacts.map((c, i) =>
+    `<button class="contact-sel-chip${_selectedContact[panel] === i ? ' active' : ''}" onclick="selectContact(${i},'${panel}')">${escHtml(c.name)}</button>`
+  ).join('') + `<button class="contact-sel-chip none${_selectedContact[panel] === null ? ' active' : ''}" onclick="selectContact(null,'${panel}')">None</button>`;
+}
+
+function selectContact(idx, panel){
+  _selectedContact[panel] = idx;
+  renderContactSelector(
+    panel === 'rewrite' ? 'contactSelRow' : panel === 'reply' ? 'contactSelRowReply' : 'contactSelRowFu',
+    panel === 'rewrite' ? 'contactSelWrap' : panel === 'reply' ? 'contactSelWrapReply' : 'contactSelWrapFu',
+    panel
+  );
+}
+
+function clearContactSel(panel){
+  _selectedContact[panel] = null;
+  renderContactSelector(
+    panel === 'rewrite' ? 'contactSelRow' : panel === 'reply' ? 'contactSelRowReply' : 'contactSelRowFu',
+    panel === 'rewrite' ? 'contactSelWrap' : panel === 'reply' ? 'contactSelWrapReply' : 'contactSelWrapFu',
+    panel
+  );
+}
+
+function getContactContext(panel){
+  const idx = _selectedContact[panel];
+  if(idx === null || idx === undefined || !_contacts[idx]) return '';
+  const c = _contacts[idx];
+  let ctx = `The recipient is "${c.name}" (${c.rel})`;
+  if(c.formality && c.formality !== 'auto') ctx += `, use ${c.formality} language`;
+  if(c.notes) ctx += `. Tone notes: ${c.notes}`;
+  return ctx + '.';
+}
+
+// Init contact rel buttons
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('contactRelRow') && document.getElementById('contactRelRow').addEventListener('click', e => {
+    const btn = e.target.closest('.contact-rel-btn');
+    if(btn) setContactRel(btn.dataset.rel);
+  });
+  loadContacts();
+});
+
 function analyzeVoiceDNA(){
   var samples=document.querySelectorAll('.dna-sample');
   var texts=[];
