@@ -784,6 +784,38 @@ input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);bo
 .metrics-toggle-btn{display:none;position:fixed;right:16px;bottom:80px;z-index:300;background:linear-gradient(135deg,var(--i5),var(--i4));border:none;border-radius:50px;padding:10px 16px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(99,102,241,.5);transition:transform .2s,box-shadow .2s}
 .metrics-toggle-btn:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(99,102,241,.65)}
 @media(max-width:1199px) and (min-width:900px){.metrics-toggle-btn{display:flex;align-items:center;gap:6px}}
+
+/* ===== RADAR METRICS UPGRADE ===== */
+.mp-mode-badge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;background:rgba(99,102,241,.18);border:1px solid rgba(99,102,241,.28);color:var(--i4);padding:2px 8px;border-radius:20px;flex-shrink:0}
+.radar-bars{position:relative;display:flex;flex-direction:column;gap:11px;margin-top:4px}
+.radar-locked{position:absolute;inset:-8px;border-radius:12px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);background:rgba(10,10,22,.78);display:flex;align-items:center;justify-content:center;z-index:10}
+.rl-inner{text-align:center;padding:16px 20px}
+.rl-icon{font-size:26px;margin-bottom:6px}
+.rl-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:4px}
+.rl-sub{font-size:11px;color:var(--t3);margin-bottom:12px;line-height:1.5}
+.rl-btn{background:linear-gradient(135deg,#8b5cf6,#6366f1);border:none;border-radius:20px;color:#fff;font-size:12px;font-weight:700;padding:7px 18px;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.rl-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(99,102,241,.55)}
+.rb-row{display:flex;flex-direction:column;gap:4px}
+.rb-top{display:flex;align-items:center;justify-content:space-between}
+.rb-label{display:flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:var(--t2)}
+.rb-icon{font-size:12px}
+.rb-val{font-size:11.5px;font-weight:700;color:#fff}
+.rb-track{height:7px;background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden}
+.rb-fill{height:100%;border-radius:10px;width:0%;transition:width .65s cubic-bezier(.4,0,.2,1),background .4s}
+.rb-boost{background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.26);color:var(--i4);font-size:10px;font-weight:700;padding:3px 9px;border-radius:12px;cursor:pointer;transition:all .2s;width:fit-content;margin-top:1px}
+.rb-boost:hover{background:rgba(99,102,241,.26);border-color:var(--i5);transform:translateY(-1px)}
+.micro-badges{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px;padding-top:11px;border-top:1px solid rgba(255,255,255,.07)}
+.mbadge{font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:12px;border:1px solid rgba(255,255,255,.1);color:var(--t3);background:rgba(255,255,255,.04);line-height:1.5}
+.mbadge.green{color:#4ade80;border-color:rgba(74,222,128,.28);background:rgba(74,222,128,.08)}
+.mbadge.yellow{color:#fbbf24;border-color:rgba(251,191,36,.28);background:rgba(251,191,36,.08)}
+.mbadge.red{color:rgba(252,165,165,.95);border-color:rgba(252,165,165,.28);background:rgba(252,165,165,.08)}
+.mbadge.purple{color:var(--i4);border-color:rgba(99,102,241,.32);background:rgba(99,102,241,.1)}
+.mp-percentile{text-align:center;font-size:11px;color:var(--t3);margin-bottom:12px;padding:6px 10px;background:rgba(99,102,241,.08);border-radius:8px;border:1px solid rgba(99,102,241,.18)}
+.mp-percentile strong{color:var(--i4);font-weight:700}
+.mp-kpis{display:flex;gap:8px;margin-bottom:10px}
+.mp-kpi{flex:1;background:rgba(255,255,255,.04);border-radius:8px;padding:8px 6px;text-align:center;border:1px solid rgba(255,255,255,.06)}
+.mp-kpi-val{font-size:18px;font-weight:700;color:#fff;line-height:1}
+.mp-kpi-lbl{font-size:9.5px;color:var(--t3);margin-top:3px;text-transform:uppercase;letter-spacing:.4px}
 </style>
 </head>
 <body>
@@ -3575,31 +3607,57 @@ function openManageSubscription(){
 })();
 
 // ===================================================================
-// ===== METRICS PANEL SYSTEM ========================================
+// ===== METRICS PANEL SYSTEM (Radar v2) ==============================
 // ===================================================================
 
 var RT_METRICS = {
   activeMode: 'rewrite',
   totalRuns: parseInt(localStorage.getItem('rt_totalRuns')||'0'),
-  timeSaved: parseInt(localStorage.getItem('rt_timeSaved')||'0')
+  timeSaved: parseInt(localStorage.getItem('rt_timeSaved')||'0'),
+  streak: parseInt(localStorage.getItem('rt_streak')||'1'),
+  lastAxes: null,
+  lastMasterScore: 0
 };
 
-// Restore session counters on load
+// ── Axis definitions ───────────────────────────────────────────────
+var UNIVERSAL_AXES=[
+  {name:'Impact',   icon:'📊', weight:0.30},
+  {name:'Clarity',  icon:'💡', weight:0.25},
+  {name:'Tone Match',icon:'🎯',weight:0.20},
+  {name:'Conciseness',icon:'✂️',weight:0.15},
+  {name:'Diplomacy',icon:'🤝', weight:0.10}
+];
+var SPECIALIZED_AXES=[
+  {name:'Human Score', icon:'🧬', weight:0.30},
+  {name:'Originality', icon:'✨', weight:0.25},
+  {name:'Readability', icon:'📖', weight:0.20},
+  {name:'Rhythm',      icon:'🎵', weight:0.15},
+  {name:'Vocab Flow',  icon:'📝', weight:0.10}
+];
+
+// ── Restore session counters on load ───────────────────────────────
 (function(){
   var r=document.getElementById('stat-runs');
   var t=document.getElementById('stat-time');
   if(r) r.textContent=RT_METRICS.totalRuns;
   if(t) t.textContent=RT_METRICS.timeSaved;
+  var kr=document.getElementById('mpkpi-runs');
+  var kt=document.getElementById('mpkpi-time');
+  var ks=document.getElementById('mpkpi-streak');
+  if(kr) kr.textContent=RT_METRICS.totalRuns;
+  if(kt) kt.textContent=RT_METRICS.timeSaved;
+  if(ks) ks.textContent=RT_METRICS.streak;
 })();
 
+// ── Panel show/hide ────────────────────────────────────────────────
 function showMetricsPanel(mode){
   var panel=document.getElementById('metricsPanel');
   if(!panel) return;
-  document.querySelectorAll('.mw').forEach(function(w){w.style.display='none';});
-  var widget=document.getElementById('mw-'+mode);
-  if(widget) widget.style.display='block';
+  // For bulk, show bulk widget; for all others show main
+  var isBulk=(mode==='bulk');
+  document.getElementById('mw-main').style.display=isBulk?'none':'block';
+  document.getElementById('mw-bulk').style.display=isBulk?'block':'none';
   panel.classList.add('show');
-  // Show toggle button on medium screens (900-1199px)
   var btn=document.getElementById('metricsToggleBtn');
   if(btn) btn.style.display='flex';
 }
@@ -3611,6 +3669,270 @@ function toggleMetricsPanel(){
   if(btn) btn.textContent=panel.classList.contains('show')?'✕ Hide':'⚡ Stats';
 }
 
+// ── Core axes computation ──────────────────────────────────────────
+function computeUniversalAxes(original, output, mode){
+  var text=output||'';
+  var orig=original||'';
+  var lower=text.toLowerCase();
+
+  // 1. IMPACT: action verbs + power words
+  var actionWords=['achieve','build','create','deliver','drive','ensure','generate','grow','improve','increase','launch','lead','maximize','optimize','produce','provide','reduce','resolve','save','solve','transform','accelerate','boost','streamline','strengthen'];
+  var powerWords=['proven','guaranteed','results','success','breakthrough','critical','key','essential','immediate','significant','substantial','effective','efficient','comprehensive','strategic'];
+  var wordCount=(text.match(/\S+/g)||[]).length||1;
+  var actionCount=actionWords.filter(function(w){return lower.indexOf(w)!==-1;}).length;
+  var powerCount=powerWords.filter(function(w){return lower.indexOf(w)!==-1;}).length;
+  var impactScore=Math.min(100,Math.round((actionCount*7+powerCount*5+20)*(wordCount<20?0.7:1)));
+
+  // 2. CLARITY: sentence length distribution
+  var sentences=text.split(/[.!?]+/).filter(function(s){return s.trim().length>3;});
+  var sentLens=sentences.map(function(s){return (s.match(/\S+/g)||[]).length;});
+  var avgLen=sentLens.length>0?sentLens.reduce(function(a,b){return a+b;},0)/sentLens.length:15;
+  var clarityScore=avgLen<=8?75:avgLen<=15?95:avgLen<=22?88:avgLen<=30?70:Math.max(40,100-avgLen*2);
+  // Bonus for varied sentence lengths
+  if(sentLens.length>2){
+    var variance=sentLens.reduce(function(a,b){return a+Math.abs(b-avgLen);},0)/sentLens.length;
+    clarityScore=Math.min(100,clarityScore+(variance>3?6:0));
+  }
+
+  // 3. TONE MATCH: formality alignment
+  var contractions=(text.match(/\b(I'm|you're|don't|can't|won't|isn't|aren't|it's|we're|they're|I've|I'll|we'll|you'll)\b/gi)||[]).length;
+  var formalMarkers=(text.match(/\b(therefore|however|furthermore|hence|regarding|consequently|accordingly|nevertheless|henceforth|pursuant|aforementioned)\b/gi)||[]).length;
+  var isFormalContext=(mode==='rewrite'||mode==='followup');
+  var toneScore;
+  if(isFormalContext){
+    toneScore=Math.min(100,Math.round(70+formalMarkers*6-contractions*4));
+  } else {
+    // Reply/casual modes — natural balanced tone scores higher
+    toneScore=Math.min(100,Math.round(72+(contractions>0?8:0)+formalMarkers*3));
+  }
+  toneScore=Math.max(35,toneScore);
+
+  // 4. CONCISENESS: word count delta vs original
+  var origWC=(orig.match(/\S+/g)||[]).length;
+  var outWC=(text.match(/\S+/g)||[]).length;
+  var conciseScore=50;
+  if(origWC>0){
+    var ratio=outWC/origWC;
+    if(ratio<=0.6) conciseScore=95;
+    else if(ratio<=0.75) conciseScore=88;
+    else if(ratio<=0.9) conciseScore=78;
+    else if(ratio<=1.0) conciseScore=65;
+    else if(ratio<=1.15) conciseScore=50;
+    else conciseScore=Math.max(25,Math.round(50-(ratio-1)*80));
+  } else {
+    // No original: score based on avg sentence length and filler words
+    var fillerWords=(text.match(/\b(basically|actually|just|really|very|quite|somewhat|rather|perhaps|maybe|simply|honestly|literally)\b/gi)||[]).length;
+    conciseScore=Math.min(90,Math.max(40,80-fillerWords*8+(avgLen<18?10:0)));
+  }
+
+  // 5. DIPLOMACY: diplomatic language markers
+  var diplomacyWords=['thank','appreciate','understand','please','would','could','happy to','glad to','let me know','feel free','any questions','hope this helps','looking forward','best regards','kind regards','my apologies','sorry for','i respect','value your'];
+  var aggressiveWords=['immediately','must','demand','require','insist','unacceptable','failure','incompetent','ridiculous','absurd'];
+  var diploCount=diplomacyWords.filter(function(w){return lower.indexOf(w)!==-1;}).length;
+  var aggroCount=aggressiveWords.filter(function(w){return lower.indexOf(w)!==-1;}).length;
+  var diplomacyScore=Math.min(100,Math.max(20,Math.round(55+diploCount*8-aggroCount*12)));
+
+  return [impactScore, Math.round(clarityScore), toneScore, conciseScore, diplomacyScore];
+}
+
+function computeSpecializedAxes(data, mode, inputText){
+  var text='';
+  if(mode==='grammar') text=data.corrected||inputText||'';
+  else if(mode==='summarize') text=data.summary||inputText||'';
+  else if(mode==='humanize') text=data.humanized||inputText||'';
+  else if(mode==='detect-ai') text=inputText||'';
+  else if(mode==='plagiarism') text=inputText||'';
+
+  var lower=text.toLowerCase();
+  var words=(text.match(/\S+/g)||[]).length||1;
+  var uniqueWords=(function(){var s={};(text.match(/[a-z]+/gi)||[]).forEach(function(w){s[w.toLowerCase()]=1;});return Object.keys(s).length;})();
+
+  // 1. HUMAN SCORE: how human-like the text reads
+  var humanScore=70;
+  if(mode==='humanize'&&data.ai_score_after!=null){
+    humanScore=Math.round(100-data.ai_score_after);
+  } else if(mode==='detect-ai'&&data.score!=null){
+    humanScore=Math.round(100-data.score);
+  } else {
+    // Heuristic: contractions + varied length + no repetitive structures
+    var contractions=(text.match(/\b(I'm|you're|don't|can't|won't|isn't|aren't|it's|we're|they're|I've|I'll)\b/gi)||[]).length;
+    var sentences=text.split(/[.!?]+/).filter(function(s){return s.trim().length>3;});
+    var sentLens=sentences.map(function(s){return (s.match(/\S+/g)||[]).length;});
+    var avgLen=sentLens.length?sentLens.reduce(function(a,b){return a+b;},0)/sentLens.length:15;
+    var variance=sentLens.length>1?sentLens.reduce(function(a,b){return a+Math.abs(b-avgLen);},0)/sentLens.length:0;
+    humanScore=Math.min(96,Math.round(58+contractions*5+variance*3+(words>50?8:0)));
+  }
+
+  // 2. ORIGINALITY: plagiarism/uniqueness score
+  var originalityScore=75;
+  if(mode==='plagiarism'&&data.originality_score!=null){
+    originalityScore=data.originality_score;
+  } else if(mode==='humanize'&&data.ai_score_after!=null){
+    // Humanized text assumed more original
+    originalityScore=Math.min(95,Math.round(70+(100-data.ai_score_after)*0.25));
+  } else {
+    // Heuristic type-token ratio
+    var ttr=Math.min(1,uniqueWords/words);
+    originalityScore=Math.min(95,Math.round(ttr*120));
+  }
+
+  // 3. READABILITY: Flesch approximation
+  var sentences2=text.split(/[.!?]+/).filter(function(s){return s.trim().length>3;});
+  var avgSentLen=sentences2.length?((text.match(/\S+/g)||[]).length)/sentences2.length:15;
+  // Avg syllable estimate: avg word length / 3 (rough proxy)
+  var allWords=text.match(/[a-z]+/gi)||[];
+  var avgWordLen=allWords.length?allWords.reduce(function(a,b){return a+b.length;},0)/allWords.length:5;
+  var avgSyl=avgWordLen/3;
+  var flesch=Math.max(0,Math.min(100,Math.round(206.835-1.015*avgSentLen-84.6*avgSyl)));
+  var readabilityScore=Math.max(30,flesch);
+
+  // 4. RHYTHM: sentence length variation (burstiness)
+  var sentLens2=sentences2.map(function(s){return (s.match(/\S+/g)||[]).length;});
+  var avgL2=sentLens2.length?sentLens2.reduce(function(a,b){return a+b;},0)/sentLens2.length:10;
+  var stdDev=sentLens2.length>1?Math.sqrt(sentLens2.reduce(function(a,b){return a+Math.pow(b-avgL2,2);},0)/sentLens2.length):0;
+  // Good rhythm: std dev 3-8 words
+  var rhythmScore=stdDev<2?45:stdDev<4?72:stdDev<8?92:stdDev<12?80:65;
+  if(mode==='grammar'&&data.score!=null) rhythmScore=Math.round(rhythmScore*0.7+data.score*0.3);
+
+  // 5. VOCAB FLOW: type-token ratio + no excessive repetition
+  var ttr2=words>0?Math.min(1,uniqueWords/words):0.5;
+  var vocabScore=Math.min(96,Math.round(ttr2*130));
+  // Penalty for very common words dominating
+  var commonWords=['the','a','an','is','are','was','were','be','been','being','have','has','had','do','does','did','will','would','could','should','may','might','shall','can','need','dare','ought','used'];
+  var commonCount=(lower.match(/\b(the|a|an|is|are|was|were|be|been|being|have|has|had|do|does|did|will|would|could|should|may|might|shall|can)\b/g)||[]).length;
+  if(words>0&&commonCount/words>0.35) vocabScore=Math.round(vocabScore*0.85);
+
+  return [humanScore, originalityScore, readabilityScore, rhythmScore, Math.max(30,vocabScore)];
+}
+
+function computeMasterScore(axes, axesDef){
+  var total=0;
+  for(var i=0;i<axesDef.length&&i<axes.length;i++){
+    total+=axes[i]*axesDef[i].weight;
+  }
+  return Math.round(total);
+}
+
+function computeMicroBadges(original, output, mode){
+  var badges=[];
+  var origWC=(original.match(/\S+/g)||[]).length;
+  var outWC=(output.match(/\S+/g)||[]).length;
+
+  // Word Delta
+  if(origWC>0&&outWC>0){
+    var delta=Math.round((1-outWC/origWC)*100);
+    if(delta>5){badges.push({id:'delta',cls:'green',text:'▼'+delta+'% shorter'});}
+    else if(delta<-5){badges.push({id:'delta',cls:'yellow',text:'▲'+Math.abs(delta)+'% longer'});}
+    else{badges.push({id:'delta',cls:'',text:'≈ same length'});}
+  }
+
+  // Cringe Risk (overused business buzzwords + hedging)
+  var cringeWords=['synergy','leverage','circle back','touch base','low-hanging fruit','move the needle','paradigm shift','boil the ocean','bandwidth','deep dive','pivot','stakeholder','optics','ecosystem','disruption','robust','scalable'];
+  var lower=(output||'').toLowerCase();
+  var cringeCount=cringeWords.filter(function(w){return lower.indexOf(w)!==-1;}).length;
+  if(cringeCount>=3){badges.push({id:'cringe',cls:'red',text:'⚠ Cringe: High'});}
+  else if(cringeCount>=1){badges.push({id:'cringe',cls:'yellow',text:'⚡ Cringe: Low'});}
+  else{badges.push({id:'cringe',cls:'green',text:'✓ Cringe: None'});}
+
+  // Subtext Tag
+  var warmWords=['appreciate','thank','glad','happy','wonderful','pleasure','delight','care','warmly'];
+  var urgentWords=['urgent','asap','immediately','critical','deadline','priority','action required'];
+  var formalWords=['regarding','pursuant','henceforth','therefore','accordingly','sincerely','respectfully'];
+  var warmCount=warmWords.filter(function(w){return lower.indexOf(w)!==-1;}).length;
+  var urgentCount=urgentWords.filter(function(w){return lower.indexOf(w)!==-1;}).length;
+  var formalCount=formalWords.filter(function(w){return lower.indexOf(w)!==-1;}).length;
+  var subtextTag='Professional';
+  if(urgentCount>=2){subtextTag='Urgent';}
+  else if(formalCount>=2){subtextTag='Formal';}
+  else if(warmCount>=2){subtextTag='Warm';}
+  else if(lower.indexOf('hey')!==-1||lower.indexOf('btw')!==-1||lower.indexOf('lol')!==-1){subtextTag='Casual';}
+  badges.push({id:'subtext',cls:'purple',text:'◈ '+subtextTag});
+
+  return badges;
+}
+
+// ── Render radar bars ──────────────────────────────────────────────
+function renderRadarBars(axes, axesDef, masterScore, originalText, outputText, isFree){
+  // Set mode badge
+  var isUniversal=(axesDef===UNIVERSAL_AXES);
+  var modeBadge=document.getElementById('mpModeBadge');
+  if(modeBadge) modeBadge.textContent=isUniversal?'Universal':'Specialized';
+
+  // Animate master gauge
+  animateGauge('master-gauge',masterScore,100);
+  var gv=document.getElementById('master-gauge-val');
+  if(gv) gv.textContent=masterScore;
+
+  // Percentile (simulated heuristic)
+  var pctEl=document.getElementById('mpPercentile');
+  var pctVal=document.getElementById('mpPctVal');
+  if(pctEl&&pctVal&&masterScore>50){
+    var pct=Math.round((masterScore-50)*1.8+masterScore*0.3);
+    pct=Math.min(99,Math.max(50,pct));
+    pctVal.textContent=pct;
+    pctEl.style.display='block';
+  } else if(pctEl){
+    pctEl.style.display='none';
+  }
+
+  // Tier gate
+  var lockEl=document.getElementById('radarLocked');
+  if(lockEl) lockEl.style.display=isFree?'flex':'none';
+
+  // Render each axis
+  for(var i=0;i<5;i++){
+    var n=i+1;
+    var val=axes[i]||0;
+    var def=axesDef[i];
+    var nameEl=document.getElementById('rb-name'+n);
+    var iconEl=document.getElementById('rb-icon'+n);
+    var valEl=document.getElementById('rb-val'+n);
+    var fillEl=document.getElementById('rb-fill'+n);
+    var boostEl=document.getElementById('rb-boost'+n);
+    if(nameEl) nameEl.textContent=def.name;
+    if(iconEl) iconEl.textContent=def.icon;
+    if(valEl) valEl.textContent=val+'%';
+    if(fillEl){
+      fillEl.style.width=val+'%';
+      fillEl.style.background=val>=80?'linear-gradient(90deg,#818cf8,#a78bfa)':val>=65?'linear-gradient(90deg,#6366f1,#818cf8)':val>=45?'linear-gradient(90deg,#facc15,#fbbf24)':'linear-gradient(90deg,#f97316,#fb923c)';
+    }
+    // Show boost button for low-scoring axes (non-free only)
+    if(boostEl) boostEl.style.display=(!isFree&&val<65)?'block':'none';
+  }
+
+  RT_METRICS.lastAxes=axes;
+  RT_METRICS.lastMasterScore=masterScore;
+
+  // Micro-badges
+  if(outputText){
+    var badges=computeMicroBadges(originalText||'',outputText,'');
+    var mbWrap=document.getElementById('microBadges');
+    if(mbWrap){
+      mbWrap.style.display='flex';
+      badges.forEach(function(b){
+        var el=document.getElementById('badge-'+b.id);
+        if(el){el.textContent=b.text;el.className='mbadge'+(b.cls?' '+b.cls:'');}
+      });
+    }
+  }
+
+  // vs original delta
+  var deltaRow=document.getElementById('metricDeltaRow');
+  if(deltaRow&&originalText&&outputText){
+    var origScore=computeMasterScore(computeUniversalAxes(originalText,originalText,'rewrite'),UNIVERSAL_AXES);
+    var diff=masterScore-origScore;
+    var impEl=document.getElementById('master-improvement');
+    if(impEl){
+      impEl.textContent=(diff>0?'+':'')+diff+' pts';
+      impEl.style.color=diff>0?'#4ade80':diff<0?'#f97316':'#94a3b8';
+    }
+    deltaRow.style.display='block';
+  } else if(deltaRow){
+    deltaRow.style.display='none';
+  }
+}
+
+// ── Main update entry point ────────────────────────────────────────
 function updateMetrics(mode, data, originalText, outputText){
   RT_METRICS.totalRuns++;
   RT_METRICS.timeSaved+=3;
@@ -3618,70 +3940,36 @@ function updateMetrics(mode, data, originalText, outputText){
   localStorage.setItem('rt_timeSaved',RT_METRICS.timeSaved);
   animateCounter('stat-runs',RT_METRICS.totalRuns);
   animateCounter('stat-time',RT_METRICS.timeSaved);
+  animateCounter('mpkpi-runs',RT_METRICS.totalRuns);
+  animateCounter('mpkpi-time',RT_METRICS.timeSaved);
+
+  if(mode==='bulk') return; // bulk is handled in renderBulkResults hook
+
+  var isFree=!(RT&&RT.user&&RT.user.plan==='premium');
+  var output=outputText||(data?data.v1||'':'');
+  var input=originalText||'';
+
+  var isSpecialized=['grammar','summarize','humanize','detect-ai','plagiarism'].indexOf(mode)!==-1;
+  var axesDef=isSpecialized?SPECIALIZED_AXES:UNIVERSAL_AXES;
+  var axes=isSpecialized?computeSpecializedAxes(data,mode,input):computeUniversalAxes(input,output,mode);
+  var master=computeMasterScore(axes,axesDef);
+
+  renderRadarBars(axes,axesDef,master,input,output,isFree);
   showMetricsPanel(mode);
-  if(mode==='rewrite') updateRewriteMetrics(originalText,outputText||data.v1);
-  else if(mode==='reply') updateReplyMetrics(data);
-  else if(mode==='followup') updateFollowupMetrics(data);
 }
 
-function updateRewriteMetrics(original,output){
-  var origScore=scoreMessage(original);
-  var outScore=scoreMessage(output);
-  var strength=Math.round(((outScore.clarity+outScore.tone+outScore.prof)/3)*10);
-  animateGauge('rw-gauge',strength,100);
-  document.getElementById('rw-gauge-val').textContent=strength;
-  setMetricBar('rw-clarity',outScore.clarity*10);
-  setMetricBar('rw-tone',outScore.tone*10);
-  setMetricBar('rw-prof',outScore.prof*10);
-  var origWC=(original.match(/\S+/g)||[]).length;
-  var outWC=(output.match(/\S+/g)||[]).length;
-  var concisePct=origWC>0?Math.min(100,Math.max(10,Math.round((1-(outWC/origWC))*200+50))):60;
-  setMetricBar('rw-concise',concisePct);
-  var origStr=Math.round(((origScore.clarity+origScore.tone+origScore.prof)/3)*10);
-  var improvement=strength-origStr;
-  var impEl=document.getElementById('rw-improvement');
-  if(impEl){
-    impEl.textContent=(improvement>0?'+':'')+improvement+' pts';
-    impEl.style.color=improvement>0?'#4ade80':improvement<0?'#f97316':'#94a3b8';
+// ── Boost button handler ───────────────────────────────────────────
+function boostAxis(axisNum){
+  // Open upgrade modal with targeted message, or for premium show targeted tip
+  if(RT&&RT.user&&RT.user.plan==='premium'){
+    var axisName=RT_METRICS.lastAxes&&UNIVERSAL_AXES[axisNum-1]?UNIVERSAL_AXES[axisNum-1].name:'this axis';
+    alert('💡 Tip: To boost '+axisName+', try re-running with a different tone or length setting.');
+  } else {
+    openUpgradeModal('boost_axis_'+axisNum);
   }
 }
 
-function updateReplyMetrics(data){
-  var output=data.v1||'';
-  var s=scoreMessage(output);
-  var text=output.toLowerCase();
-  var empathyWords=['understand','appreciate','sorry','feel','hear','acknowledge','thank','value','happy','glad'];
-  var empathy=empathyWords.filter(function(w){return text.indexOf(w)!==-1;}).length;
-  var empathyScore=Math.min(100,empathy*12+28);
-  setMetricBar('ry-empathy',empathyScore);
-  setMetricBar('ry-clarity',s.clarity*10);
-  setMetricBar('ry-tone',s.tone*10);
-  setMetricBar('ry-prof',s.prof*10);
-  var overall=Math.round((empathyScore+s.clarity*10+s.tone*10+s.prof*10)/4);
-  animateGauge('ry-gauge',overall,100);
-  document.getElementById('ry-gauge-val').textContent=overall;
-}
-
-function updateFollowupMetrics(data){
-  var output=data.v1||'';
-  var text=output.toLowerCase();
-  var urgencyWords=['urgent','asap','immediately','deadline','today','tomorrow','priority','critical','important','soon','quickly','time-sensitive'];
-  var urgency=urgencyWords.filter(function(w){return text.indexOf(w)!==-1;}).length;
-  var urgencyScore=Math.min(10,urgency*2+4);
-  document.getElementById('fu-urgency-val').textContent=urgencyScore.toFixed(1)+' / 10';
-  setMetricBar('fu-urgency-bar',urgencyScore*10);
-  var days=['Sun','Mon','Tue','Wed','Thu'];
-  var d=new Date();
-  var nd=new Date(d);
-  var targetDay=d.getDay()<2?2:d.getDay()<4?4:2;
-  for(var i=0;i<7;i++){nd.setDate(nd.getDate()+1);if(nd.getDay()===targetDay) break;}
-  document.getElementById('fu-sendtime').textContent=days[nd.getDay()]||'Tue'+' 10:00 AM';
-  var s=scoreMessage(output);
-  setMetricBar('fu-response',Math.round((s.tone+s.prof)*5));
-  setMetricBar('fu-open',68);
-  setMetricBar('fu-click',42);
-}
-
+// ── Helpers ────────────────────────────────────────────────────────
 function setMetricBar(id,pct){
   pct=Math.max(0,Math.min(100,Math.round(pct)));
   var bar=document.getElementById(id);
@@ -3696,7 +3984,6 @@ function animateGauge(id,value,max){
   var el=document.getElementById(id);
   if(!el) return;
   var pct=Math.round((value/max)*100);
-  // Animate via requestAnimationFrame
   var start=parseInt(el.style.getPropertyValue('--gauge-pct'))||0;
   var dur=600,startTime=null;
   function step(ts){
@@ -3715,7 +4002,7 @@ function animateCounter(id,val){
   var el=document.getElementById(id);
   if(!el) return;
   var current=parseInt(el.textContent)||0;
-  if(current===val){return;}
+  if(current===val) return;
   var step=Math.ceil(Math.abs(val-current)/15);
   var t=setInterval(function(){
     current=Math.min(current+step,val);
@@ -3724,17 +4011,11 @@ function animateCounter(id,val){
   },30);
 }
 
-// Hook metrics into mode switches
+// ── Hook metrics into mode switches ───────────────────────────────
 var _origSwitchMode=switchMode;
 switchMode=function(mode){
   _origSwitchMode.apply(this,arguments);
   RT_METRICS.activeMode=mode;
-  var panel=document.getElementById('metricsPanel');
-  if(panel&&panel.classList.contains('show')){
-    document.querySelectorAll('.mw').forEach(function(w){w.style.display='none';});
-    var widget=document.getElementById('mw-'+mode);
-    if(widget) widget.style.display='block';
-  }
 };
 
 // Hook bulk rewrite metrics
@@ -4346,6 +4627,7 @@ function runGrammar(){
       }
       results.innerHTML=html;results.style.display='block';
       msg.className='rt-msg success';msg.textContent='Done!';
+      updateMetrics('grammar',res,text,res.corrected||'');
     } else {
       msg.className='rt-msg error';msg.textContent=(res&&res.error)?res.error:'Something went wrong. Please try again.';
     }
@@ -4388,6 +4670,7 @@ function runSummarize(){
       }
       results.innerHTML=html;results.style.display='block';
       msg.className='rt-msg success';msg.textContent='Done!';
+      updateMetrics('summarize',res,text,res.summary||'');
     } else {
       msg.className='rt-msg error';msg.textContent=(res&&res.error)?res.error:'Something went wrong. Please try again.';
     }
@@ -4431,6 +4714,7 @@ function runHumanize(){
       }
       results.innerHTML=html;results.style.display='block';
       msg.className='rt-msg success';msg.textContent='Done!';
+      updateMetrics('humanize',res,text,res.humanized||'');
     } else {
       msg.className='rt-msg error';msg.textContent=(res&&res.error)?res.error:'Something went wrong. Please try again.';
     }
@@ -4478,6 +4762,7 @@ function runDetectAI(){
       }
       results.innerHTML=html;results.style.display='block';
       msg.className='rt-msg success';msg.textContent='Done!';
+      updateMetrics('detect-ai',res,text,'');
     } else {
       msg.className='rt-msg error';msg.textContent=(res&&res.error)?res.error:'Something went wrong. Please try again.';
     }
@@ -4526,6 +4811,7 @@ function runPlagiarism(){
       }
       results.innerHTML=html;results.style.display='block';
       msg.className='rt-msg success';msg.textContent='Done!';
+      updateMetrics('plagiarism',res,text,'');
     } else {
       msg.className='rt-msg error';msg.textContent=(res&&res.error)?res.error:'Something went wrong. Please try again.';
     }
@@ -4544,64 +4830,93 @@ function runPlagiarism(){
 <div class="metrics-panel" id="metricsPanel">
   <div class="mp-header">
     <span class="mp-title">⚡ Live Metrics</span>
+    <span class="mp-mode-badge" id="mpModeBadge">Universal</span>
     <button class="mp-close" onclick="document.getElementById('metricsPanel').classList.remove('show')" title="Close">×</button>
   </div>
 
-  <!-- REWRITE widget -->
-  <div class="mw" id="mw-rewrite">
-    <div class="mw-title">Reply Strength Score</div>
+  <!-- MAIN unified widget (all single-output modes) -->
+  <div class="mw" id="mw-main">
     <div class="gauge-wrap">
-      <div class="gauge" id="rw-gauge" style="--gauge-pct:0">
-        <div class="gauge-val"><span id="rw-gauge-val">—</span><small>/100</small></div>
+      <div class="gauge" id="master-gauge" style="--gauge-pct:0">
+        <div class="gauge-val"><span id="master-gauge-val">—</span><small>/100</small></div>
       </div>
-      <div class="gauge-label">Overall Score</div>
+      <div class="gauge-label" id="masterGaugeLabel">Master Score</div>
     </div>
-    <div class="metric-bars">
-      <div class="metric-bar-row"><span class="mb-label">Clarity</span><div class="mb-track"><div class="mb-fill" id="rw-clarity"></div></div><span class="mbv">—</span></div>
-      <div class="metric-bar-row"><span class="mb-label">Tone</span><div class="mb-track"><div class="mb-fill" id="rw-tone"></div></div><span class="mbv">—</span></div>
-      <div class="metric-bar-row"><span class="mb-label">Professional</span><div class="mb-track"><div class="mb-fill" id="rw-prof"></div></div><span class="mbv">—</span></div>
-      <div class="metric-bar-row"><span class="mb-label">Concise</span><div class="mb-track"><div class="mb-fill" id="rw-concise"></div></div><span class="mbv">—</span></div>
-    </div>
-    <div class="metric-delta">vs. original: <strong id="rw-improvement">—</strong></div>
-  </div>
 
-  <!-- REPLY widget -->
-  <div class="mw" id="mw-reply" style="display:none">
-    <div class="mw-title">Reply Quality Score</div>
-    <div class="gauge-wrap">
-      <div class="gauge" id="ry-gauge" style="--gauge-pct:0">
-        <div class="gauge-val"><span id="ry-gauge-val">—</span><small>/100</small></div>
+    <div class="mp-percentile" id="mpPercentile" style="display:none">
+      Outperforms <strong id="mpPctVal">—</strong>% of messages
+    </div>
+
+    <!-- 5-axis radar bars -->
+    <div class="radar-bars" id="radarBars">
+      <!-- Free-tier lock overlay -->
+      <div class="radar-locked" id="radarLocked" style="display:none">
+        <div class="rl-inner">
+          <div class="rl-icon">🔒</div>
+          <div class="rl-title">Full AI Telemetry</div>
+          <div class="rl-sub">Upgrade to unlock detailed axis breakdown &amp; score history</div>
+          <button onclick="openUpgradeModal('metrics')" class="rl-btn">Unlock Plus →</button>
+        </div>
       </div>
-      <div class="gauge-label">Quality Index</div>
+      <!-- Axis 1 -->
+      <div class="rb-row">
+        <div class="rb-top">
+          <span class="rb-label"><span class="rb-icon" id="rb-icon1">📊</span><span id="rb-name1">Impact</span></span>
+          <span class="rb-val" id="rb-val1">—</span>
+        </div>
+        <div class="rb-track"><div class="rb-fill" id="rb-fill1"></div></div>
+        <button class="rb-boost" id="rb-boost1" onclick="boostAxis(1)" style="display:none">⚡ Boost to 90+</button>
+      </div>
+      <!-- Axis 2 -->
+      <div class="rb-row">
+        <div class="rb-top">
+          <span class="rb-label"><span class="rb-icon" id="rb-icon2">💡</span><span id="rb-name2">Clarity</span></span>
+          <span class="rb-val" id="rb-val2">—</span>
+        </div>
+        <div class="rb-track"><div class="rb-fill" id="rb-fill2"></div></div>
+        <button class="rb-boost" id="rb-boost2" onclick="boostAxis(2)" style="display:none">⚡ Boost to 90+</button>
+      </div>
+      <!-- Axis 3 -->
+      <div class="rb-row">
+        <div class="rb-top">
+          <span class="rb-label"><span class="rb-icon" id="rb-icon3">🎯</span><span id="rb-name3">Tone Match</span></span>
+          <span class="rb-val" id="rb-val3">—</span>
+        </div>
+        <div class="rb-track"><div class="rb-fill" id="rb-fill3"></div></div>
+        <button class="rb-boost" id="rb-boost3" onclick="boostAxis(3)" style="display:none">⚡ Boost to 90+</button>
+      </div>
+      <!-- Axis 4 -->
+      <div class="rb-row">
+        <div class="rb-top">
+          <span class="rb-label"><span class="rb-icon" id="rb-icon4">✂️</span><span id="rb-name4">Conciseness</span></span>
+          <span class="rb-val" id="rb-val4">—</span>
+        </div>
+        <div class="rb-track"><div class="rb-fill" id="rb-fill4"></div></div>
+        <button class="rb-boost" id="rb-boost4" onclick="boostAxis(4)" style="display:none">⚡ Boost to 90+</button>
+      </div>
+      <!-- Axis 5 -->
+      <div class="rb-row">
+        <div class="rb-top">
+          <span class="rb-label"><span class="rb-icon" id="rb-icon5">🤝</span><span id="rb-name5">Diplomacy</span></span>
+          <span class="rb-val" id="rb-val5">—</span>
+        </div>
+        <div class="rb-track"><div class="rb-fill" id="rb-fill5"></div></div>
+        <button class="rb-boost" id="rb-boost5" onclick="boostAxis(5)" style="display:none">⚡ Boost to 90+</button>
+      </div>
     </div>
-    <div class="metric-bars">
-      <div class="metric-bar-row"><span class="mb-label">Empathy</span><div class="mb-track"><div class="mb-fill" id="ry-empathy"></div></div><span class="mbv">—</span></div>
-      <div class="metric-bar-row"><span class="mb-label">Clarity</span><div class="mb-track"><div class="mb-fill" id="ry-clarity"></div></div><span class="mbv">—</span></div>
-      <div class="metric-bar-row"><span class="mb-label">Tone</span><div class="mb-track"><div class="mb-fill" id="ry-tone"></div></div><span class="mbv">—</span></div>
-      <div class="metric-bar-row"><span class="mb-label">Professional</span><div class="mb-track"><div class="mb-fill" id="ry-prof"></div></div><span class="mbv">—</span></div>
+
+    <!-- Micro-badges -->
+    <div class="micro-badges" id="microBadges" style="display:none">
+      <span class="mbadge" id="badge-delta"></span>
+      <span class="mbadge" id="badge-cringe"></span>
+      <span class="mbadge" id="badge-subtext"></span>
     </div>
+
+    <!-- vs original delta -->
+    <div class="metric-delta" id="metricDeltaRow" style="display:none">vs. original: <strong id="master-improvement">—</strong></div>
   </div>
 
-  <!-- FOLLOWUP widget -->
-  <div class="mw" id="mw-followup" style="display:none">
-    <div class="mw-title">Follow-Up Effectiveness</div>
-    <div class="fu-urgency">
-      <div class="fu-urg-label">Urgency Score</div>
-      <div class="fu-urg-val" id="fu-urgency-val">—</div>
-      <div class="mb-track" style="margin-top:8px"><div class="mb-fill" id="fu-urgency-bar"></div></div>
-    </div>
-    <div class="fu-sendtime-row">
-      <span class="fu-st-label">📅 Best Send Time</span>
-      <span class="fu-st-val" id="fu-sendtime">—</span>
-    </div>
-    <div class="metric-bars" style="margin-top:16px">
-      <div class="metric-bar-row"><span class="mb-label">Response Rate</span><div class="mb-track"><div class="mb-fill" id="fu-response"></div></div><span class="mbv">—</span></div>
-      <div class="metric-bar-row"><span class="mb-label">Open Rate Est.</span><div class="mb-track"><div class="mb-fill" id="fu-open"></div></div><span class="mbv">—</span></div>
-      <div class="metric-bar-row"><span class="mb-label">Click Through</span><div class="mb-track"><div class="mb-fill" id="fu-click"></div></div><span class="mbv">—</span></div>
-    </div>
-  </div>
-
-  <!-- BULK widget -->
+  <!-- BULK widget (multi-item, kept separate) -->
   <div class="mw" id="mw-bulk" style="display:none">
     <div class="mw-title">Batch Results</div>
     <div class="bulk-stats">
@@ -4615,7 +4930,12 @@ function runPlagiarism(){
   </div>
 
   <div class="mp-footer">
-    <div class="mp-upgrade">🔒 <span>Score History &amp; Full Analytics</span>
+    <div class="mp-kpis">
+      <div class="mp-kpi"><div class="mp-kpi-val" id="mpkpi-runs">0</div><div class="mp-kpi-lbl">Runs</div></div>
+      <div class="mp-kpi"><div class="mp-kpi-val" id="mpkpi-time">0</div><div class="mp-kpi-lbl">Min Saved</div></div>
+      <div class="mp-kpi"><div class="mp-kpi-val" id="mpkpi-streak">1</div><div class="mp-kpi-lbl">Day Streak</div></div>
+    </div>
+    <div class="mp-upgrade">🔒 <span>Score History &amp; Analytics</span>
       <button onclick="openUpgradeModal('metrics')" class="mp-upgrade-btn">Unlock</button>
     </div>
   </div>
