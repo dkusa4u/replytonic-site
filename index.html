@@ -101,8 +101,8 @@ h1{font-size:clamp(36px,5.5vw,68px);font-weight:900;line-height:1.08;letter-spac
 .tool-card{background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:var(--r28);padding:32px;max-width:960px;position:relative;backdrop-filter:blur(10px);box-shadow:var(--glow),0 24px 60px rgba(0,0,0,.4)}
 .tool-card::before{content:'';position:absolute;inset:-1px;background:linear-gradient(135deg,rgba(99,102,241,.25),rgba(139,92,246,.08),transparent 60%);border-radius:var(--r28);z-index:-1}
 /* MODE TABS */
-.mode-tabs{display:flex;gap:3px;margin-bottom:24px;background:rgba(0,0,0,.25);padding:4px;border-radius:var(--r12);border:1px solid var(--border)}
-.mode-tab{flex:1;padding:9px 8px;border-radius:var(--r8);font-size:12px;font-weight:600;color:var(--t3);cursor:pointer;text-align:center;transition:all .2s;white-space:nowrap}
+.mode-tabs{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:24px;background:rgba(0,0,0,.25);padding:6px;border-radius:var(--r12);border:1px solid var(--border)}
+.mode-tab{flex:0 0 auto;padding:8px 13px;border-radius:var(--r8);font-size:12px;font-weight:600;color:var(--t3);cursor:pointer;text-align:center;transition:all .2s;white-space:nowrap}
 .mode-tab:hover{color:var(--t2)}
 .mode-tab.active{background:rgba(99,102,241,.18);color:var(--i4);border:1px solid rgba(99,102,241,.28)}
 .mode-panel{display:none}
@@ -512,7 +512,6 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
   .tone-lang-row{flex-direction:column}
   .lang-select{min-width:100%;width:100%}
   .versions-grid,.reply-cards{grid-template-columns:1fr}
-  .mode-tabs{flex-wrap:wrap}
 }
 @media(max-width:600px){
   .hero{padding:100px 18px 60px}
