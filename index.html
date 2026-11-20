@@ -3434,7 +3434,10 @@ function doAuth(){
   btn.disabled=true;
   btn.textContent=_authMode==='login'?'Logging in…':'Creating account…';
   msg.textContent='';
-  rtPost('/api/auth.php',{action:_authMode,email:email,password:pass},function(d){
+  // Include referral code (captured from ?ref= URL param) on registration
+  var payload={action:_authMode,email:email,password:pass};
+  if(_authMode==='register' && window._rtRefCode) payload.ref_code=window._rtRefCode;
+  rtPost('/api/auth.php',payload,function(d){
     btn.disabled=false;
     btn.textContent=_authMode==='login'?'Log In':'Create Account';
     if(d.error){
@@ -3657,6 +3660,40 @@ function loadSettingsInfo(){
     var ao=document.getElementById('privacyAiOptOut');
     if(ao) ao.checked = d.ai_opt_out === 1;
 
+    // Preferences tab — default language
+    var prefLang=document.getElementById('prefLangSelect');
+    if(prefLang && d.preferred_language){
+      prefLang.value = d.preferred_language;
+      // Apply to main language selectors
+      if(d.preferred_language && d.preferred_language !== 'auto'){
+        ['langSelect','replyLang','fuLang','bulkLang'].forEach(function(id){
+          var sel=document.getElementById(id);
+          if(sel){
+            var opt=sel.querySelector('option[value="'+d.preferred_language+'"]');
+            if(opt) sel.value=d.preferred_language;
+          }
+        });
+      }
+      // Store globally for new sessions
+      window.rtPrefLang = d.preferred_language;
+    }
+
+    // Referral section
+    var refLoading=document.getElementById('referralLoading');
+    var refRow=document.getElementById('referralLinkRow');
+    var refInput=document.getElementById('referralLinkInput');
+    var refCount=document.getElementById('referralCountRow');
+    if(refLoading) refLoading.style.display='none';
+    if(d.referral_code && refRow && refInput){
+      refRow.style.display='block';
+      var refLink='https://replytonic.com/?ref='+d.referral_code;
+      refInput.value=refLink;
+      if(refCount){
+        var c=d.referral_count||0;
+        refCount.textContent=c>0 ? '🎉 '+c+' friend'+(c===1?'':'s')+' joined via your link' : 'No referrals yet — share your link to get started';
+      }
+    }
+
   }).catch(function(){});
 }
 
@@ -3854,6 +3891,71 @@ function doExportData(){
 
 function setMsg(el,text,type){
   el.textContent=text; el.className='rt-msg '+(type||'');
+}
+
+// ── Sign out all devices ────────────────────────────────────────────
+function doSignOutAll(){
+  if(!confirm('Sign out of ALL devices? You will be logged out of this session too.')) return;
+  var msg=document.getElementById('signOutAllMsg');
+  fetch('api/account.php',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+RT.token},
+    body:JSON.stringify({action:'sign_out_all'})
+  }).then(function(r){return r.json();}).then(function(d){
+    if(d.success){
+      // Signed out everywhere — clear local token and reload to login state
+      localStorage.removeItem('rt_token');
+      RT.token=null; RT.user=null;
+      closeSettings();
+      showToast('Signed out of all devices.');
+      setTimeout(function(){ window.location.reload(); },1200);
+    } else {
+      if(msg) setMsg(msg,d.error||'Failed.','error');
+    }
+  }).catch(function(){ if(msg) setMsg(msg,'Network error.','error'); });
+}
+
+// ── Update general preferences ──────────────────────────────────────
+function doUpdatePreferences(){
+  var langSel=document.getElementById('prefLangSelect');
+  var msg=document.getElementById('prefMsg');
+  if(!langSel) return;
+  var lang=langSel.value;
+  fetch('api/account.php',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+RT.token},
+    body:JSON.stringify({action:'update_preferences',preferred_language:lang})
+  }).then(function(r){return r.json();}).then(function(d){
+    if(d.success){
+      window.rtPrefLang=lang;
+      // Apply to main language dropdowns immediately
+      if(lang && lang !== 'auto'){
+        ['langSelect','replyLang','fuLang','bulkLang'].forEach(function(id){
+          var sel=document.getElementById(id);
+          if(sel){
+            var opt=sel.querySelector('option[value="'+lang+'"]');
+            if(opt) sel.value=lang;
+          }
+        });
+      }
+      if(msg){ setMsg(msg,'✅ Saved','success'); setTimeout(function(){ msg.textContent=''; },2000); }
+    } else {
+      if(msg) setMsg(msg,d.error||'Save failed.','error');
+    }
+  }).catch(function(){ if(msg) setMsg(msg,'Network error.','error'); });
+}
+
+// ── Copy referral link ──────────────────────────────────────────────
+function copyReferralLink(){
+  var input=document.getElementById('referralLinkInput');
+  var btn=document.getElementById('copyRefBtn');
+  if(!input) return;
+  navigator.clipboard.writeText(input.value).then(function(){
+    if(btn){ btn.textContent='✅ Copied!'; setTimeout(function(){ btn.textContent='📋 Copy link'; },2000); }
+  }).catch(function(){
+    input.select(); document.execCommand('copy');
+    if(btn){ btn.textContent='✅ Copied!'; setTimeout(function(){ btn.textContent='📋 Copy link'; },2000); }
+  });
 }
 
 // ── Human Touch toggle ──────────────────────────────────────────────
@@ -4484,6 +4586,9 @@ callAPI=function(payload, onSuccess, onError){
     }
   }, onError);
 };
+
+// ── Referral code capture ───────────────────────────────────────────
+window._rtRefCode = new URLSearchParams(window.location.search).get('ref') || '';
 
 // ── Boot ────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', initAuth);
@@ -5432,6 +5537,7 @@ function runPlagiarism(){
     <div class="settings-tabs">
       <button class="settings-tab active" onclick="switchSettingsTab('account')">Account</button>
       <button class="settings-tab" onclick="switchSettingsTab('security')">Security</button>
+      <button class="settings-tab" onclick="switchSettingsTab('prefs')">Preferences</button>
       <button class="settings-tab" onclick="switchSettingsTab('plan')">Plan & Billing</button>
       <button class="settings-tab" onclick="switchSettingsTab('usage')">Usage</button>
       <button class="settings-tab" onclick="switchSettingsTab('notifications')">Alerts</button>
@@ -5479,6 +5585,20 @@ function runPlagiarism(){
         <div class="rt-msg" id="changeEmailMsg"></div>
       </div>
 
+      <!-- Referral program -->
+      <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.07)">
+        <div style="font-size:12px;font-weight:600;color:var(--t3);letter-spacing:.05em;text-transform:uppercase;margin-bottom:10px">Invite Friends</div>
+        <div style="font-size:12px;color:var(--t3);margin-bottom:12px">Share your link. When a friend signs up, you both win. 🎉</div>
+        <div id="referralLinkRow" style="display:none">
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <input type="text" id="referralLinkInput" readonly style="flex:1;min-width:0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--r8);padding:9px 12px;color:var(--t1);font-size:12px;font-family:monospace" value="">
+            <button class="settings-quick-link" onclick="copyReferralLink()" id="copyRefBtn" style="white-space:nowrap;flex-shrink:0">📋 Copy link</button>
+          </div>
+          <div style="margin-top:8px;font-size:11px;color:var(--t3)" id="referralCountRow"></div>
+        </div>
+        <div id="referralLoading" style="font-size:12px;color:var(--t3)">Loading…</div>
+      </div>
+
       <!-- Quick links -->
       <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.07);display:flex;gap:10px;flex-wrap:wrap">
         <a href="https://chrome.google.com/webstore" target="_blank" class="settings-quick-link">🧩 Chrome Extension</a>
@@ -5515,6 +5635,57 @@ function runPlagiarism(){
       </div>
       <button class="rt-submit-btn" id="secSaveBtn" onclick="doChangePassword()">Update Password</button>
       <div class="rt-msg" id="secMsg"></div>
+
+      <!-- Sign Out All Devices -->
+      <div style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,.08)">
+        <div style="font-size:13px;font-weight:600;color:var(--t1);margin-bottom:4px">Active Sessions</div>
+        <div style="font-size:12px;color:var(--t3);margin-bottom:14px">Signs you out of all devices — including this one. You'll need to log in again.</div>
+        <button class="rt-submit-btn" style="background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3);max-width:220px" onclick="doSignOutAll()">Sign Out All Devices</button>
+        <div class="rt-msg" id="signOutAllMsg"></div>
+      </div>
+    </div>
+
+    <!-- Preferences Tab -->
+    <div class="settings-panel" id="settingsTab-prefs">
+      <div style="font-size:13px;font-weight:600;color:var(--t1);margin-bottom:16px">Output Defaults</div>
+
+      <!-- Default Language -->
+      <div class="rt-field">
+        <label style="margin-bottom:8px;display:block">Default Output Language</label>
+        <div style="font-size:11px;color:var(--t3);margin-bottom:10px">Sets the language selector default for all rewrite modes.</div>
+        <select id="prefLangSelect" class="rt-select-field" onchange="doUpdatePreferences()" style="max-width:260px">
+          <option value="auto">Auto (match input language)</option>
+          <optgroup label="Common Languages">
+            <option value="English">English</option>
+            <option value="Spanish">Spanish</option>
+            <option value="French">French</option>
+            <option value="German">German</option>
+            <option value="Portuguese">Portuguese</option>
+            <option value="Italian">Italian</option>
+            <option value="Dutch">Dutch</option>
+            <option value="Russian">Russian</option>
+            <option value="Turkish">Turkish</option>
+            <option value="Polish">Polish</option>
+            <option value="Swedish">Swedish</option>
+          </optgroup>
+          <optgroup label="Asian Languages">
+            <option value="Japanese">Japanese</option>
+            <option value="Korean">Korean</option>
+            <option value="Chinese (Simplified)">Chinese (Simplified)</option>
+            <option value="Chinese (Traditional)">Chinese (Traditional)</option>
+            <option value="Hindi">Hindi</option>
+            <option value="Indonesian">Indonesian</option>
+            <option value="Thai">Thai</option>
+            <option value="Vietnamese">Vietnamese</option>
+            <option value="Filipino">Filipino</option>
+          </optgroup>
+          <optgroup label="Middle East &amp; Africa">
+            <option value="Arabic">Arabic</option>
+            <option value="Swahili">Swahili</option>
+          </optgroup>
+        </select>
+        <div class="rt-msg" id="prefMsg"></div>
+      </div>
     </div>
 
     <!-- Plan & Billing Tab -->

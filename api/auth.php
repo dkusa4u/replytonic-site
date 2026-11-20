@@ -49,10 +49,25 @@ switch ($action) {
         $ins->execute([$email, $hash]);
         $uid = (int)$db->lastInsertId();
 
+        // ── Handle referral tracking ───────────────────────────────────────
+        $refCode = trim($body['ref_code'] ?? '');
+        if ($refCode) {
+            try {
+                $db->prepare('ALTER TABLE users ADD COLUMN IF NOT EXISTS referral_code VARCHAR(16) DEFAULT NULL, ADD COLUMN IF NOT EXISTS referred_by INT DEFAULT NULL')->execute();
+                $rSt = $db->prepare('SELECT id FROM users WHERE referral_code = ? AND id != ?');
+                $rSt->execute([$refCode, $uid]);
+                $referrer = $rSt->fetch(PDO::FETCH_ASSOC);
+                if ($referrer) {
+                    $db->prepare('UPDATE users SET referred_by = ? WHERE id = ?')->execute([(int)$referrer['id'], $uid]);
+                }
+            } catch(Exception $e) {}
+        }
+
         $token = jwt_encode([
             'sub'   => $uid,
             'email' => $email,
             'plan'  => 'free',
+            'ver'   => 0,
             'iat'   => time(),
             'exp'   => time() + 60 * 60 * 24 * 90, // 90 days
         ], JWT_SECRET);
@@ -87,10 +102,20 @@ switch ($action) {
             $plan = 'free';
         }
 
+        // Get current token_version so the new token stays valid
+        $tokenVer = 0;
+        try {
+            $tvSt = $db->prepare('SELECT token_version FROM users WHERE id = ?');
+            $tvSt->execute([$user['id']]);
+            $tvRow = $tvSt->fetch(PDO::FETCH_ASSOC);
+            if ($tvRow && isset($tvRow['token_version'])) $tokenVer = (int)$tvRow['token_version'];
+        } catch(Exception $e) {}
+
         $token = jwt_encode([
             'sub'   => (int)$user['id'],
             'email' => $user['email'],
             'plan'  => $plan,
+            'ver'   => $tokenVer,
             'iat'   => time(),
             'exp'   => time() + 60 * 60 * 24 * 90,
         ], JWT_SECRET);

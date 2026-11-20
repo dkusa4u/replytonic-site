@@ -53,20 +53,45 @@ switch ($action) {
         $totSt->execute([$uid]);
         $totalAll = (int)$totSt->fetchColumn();
 
+        // Auto-generate referral code if missing
+        $referralCode = safe_col($u, 'referral_code', null);
+        if (!$referralCode) {
+            try {
+                $db->prepare('ALTER TABLE users ADD COLUMN IF NOT EXISTS referral_code VARCHAR(16) DEFAULT NULL, ADD COLUMN IF NOT EXISTS referred_by INT DEFAULT NULL')->execute();
+            } catch(Exception $e) {}
+            $referralCode = strtoupper(substr(md5($uid . 'rt' . time()), 0, 8));
+            try {
+                $db->prepare('UPDATE users SET referral_code = ? WHERE id = ? AND referral_code IS NULL')->execute([$referralCode, $uid]);
+            } catch(Exception $e) { $referralCode = null; }
+        }
+
+        // Count referrals
+        $refCount = 0;
+        try {
+            $rSt = $db->prepare('SELECT COUNT(*) FROM users WHERE referred_by = ?');
+            $rSt->execute([$uid]);
+            $refCount = (int)$rSt->fetchColumn();
+        } catch(Exception $e) {}
+
         json_out([
-            'email'            => $u['email'],
-            'plan'             => $plan,
-            'plan_expires_at'  => $u['plan_expires_at'],
-            'created_at'       => $u['created_at'] ?? null,
-            'used_today'       => $usedToday,
-            'daily_limit'      => $plan === 'free' ? FREE_DAILY_LIMIT : null,
-            'total_rewrites'   => $totalAll,
+            'email'              => $u['email'],
+            'plan'               => $plan,
+            'plan_expires_at'    => $u['plan_expires_at'],
+            'created_at'         => $u['created_at'] ?? null,
+            'used_today'         => $usedToday,
+            'daily_limit'        => $plan === 'free' ? FREE_DAILY_LIMIT : null,
+            'total_rewrites'     => $totalAll,
             // Notifications (default all on if column missing)
-            'notif_billing'    => (int)safe_col($u, 'notifications_billing', 1),
-            'notif_usage'      => (int)safe_col($u, 'notifications_usage_alert', 1),
-            'notif_updates'    => (int)safe_col($u, 'notifications_updates', 1),
+            'notif_billing'      => (int)safe_col($u, 'notifications_billing', 1),
+            'notif_usage'        => (int)safe_col($u, 'notifications_usage_alert', 1),
+            'notif_updates'      => (int)safe_col($u, 'notifications_updates', 1),
             // Privacy
-            'ai_opt_out'       => (int)safe_col($u, 'ai_training_opt_out', 0),
+            'ai_opt_out'         => (int)safe_col($u, 'ai_training_opt_out', 0),
+            // Preferences
+            'preferred_language' => safe_col($u, 'preferred_language', 'auto'),
+            // Referral
+            'referral_code'      => $referralCode,
+            'referral_count'     => $refCount,
         ]);
     }
 
@@ -152,6 +177,33 @@ switch ($action) {
         } catch(Exception $e) {
             json_out(['success' => true, 'message' => 'Saved. (Run migration to persist.)']);
         }
+    }
+
+    // ── Update general preferences (language etc.) ────────────────────────────
+    case 'update_preferences': {
+        $lang = trim($body['preferred_language'] ?? 'auto');
+        // Whitelist allowed values
+        $allowed = ['auto','English','Spanish','French','German','Portuguese','Italian',
+                    'Japanese','Korean','Chinese (Simplified)','Chinese (Traditional)',
+                    'Hindi','Arabic','Dutch','Swedish','Polish','Turkish','Russian',
+                    'Indonesian','Thai','Vietnamese','Filipino','Swahili'];
+        if (!in_array($lang, $allowed, true)) $lang = 'auto';
+
+        try {
+            $db->prepare('ALTER TABLE users ADD COLUMN IF NOT EXISTS preferred_language VARCHAR(40) NOT NULL DEFAULT \'auto\'')->execute();
+        } catch(Exception $e) {}
+
+        $db->prepare('UPDATE users SET preferred_language = ? WHERE id = ?')->execute([$lang, $uid]);
+        json_out(['success' => true, 'message' => 'Preferences saved.']);
+    }
+
+    // ── Sign out all devices (invalidate all existing tokens) ─────────────────
+    case 'sign_out_all': {
+        try {
+            $db->prepare('ALTER TABLE users ADD COLUMN IF NOT EXISTS token_version INT NOT NULL DEFAULT 0')->execute();
+        } catch(Exception $e) {}
+        $db->prepare('UPDATE users SET token_version = token_version + 1 WHERE id = ?')->execute([$uid]);
+        json_out(['success' => true, 'message' => 'All sessions signed out.']);
     }
 
     // ── Update privacy settings ───────────────────────────────────────────────

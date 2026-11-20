@@ -70,7 +70,29 @@ function get_auth_user() {
         $token = $m[1];
     }
     if (!$token) return null;
-    return jwt_decode($token, JWT_SECRET);
+    $claims = jwt_decode($token, JWT_SECRET);
+    if (!$claims) return null;
+
+    // ── Token-version check: invalidates all sessions on sign-out-all ──
+    // Only run if the users table has the token_version column (graceful degradation)
+    if (isset($claims['ver'])) {
+        try {
+            $db  = get_db();
+            $uid = (int)($claims['sub'] ?? 0);
+            if ($uid > 0) {
+                $st = $db->prepare('SELECT token_version FROM users WHERE id = ?');
+                $st->execute([$uid]);
+                $row = $st->fetch(PDO::FETCH_ASSOC);
+                if ($row && (int)$row['token_version'] > (int)$claims['ver']) {
+                    return null; // token was invalidated by sign-out-all
+                }
+            }
+        } catch(Exception $e) {
+            // column doesn't exist yet — allow the request
+        }
+    }
+
+    return $claims;
 }
 
 function get_client_ip() {
