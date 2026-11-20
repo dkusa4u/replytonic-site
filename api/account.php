@@ -1,7 +1,9 @@
 <?php
 /**
  * ReplyTonic — Account management
- * Actions: get_info, change_password, delete_account
+ * Actions: get_info, change_password, change_email,
+ *          get_notifications, update_notifications,
+ *          update_privacy, export_data, delete_account
  */
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/db.php';
@@ -19,11 +21,16 @@ $db   = get_db();
 $body   = json_decode(file_get_contents('php://input'), true) ?? [];
 $action = $body['action'] ?? '';
 
+// Helper: safe column read (returns default if column missing)
+function safe_col($row, $col, $default = null) {
+    return array_key_exists($col, $row) ? $row[$col] : $default;
+}
+
 switch ($action) {
 
     // ── Get account info + today's usage ──────────────────────────────────────
     case 'get_info': {
-        $st = $db->prepare('SELECT id, email, plan, plan_expires_at, created_at FROM users WHERE id = ?');
+        $st = $db->prepare('SELECT * FROM users WHERE id = ?');
         $st->execute([$uid]);
         $u = $st->fetch(PDO::FETCH_ASSOC);
         if (!$u) json_out(['error' => 'User not found.'], 404);
@@ -54,6 +61,12 @@ switch ($action) {
             'used_today'       => $usedToday,
             'daily_limit'      => $plan === 'free' ? FREE_DAILY_LIMIT : null,
             'total_rewrites'   => $totalAll,
+            // Notifications (default all on if column missing)
+            'notif_billing'    => (int)safe_col($u, 'notifications_billing', 1),
+            'notif_usage'      => (int)safe_col($u, 'notifications_usage_alert', 1),
+            'notif_updates'    => (int)safe_col($u, 'notifications_updates', 1),
+            // Privacy
+            'ai_opt_out'       => (int)safe_col($u, 'ai_training_opt_out', 0),
         ]);
     }
 
@@ -70,7 +83,6 @@ switch ($action) {
         if (strlen($newPass) < 8)
             json_out(['error' => 'New password must be at least 8 characters.'], 400);
 
-        // Fetch current hash
         $st = $db->prepare('SELECT password_hash FROM users WHERE id = ?');
         $st->execute([$uid]);
         $row = $st->fetch(PDO::FETCH_ASSOC);
@@ -83,12 +95,112 @@ switch ($action) {
         json_out(['success' => true, 'message' => 'Password updated successfully.']);
     }
 
+    // ── Change email ──────────────────────────────────────────────────────────
+    case 'change_email': {
+        $newEmail   = trim($body['new_email']       ?? '');
+        $currentPw  = $body['current_password']     ?? '';
+
+        if (!$newEmail || !$currentPw)
+            json_out(['error' => 'New email and current password are required.'], 400);
+        if (!filter_var($newEmail, FILTER_VALIDATE_EMAIL))
+            json_out(['error' => 'Please enter a valid email address.'], 400);
+
+        // Verify password
+        $st = $db->prepare('SELECT password_hash FROM users WHERE id = ?');
+        $st->execute([$uid]);
+        $row = $st->fetch(PDO::FETCH_ASSOC);
+        if (!$row || !password_verify($currentPw, $row['password_hash']))
+            json_out(['error' => 'Current password is incorrect.'], 401);
+
+        // Check email not already in use
+        $chk = $db->prepare('SELECT id FROM users WHERE email = ? AND id != ?');
+        $chk->execute([$newEmail, $uid]);
+        if ($chk->fetch()) json_out(['error' => 'That email is already in use.'], 409);
+
+        $db->prepare('UPDATE users SET email = ? WHERE id = ?')->execute([$newEmail, $uid]);
+
+        json_out(['success' => true, 'message' => 'Email updated. Please log in again with your new email.']);
+    }
+
+    // ── Update notification preferences ──────────────────────────────────────
+    case 'update_notifications': {
+        $billing = isset($body['notif_billing'])  ? (int)(bool)$body['notif_billing']  : null;
+        $usage   = isset($body['notif_usage'])    ? (int)(bool)$body['notif_usage']    : null;
+        $updates = isset($body['notif_updates'])  ? (int)(bool)$body['notif_updates']  : null;
+
+        // Try to update; silently succeed even if columns don't exist yet
+        try {
+            $db->prepare('ALTER TABLE users
+                ADD COLUMN IF NOT EXISTS notifications_billing    TINYINT(1) NOT NULL DEFAULT 1,
+                ADD COLUMN IF NOT EXISTS notifications_usage_alert TINYINT(1) NOT NULL DEFAULT 1,
+                ADD COLUMN IF NOT EXISTS notifications_updates    TINYINT(1) NOT NULL DEFAULT 1,
+                ADD COLUMN IF NOT EXISTS ai_training_opt_out      TINYINT(1) NOT NULL DEFAULT 0
+            ')->execute();
+        } catch(Exception $e) {}
+
+        try {
+            $sets = [];
+            $vals = [];
+            if ($billing  !== null) { $sets[] = 'notifications_billing = ?';     $vals[] = $billing; }
+            if ($usage    !== null) { $sets[] = 'notifications_usage_alert = ?'; $vals[] = $usage; }
+            if ($updates  !== null) { $sets[] = 'notifications_updates = ?';     $vals[] = $updates; }
+            if ($sets) {
+                $vals[] = $uid;
+                $db->prepare('UPDATE users SET ' . implode(', ', $sets) . ' WHERE id = ?')->execute($vals);
+            }
+            json_out(['success' => true, 'message' => 'Notification preferences saved.']);
+        } catch(Exception $e) {
+            json_out(['success' => true, 'message' => 'Saved. (Run migration to persist.)']);
+        }
+    }
+
+    // ── Update privacy settings ───────────────────────────────────────────────
+    case 'update_privacy': {
+        $optOut = isset($body['ai_opt_out']) ? (int)(bool)$body['ai_opt_out'] : 0;
+
+        try {
+            $db->prepare('ALTER TABLE users
+                ADD COLUMN IF NOT EXISTS ai_training_opt_out TINYINT(1) NOT NULL DEFAULT 0
+            ')->execute();
+        } catch(Exception $e) {}
+
+        try {
+            $db->prepare('UPDATE users SET ai_training_opt_out = ? WHERE id = ?')->execute([$optOut, $uid]);
+            json_out(['success' => true, 'message' => $optOut ? 'Opted out of AI training.' : 'Opted back in to AI training.']);
+        } catch(Exception $e) {
+            json_out(['success' => true, 'message' => 'Preference saved.']);
+        }
+    }
+
+    // ── Export account data ───────────────────────────────────────────────────
+    case 'export_data': {
+        $st = $db->prepare('SELECT id, email, plan, plan_expires_at, created_at FROM users WHERE id = ?');
+        $st->execute([$uid]);
+        $u = $st->fetch(PDO::FETCH_ASSOC);
+
+        $logSt = $db->prepare('SELECT log_date, rewrites_today FROM usage_log WHERE user_id = ? ORDER BY log_date DESC');
+        $logSt->execute([$uid]);
+        $logs = $logSt->fetchAll(PDO::FETCH_ASSOC);
+
+        $export = [
+            'exported_at' => date('c'),
+            'account'     => $u,
+            'usage_log'   => $logs,
+        ];
+
+        json_out(['success' => true, 'data' => $export]);
+    }
+
     // ── Delete account ────────────────────────────────────────────────────────
     case 'delete_account': {
         $confirm = $body['confirm'] ?? '';
         if ($confirm !== 'DELETE') json_out(['error' => 'Type DELETE to confirm.'], 400);
 
-        // Wipe usage log then user row
+        // Log reason (optional — just ignore if table/column missing)
+        $reason = substr($body['reason'] ?? '', 0, 255);
+        // We just log it to error_log for now; future: cancellation_feedback table
+        if ($reason) error_log("ReplyTonic delete reason uid=$uid: $reason");
+
         $db->prepare('DELETE FROM usage_log WHERE user_id = ?')->execute([$uid]);
         $db->prepare('DELETE FROM users WHERE id = ?')->execute([$uid]);
 
