@@ -75,6 +75,50 @@ function activate_plan(PDO $pdo, int $user_id, string $plan, string $customer_id
     $stmt->execute([$plan, $customer_id, $expires, $user_id]);
 }
 
+// --- Helper: reward referrer with 7 free premium days (fires once per referred user) ---
+function reward_referrer(PDO $pdo, int $new_user_id): void {
+    try {
+        // Ensure column exists
+        $pdo->prepare(
+            'ALTER TABLE users ADD COLUMN IF NOT EXISTS referral_rewarded TINYINT(1) NOT NULL DEFAULT 0'
+        )->execute();
+
+        // Check referred_by and whether already rewarded
+        $st = $pdo->prepare('SELECT referred_by, referral_rewarded FROM users WHERE id = ?');
+        $st->execute([$new_user_id]);
+        $row = $st->fetch(PDO::FETCH_ASSOC);
+        if (!$row || !$row['referred_by'] || $row['referral_rewarded']) return;
+
+        $referrer_id = (int)$row['referred_by'];
+
+        // Mark rewarded immediately to prevent duplicate fires
+        $pdo->prepare('UPDATE users SET referral_rewarded = 1 WHERE id = ?')
+            ->execute([$new_user_id]);
+
+        // Determine base date: extend existing expiry or start from now
+        $rSt = $pdo->prepare('SELECT plan, plan_expires_at FROM users WHERE id = ?');
+        $rSt->execute([$referrer_id]);
+        $referrer = $rSt->fetch(PDO::FETCH_ASSOC);
+        if (!$referrer) return;
+
+        $base = ($referrer['plan'] !== 'free' && $referrer['plan_expires_at'])
+            ? max(time(), strtotime($referrer['plan_expires_at']))
+            : time();
+
+        $new_expiry = date('Y-m-d H:i:s', $base + 7 * 86400);
+
+        // If referrer is free, upgrade to premium for those 7 days; otherwise just extend
+        $pdo->prepare(
+            "UPDATE users
+             SET plan = IF(plan = 'free', 'premium', plan), plan_expires_at = ?
+             WHERE id = ?"
+        )->execute([$new_expiry, $referrer_id]);
+
+    } catch (Exception $e) {
+        // Non-fatal — referral reward failure must never break the main webhook
+    }
+}
+
 // --- Helper: cancel / downgrade user plan ---
 function cancel_plan(PDO $pdo, string $customer_id): void {
     $stmt = $pdo->prepare(
@@ -114,6 +158,9 @@ switch ($type) {
             $period_end ? date('Y-m-d H:i:s', $period_end) : null,
             $user_id,
         ]);
+
+        // Reward the referrer with 7 free premium days (no-op if no referral)
+        reward_referrer($pdo, $user_id);
         break;
 
     // -------------------------------------------------
