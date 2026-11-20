@@ -701,6 +701,33 @@ input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);bo
 .rt-msg{margin-top:11px;font-size:13px;text-align:center;min-height:18px}
 .rt-msg.error{color:rgba(252,165,165,.9)}
 .rt-msg.success{color:#4ade80}
+/* Settings modal */
+.settings-modal-inner{max-width:460px;width:100%}
+.settings-tabs{display:flex;gap:2px;margin-bottom:20px;background:rgba(255,255,255,.04);padding:4px;border-radius:var(--r8)}
+.settings-tab{flex:1;padding:7px 4px;text-align:center;font-size:12px;font-weight:600;color:var(--t3);cursor:pointer;border:none;background:none;border-radius:6px;transition:all .2s;white-space:nowrap}
+.settings-tab.active{background:rgba(99,102,241,.22);color:var(--i4)}
+.settings-panel{display:none}.settings-panel.active{display:block}
+.settings-info-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:13px}
+.settings-info-row:last-child{border:none}
+.settings-info-label{color:var(--t3);font-weight:600}
+.settings-info-value{color:var(--t1);font-weight:600}
+.plan-badge-sm{font-size:11px;font-weight:800;padding:3px 10px;border-radius:50px;text-transform:uppercase;letter-spacing:.5px}
+.plan-badge-sm.free{background:rgba(255,255,255,.08);color:var(--t2)}
+.plan-badge-sm.premium{background:rgba(249,115,22,.18);color:#fb923c}
+.plan-badge-sm.teams{background:rgba(99,102,241,.2);color:var(--i4)}
+.usage-bar-wrap{margin:14px 0 6px}
+.usage-bar-track{height:8px;background:rgba(255,255,255,.08);border-radius:50px;overflow:hidden}
+.usage-bar-fill{height:100%;background:var(--i5);border-radius:50px;transition:width .4s}
+.usage-bar-fill.warn{background:#f97316}
+.usage-bar-fill.full{background:#ef4444}
+.usage-label{font-size:12px;color:var(--t3);margin-top:6px}
+.danger-zone-box{border:1px solid rgba(239,68,68,.3);border-radius:var(--r12);padding:16px;margin-top:8px}
+.danger-zone-title{font-size:13px;font-weight:700;color:rgba(252,165,165,.9);margin-bottom:6px}
+.danger-zone-desc{font-size:12px;color:var(--t3);margin-bottom:12px;line-height:1.5}
+.danger-btn{width:100%;padding:11px;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);border-radius:var(--r8);font-size:13px;font-weight:700;color:rgba(252,165,165,.9);cursor:pointer;transition:all .2s}
+.danger-btn:hover{background:rgba(239,68,68,.22)}
+.danger-confirm-row{display:none;margin-top:12px}
+.danger-confirm-row.show{display:block}
 /* Upgrade modal */
 .upgrade-modal-inner{max-width:440px}
 .upgrade-features{list-style:none;padding:0;margin:12px 0 18px}
@@ -864,6 +891,7 @@ input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);bo
       <div class="nav-dd-email" id="navDdEmail"></div>
       <button class="nav-dd-item" onclick="openManageSubscription()" id="navManageBtn" style="display:none">⚙️ Manage Subscription</button>
       <button class="nav-dd-item" onclick="openUpgradeModal('nav')" id="navUpgradeBtn">⚡ Upgrade to Premium</button>
+      <button class="nav-dd-item" onclick="openSettingsModal()">⚙ Account Settings</button>
       <button class="nav-dd-item danger" onclick="doLogout()">↩ Log Out</button>
     </div>
   </div>
@@ -3443,6 +3471,179 @@ function doLogout(){
   closeVoicePanel();
 }
 
+// ── Settings Modal ───────────────────────────────────────────────────
+var settingsTabActive = 'account';
+
+function openSettingsModal(){
+  document.getElementById('navDropdown').classList.remove('open');
+  switchSettingsTab('account');
+  document.getElementById('settingsModal').classList.remove('hidden');
+  loadSettingsInfo();
+}
+
+function closeSettingsModal(){
+  document.getElementById('settingsModal').classList.add('hidden');
+  // Clear security fields
+  ['secCurrentPass','secNewPass','secConfirmPass'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.value='';
+  });
+  document.getElementById('secMsg').textContent='';
+  document.getElementById('secMsg').className='rt-msg';
+  // Reset danger zone
+  document.getElementById('deleteConfirmRow').classList.remove('show');
+  var dci=document.getElementById('deleteConfirmInput'); if(dci) dci.value='';
+  document.getElementById('dangerMsg').textContent='';
+}
+
+function settingsModalBgClick(e){
+  if(e.target.id==='settingsModal') closeSettingsModal();
+}
+
+function switchSettingsTab(tab){
+  settingsTabActive=tab;
+  document.querySelectorAll('.settings-tab').forEach(function(btn,i){
+    var tabs=['account','security','plan','usage','danger'];
+    btn.classList.toggle('active', tabs[i]===tab);
+  });
+  document.querySelectorAll('.settings-panel').forEach(function(panel){
+    panel.classList.remove('active');
+  });
+  var active=document.getElementById('settingsTab-'+tab);
+  if(active) active.classList.add('active');
+}
+
+function loadSettingsInfo(){
+  if(!RT.token) return;
+  fetch('api/account.php',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+RT.token},
+    body:JSON.stringify({action:'get_info'})
+  }).then(function(r){return r.json();}).then(function(d){
+    if(d.error) return;
+    // Account tab
+    var el=document.getElementById('settings-email'); if(el) el.textContent=d.email||'—';
+    var jEl=document.getElementById('settings-joined');
+    if(jEl && d.created_at){
+      var dt=new Date(d.created_at);
+      jEl.textContent=dt.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+    } else if(jEl){ jEl.textContent='—'; }
+
+    // Plan badges
+    var plan=d.plan||'free';
+    ['settings-plan-badge','settings-plan-badge2'].forEach(function(id){
+      var b=document.getElementById(id);
+      if(!b) return;
+      b.textContent=plan.charAt(0).toUpperCase()+plan.slice(1);
+      b.className='plan-badge-sm '+plan;
+    });
+
+    // Expires row
+    var exRow=document.getElementById('settings-expires-row');
+    var exVal=document.getElementById('settings-expires');
+    if(d.plan_expires_at && plan!=='free'){
+      var expDt=new Date(d.plan_expires_at);
+      if(exVal) exVal.textContent=expDt.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+      if(exRow) exRow.style.display='flex';
+    } else {
+      if(exRow) exRow.style.display='none';
+    }
+
+    // Plan tab buttons
+    var upBtn=document.getElementById('planUpgradeBtn');
+    var manBtn=document.getElementById('planManageBtn');
+    if(plan==='free'){
+      if(upBtn) upBtn.style.display='block';
+      if(manBtn) manBtn.style.display='none';
+    } else {
+      if(upBtn) upBtn.style.display='none';
+      if(manBtn) manBtn.style.display='block';
+    }
+
+    // Usage tab
+    var freeSection=document.getElementById('usageFreeSection');
+    var premSection=document.getElementById('usagePremiumSection');
+    if(plan==='free'){
+      if(freeSection) freeSection.style.display='block';
+      if(premSection) premSection.style.display='none';
+      var limit=d.daily_limit||5;
+      var used=d.used_today||0;
+      var pct=Math.min(100,Math.round(used/limit*100));
+      var countEl=document.getElementById('usageCount'); if(countEl) countEl.textContent=used;
+      var limEl=document.getElementById('usageLimit'); if(limEl) limEl.textContent=limit;
+      var bar=document.getElementById('usageBarFill');
+      if(bar){
+        bar.style.width=pct+'%';
+        bar.className='usage-bar-fill'+(pct>=100?' full':pct>=80?' warn':'');
+      }
+    } else {
+      if(freeSection) freeSection.style.display='none';
+      if(premSection) premSection.style.display='block';
+    }
+  }).catch(function(){});
+}
+
+function doChangePassword(){
+  var current=document.getElementById('secCurrentPass').value.trim();
+  var newp=document.getElementById('secNewPass').value;
+  var confirm=document.getElementById('secConfirmPass').value;
+  var msg=document.getElementById('secMsg');
+  var btn=document.getElementById('secSaveBtn');
+  msg.textContent=''; msg.className='rt-msg';
+  if(!current||!newp||!confirm){ setMsg(msg,'All fields are required.','error'); return; }
+  if(newp!==confirm){ setMsg(msg,'New passwords do not match.','error'); return; }
+  if(newp.length<8){ setMsg(msg,'New password must be at least 8 characters.','error'); return; }
+  btn.disabled=true; btn.textContent='Updating…';
+  fetch('api/account.php',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+RT.token},
+    body:JSON.stringify({action:'change_password',current_password:current,new_password:newp,confirm_password:confirm})
+  }).then(function(r){return r.json();}).then(function(d){
+    btn.disabled=false; btn.textContent='Update Password';
+    if(d.success){
+      setMsg(msg,'Password updated successfully!','success');
+      document.getElementById('secCurrentPass').value='';
+      document.getElementById('secNewPass').value='';
+      document.getElementById('secConfirmPass').value='';
+    } else {
+      setMsg(msg,d.error||'Failed to update password.','error');
+    }
+  }).catch(function(){
+    btn.disabled=false; btn.textContent='Update Password';
+    setMsg(msg,'Network error. Please try again.','error');
+  });
+}
+
+function showDeleteConfirm(){
+  document.getElementById('deleteConfirmRow').classList.add('show');
+  setTimeout(function(){ var i=document.getElementById('deleteConfirmInput'); if(i) i.focus(); },50);
+}
+
+function doDeleteAccount(){
+  var confirm=document.getElementById('deleteConfirmInput').value.trim();
+  var msg=document.getElementById('dangerMsg');
+  msg.textContent=''; msg.className='rt-msg';
+  if(confirm!=='DELETE'){ setMsg(msg,'Type DELETE (all caps) to confirm.','error'); return; }
+  fetch('api/account.php',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+RT.token},
+    body:JSON.stringify({action:'delete_account',confirm:'DELETE'})
+  }).then(function(r){return r.json();}).then(function(d){
+    if(d.success){
+      closeSettingsModal();
+      doLogout();
+      setTimeout(function(){ alert('Your account has been deleted. We\'re sorry to see you go.'); },200);
+    } else {
+      setMsg(msg,d.error||'Failed to delete account.','error');
+    }
+  }).catch(function(){
+    setMsg(msg,'Network error. Please try again.','error');
+  });
+}
+
+function setMsg(el,text,type){
+  el.textContent=text; el.className='rt-msg '+(type||'');
+}
+
 // ── Human Touch toggle ──────────────────────────────────────────────
 function toggleHumanTouch(){
   if(!RT.user || RT.user.plan!=='premium'){
@@ -5005,6 +5206,122 @@ function runPlagiarism(){
     </div>
     <button class="upgrade-cta" id="upgradeCtaBtn" onclick="startCheckout()">Start Premium — $6.99/mo</button>
     <div class="rt-msg" id="upgradeMsg"></div>
+  </div>
+</div>
+
+<!-- ── Settings Modal ──────────────────────────────────────────────────── -->
+<div class="rt-modal-bg hidden" id="settingsModal" onclick="settingsModalBgClick(event)">
+  <div class="rt-modal settings-modal-inner">
+    <button class="rt-modal-close" onclick="closeSettingsModal()">×</button>
+    <div class="rt-modal-title">⚙ Account Settings</div>
+    <div class="rt-modal-sub">Manage your account and preferences</div>
+
+    <!-- Tabs -->
+    <div class="settings-tabs">
+      <button class="settings-tab active" onclick="switchSettingsTab('account')">Account</button>
+      <button class="settings-tab" onclick="switchSettingsTab('security')">Security</button>
+      <button class="settings-tab" onclick="switchSettingsTab('plan')">Plan & Billing</button>
+      <button class="settings-tab" onclick="switchSettingsTab('usage')">Usage</button>
+      <button class="settings-tab" onclick="switchSettingsTab('danger')">Danger Zone</button>
+    </div>
+
+    <!-- Account Tab -->
+    <div class="settings-panel active" id="settingsTab-account">
+      <div class="settings-info-row">
+        <span class="settings-info-label">Email</span>
+        <span class="settings-info-value" id="settings-email">—</span>
+      </div>
+      <div class="settings-info-row">
+        <span class="settings-info-label">Member since</span>
+        <span class="settings-info-value" id="settings-joined">—</span>
+      </div>
+      <div class="settings-info-row">
+        <span class="settings-info-label">Current plan</span>
+        <span class="settings-info-value"><span class="plan-badge-sm" id="settings-plan-badge">Free</span></span>
+      </div>
+    </div>
+
+    <!-- Security Tab -->
+    <div class="settings-panel" id="settingsTab-security">
+      <div class="rt-field">
+        <label>Current Password</label>
+        <input type="password" id="secCurrentPass" placeholder="Enter current password" autocomplete="current-password">
+      </div>
+      <div class="rt-field">
+        <label>New Password</label>
+        <input type="password" id="secNewPass" placeholder="At least 8 characters" autocomplete="new-password">
+      </div>
+      <div class="rt-field">
+        <label>Confirm New Password</label>
+        <input type="password" id="secConfirmPass" placeholder="Repeat new password" autocomplete="new-password">
+      </div>
+      <button class="rt-submit-btn" id="secSaveBtn" onclick="doChangePassword()">Update Password</button>
+      <div class="rt-msg" id="secMsg"></div>
+    </div>
+
+    <!-- Plan & Billing Tab -->
+    <div class="settings-panel" id="settingsTab-plan">
+      <div class="settings-info-row">
+        <span class="settings-info-label">Current Plan</span>
+        <span class="settings-info-value"><span class="plan-badge-sm" id="settings-plan-badge2">Free</span></span>
+      </div>
+      <div class="settings-info-row" id="settings-expires-row" style="display:none">
+        <span class="settings-info-label">Renews / Expires</span>
+        <span class="settings-info-value" id="settings-expires">—</span>
+      </div>
+      <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px">
+        <button class="rt-submit-btn" id="planUpgradeBtn" onclick="closeSettingsModal();openUpgradeModal('settings')">⚡ Upgrade to Premium</button>
+        <button class="rt-submit-btn" id="planManageBtn" style="display:none;background:rgba(255,255,255,.08);color:var(--t2)" onclick="openManageSubscription()">⚙️ Manage Subscription</button>
+      </div>
+      <div class="rt-msg" id="planMsg"></div>
+    </div>
+
+    <!-- Usage Tab -->
+    <div class="settings-panel" id="settingsTab-usage">
+      <div id="usageFreeSection">
+        <div class="settings-info-row">
+          <span class="settings-info-label">Today's rewrites</span>
+          <span class="settings-info-value"><span id="usageCount">0</span> / <span id="usageLimit">5</span></span>
+        </div>
+        <div class="usage-bar-wrap">
+          <div class="usage-bar-track"><div class="usage-bar-fill" id="usageBarFill" style="width:0%"></div></div>
+          <div class="usage-label">Resets at midnight (your local time)</div>
+        </div>
+        <div style="margin-top:12px;font-size:12px;color:var(--t3);line-height:1.6">
+          Free accounts get <strong style="color:var(--t2)">5 rewrites/day</strong>. Upgrade to Premium for unlimited rewrites.
+        </div>
+        <button class="rt-submit-btn" style="margin-top:14px" onclick="closeSettingsModal();openUpgradeModal('usage')">⚡ Upgrade for Unlimited</button>
+      </div>
+      <div id="usagePremiumSection" style="display:none">
+        <div class="settings-info-row">
+          <span class="settings-info-label">Plan</span>
+          <span class="settings-info-value">Premium — Unlimited rewrites</span>
+        </div>
+        <div style="margin-top:16px;font-size:13px;color:var(--t3);line-height:1.6">
+          🎉 You have unlimited rewrites. No daily limits apply to your account.
+        </div>
+      </div>
+    </div>
+
+    <!-- Danger Zone Tab -->
+    <div class="settings-panel" id="settingsTab-danger">
+      <div class="danger-zone-box">
+        <div class="danger-zone-title">⚠️ Delete Account</div>
+        <div class="danger-zone-desc">
+          Permanently delete your ReplyTonic account and all associated data. This action cannot be undone.
+        </div>
+        <button class="danger-btn" onclick="showDeleteConfirm()">Delete My Account</button>
+        <div class="danger-confirm-row" id="deleteConfirmRow">
+          <div class="rt-field" style="margin-top:12px">
+            <label>Type <strong>DELETE</strong> to confirm</label>
+            <input type="text" id="deleteConfirmInput" placeholder="DELETE">
+          </div>
+          <button class="danger-btn" onclick="doDeleteAccount()">Permanently Delete Account</button>
+          <div class="rt-msg" id="dangerMsg"></div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
