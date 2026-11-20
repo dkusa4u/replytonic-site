@@ -885,6 +885,60 @@ input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);bo
 .mp-kpi-val{font-size:18px;font-weight:700;color:#fff;line-height:1}
 .mp-kpi-lbl{font-size:9.5px;color:var(--t3);margin-top:3px;text-transform:uppercase;letter-spacing:.4px}
 </style>
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "ReplyTonic",
+  "url": "https://replytonic.com",
+  "description": "AI-powered message rewriting in any language. Rewrite, reply, summarize, check grammar, humanize, and analyze text with one click. Free plan available.",
+  "applicationCategory": "ProductivityApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript",
+  "inLanguage": "en",
+  "offers": [
+    {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "name": "Free Plan",
+      "description": "5 uses per day, all core features"
+    },
+    {
+      "@type": "Offer",
+      "price": "9.99",
+      "priceCurrency": "USD",
+      "name": "Premium Monthly",
+      "billingIncrement": 1,
+      "priceValidUntil": "2027-12-31"
+    }
+  ],
+  "featureList": [
+    "AI message rewriting",
+    "Smart reply generation",
+    "Text summarization",
+    "Grammar correction",
+    "AI content detection",
+    "Plagiarism checker",
+    "Message humanizer",
+    "Tone analyzer",
+    "20+ language support",
+    "Chrome Extension"
+  ],
+  "screenshot": "https://replytonic.com/brand/og-share-image-1200x630.png",
+  "image": "https://replytonic.com/brand/og-share-image-1200x630.png",
+  "publisher": {
+    "@type": "Organization",
+    "name": "ReplyTonic",
+    "url": "https://replytonic.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://replytonic.com/brand/logo-800x200.png"
+    }
+  }
+}
+</script>
 </head>
 <body>
 
@@ -2415,8 +2469,8 @@ input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);bo
         <ul class="foot-links">
           <li><a href="#faq">FAQ</a></li>
           <li><a href="#">Help Center</a></li>
-          <li><a href="#">Regional Pricing</a></li>
-          <li><a href="#">Student Discount</a></li>
+          <li><a href="javascript:openAuthModal('login')">Log In</a></li>
+          <li><a href="javascript:openAuthModal('register')">Sign Up Free</a></li>
         </ul>
       </div>
     </div>

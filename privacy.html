@@ -28,9 +28,7 @@
 
   /* NAV */
   nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,15,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between}
-  .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-  .logo-mark{width:32px;height:32px;background:linear-gradient(135deg,var(--i5),var(--i6));border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#fff}
-  .logo-name{font-weight:700;font-size:17px;color:var(--t1)}
+  .nav-logo{display:flex;align-items:center;text-decoration:none;line-height:1}
   .nav-back{color:var(--t2);text-decoration:none;font-size:14px;display:flex;align-items:center;gap:6px;transition:color .2s}
   .nav-back:hover{color:var(--t1)}
   .nav-back svg{width:16px;height:16px}
@@ -69,8 +67,7 @@
 
 <nav>
   <a href="/" class="nav-logo">
-    <div class="logo-mark">R</div>
-    <span class="logo-name">ReplyTonic</span>
+    <img src="/brand/logo-800x200.png" alt="ReplyTonic" style="height:30px;width:auto;display:block">
   </a>
   <a href="/" class="nav-back">
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 12L6 8l4-4"/></svg>
@@ -81,7 +78,7 @@
 <div class="page-wrap">
   <div class="page-header">
     <h1>Privacy Policy</h1>
-    <p class="meta">Last updated: <span>November 14, 2026</span> &nbsp;·&nbsp; Effective: <span>November 14, 2026</span></p>
+    <p class="meta">Last updated: <span>November 20, 2026</span> &nbsp;·&nbsp; Effective: <span>November 14, 2026</span></p>
   </div>
 
   <div class="highlight">
@@ -179,10 +176,77 @@
   <h2>9. International Users</h2>
   <p>ReplyTonic is operated from the United States. If you access the service from outside the US, your data is transferred to and processed in the US. By using ReplyTonic, you consent to this transfer.</p>
 
-  <h2>10. Changes to This Policy</h2>
+  <h2>10. GDPR — Rights for European Users</h2>
+  <p>If you are located in the European Economic Area (EEA), the United Kingdom, or Switzerland, the following applies to you under the General Data Protection Regulation (GDPR) or applicable local law.</p>
+
+  <h3>Legal Basis for Processing</h3>
+  <p>We process your personal data under the following legal bases:</p>
+  <ul>
+    <li><strong>Contract performance</strong> — to provide the ReplyTonic service you signed up for</li>
+    <li><strong>Legitimate interests</strong> — to maintain security, prevent fraud, and improve the service</li>
+    <li><strong>Legal obligation</strong> — to comply with applicable laws (e.g., payment record retention)</li>
+    <li><strong>Consent</strong> — where you have explicitly opted in (e.g., marketing emails)</li>
+  </ul>
+
+  <h3>Your GDPR Rights</h3>
+  <p>You have the right to:</p>
+  <ul>
+    <li><strong>Access</strong> — request a copy of the personal data we hold about you</li>
+    <li><strong>Rectification</strong> — correct inaccurate or incomplete data</li>
+    <li><strong>Erasure ("right to be forgotten")</strong> — request deletion of your personal data where no legal obligation requires retention</li>
+    <li><strong>Restriction</strong> — ask us to restrict processing of your data in certain circumstances</li>
+    <li><strong>Portability</strong> — receive your data in a structured, machine-readable format</li>
+    <li><strong>Object</strong> — object to processing based on legitimate interests</li>
+    <li><strong>Withdraw consent</strong> — where processing is based on consent, withdraw it at any time without affecting the lawfulness of prior processing</li>
+  </ul>
+
+  <h3>Data Controller</h3>
+  <p>ReplyTonic (replytonic.com) is the data controller for personal data collected through the service. Contact: <a href="mailto:privacy@replytonic.com">privacy@replytonic.com</a></p>
+
+  <h3>International Transfers</h3>
+  <p>Your data may be transferred to and processed in the United States, which may not provide the same level of data protection as your home country. We rely on standard contractual clauses or other lawful transfer mechanisms where required.</p>
+
+  <h3>Supervisory Authority</h3>
+  <p>You have the right to lodge a complaint with your local data protection authority. For EU users, you may contact your national Data Protection Authority (DPA); for UK users, the Information Commissioner's Office (ICO) at <a href="https://ico.org.uk" target="_blank" rel="noopener">ico.org.uk</a>.</p>
+
+  <p>To exercise any GDPR right, email <a href="mailto:privacy@replytonic.com">privacy@replytonic.com</a>. We will respond within 30 days (or 72 hours for data breach notifications where required).</p>
+
+  <h2>11. CCPA — Rights for California Residents</h2>
+  <p>If you are a California resident, the California Consumer Privacy Act (CCPA) and the California Privacy Rights Act (CPRA) grant you additional rights regarding your personal information.</p>
+
+  <h3>Categories of Personal Information We Collect</h3>
+  <ul>
+    <li><strong>Identifiers</strong> — email address, account credentials</li>
+    <li><strong>Commercial information</strong> — subscription plan, payment history (via Stripe)</li>
+    <li><strong>Internet or electronic network activity</strong> — usage logs, feature interactions, server logs</li>
+    <li><strong>Geolocation data</strong> — approximate location derived from IP address (not stored)</li>
+  </ul>
+
+  <h3>Your California Rights</h3>
+  <ul>
+    <li><strong>Right to Know</strong> — request disclosure of the categories and specific pieces of personal information we have collected about you, the sources, the business purpose, and the categories of third parties with whom we share it</li>
+    <li><strong>Right to Delete</strong> — request deletion of personal information we have collected from you, subject to legal exceptions</li>
+    <li><strong>Right to Correct</strong> — request correction of inaccurate personal information</li>
+    <li><strong>Right to Opt-Out of Sale or Sharing</strong> — we do <strong>not sell</strong> your personal information and do not share it for cross-context behavioral advertising</li>
+    <li><strong>Right to Limit Use of Sensitive Personal Information</strong> — we do not use sensitive personal information beyond what is necessary to provide the service</li>
+    <li><strong>Right to Non-Discrimination</strong> — exercising your CCPA rights will not result in denial of service, different prices, or different quality of service</li>
+  </ul>
+
+  <div class="card">
+    <p><strong>Do Not Sell or Share My Personal Information</strong><br>
+    ReplyTonic does not sell, rent, or share your personal information with third parties for monetary or other valuable consideration. We do not engage in cross-context behavioral advertising. If you have questions, contact <a href="mailto:privacy@replytonic.com">privacy@replytonic.com</a>.</p>
+  </div>
+
+  <h3>How to Submit a California Privacy Request</h3>
+  <p>California residents may submit privacy requests by emailing <a href="mailto:privacy@replytonic.com">privacy@replytonic.com</a> with the subject line "California Privacy Request." We will verify your identity and respond within 45 days. We may extend the response period by an additional 45 days where reasonably necessary, with notice.</p>
+
+  <h3>Authorized Agent</h3>
+  <p>You may designate an authorized agent to make a request on your behalf. The authorized agent must provide written authorization signed by you, and we may still require you to verify your own identity directly with us.</p>
+
+  <h2>13. Changes to This Policy</h2>
   <p>We may update this policy from time to time. When we do, we will update the "Last updated" date at the top and, for material changes, notify registered users by email. Continued use of ReplyTonic after changes constitutes acceptance of the updated policy.</p>
 
-  <h2>11. Contact Us</h2>
+  <h2>14. Contact Us</h2>
   <div class="card">
     <p><strong>ReplyTonic Privacy</strong><br>
     Email: <a href="mailto:privacy@replytonic.com">privacy@replytonic.com</a><br>
