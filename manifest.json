@@ -1,24 +1,21 @@
 {
-  "name": "ReplyTonic — AI Message Rewriter",
+  "name": "ReplyTonic — Any Message. Any Occasion. Any Language.",
   "short_name": "ReplyTonic",
   "description": "Paste any message. Get 3 polished AI rewrites in seconds. 20+ languages, 6 tones.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#0a0a0f",
-  "theme_color": "#6366f1",
+  "theme_color": "#6E26E2",
   "orientation": "portrait-primary",
   "categories": ["productivity", "utilities"],
   "lang": "en",
   "icons": [
-    { "src": "icons/icon-72.png",  "sizes": "72x72",   "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-96.png",  "sizes": "96x96",   "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-128.png", "sizes": "128x128", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-144.png", "sizes": "144x144", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-152.png", "sizes": "152x152", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icons/icon-384.png", "sizes": "384x384", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    { "src": "brand/favicon-32.png",        "sizes": "32x32",   "type": "image/png", "purpose": "any" },
+    { "src": "brand/favicon-192.png",        "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "brand/favicon-500.png",        "sizes": "500x500", "type": "image/png", "purpose": "any" },
+    { "src": "brand/apple-touch-icon-180.png","sizes": "180x180", "type": "image/png", "purpose": "any" },
+    { "src": "brand/app-icon-1024.png",      "sizes": "1024x1024","type": "image/png","purpose": "any maskable" }
   ],
   "screenshots": [
     {
@@ -42,14 +39,14 @@
       "short_name": "Rewrite",
       "description": "Paste and rewrite a message instantly",
       "url": "/?mode=rewrite",
-      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+      "icons": [{ "src": "brand/favicon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Generate a Reply",
       "short_name": "Reply",
       "description": "Generate smart reply options",
       "url": "/?mode=reply",
-      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+      "icons": [{ "src": "brand/favicon-192.png", "sizes": "192x192" }]
     }
   ]
 }

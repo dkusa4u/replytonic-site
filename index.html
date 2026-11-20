@@ -3,32 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>ReplyTonic — AI Message Rewriter in Any Language</title>
+<title>ReplyTonic — Any Message. Any Occasion. Any Language.</title>
 <meta name="description" content="Paste any message in any language. Get 3 polished versions in 2 seconds. 20+ languages. Reply Generator, Follow-Up AI, and more.">
 
 <!-- PWA Manifest -->
 <link rel="manifest" href="manifest.json">
 
 <!-- PWA Theme & Status Bar -->
-<meta name="theme-color" content="#6366f1">
+<meta name="theme-color" content="#6E26E2">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="ReplyTonic">
 
-<!-- Apple Touch Icons -->
-<link rel="apple-touch-icon" href="icons/icon-152.png">
-<link rel="apple-touch-icon" sizes="72x72"   href="icons/icon-72.png">
-<link rel="apple-touch-icon" sizes="96x96"   href="icons/icon-96.png">
-<link rel="apple-touch-icon" sizes="128x128" href="icons/icon-128.png">
-<link rel="apple-touch-icon" sizes="144x144" href="icons/icon-144.png">
-<link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
-<link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png">
+<!-- Apple Touch Icon -->
+<link rel="apple-touch-icon" sizes="180x180" href="brand/apple-touch-icon-180.png">
 
 <!-- Favicon -->
-<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
-<link rel="icon" type="image/png" sizes="96x96"   href="icons/icon-96.png">
-<link rel="shortcut icon"         href="icons/icon-96.png">
+<link rel="icon" type="image/x-icon"         href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32"  href="brand/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="brand/favicon-192.png">
+<link rel="shortcut icon"                    href="favicon.ico">
 
 <!-- iOS Splash Screens (iPhone 14 Pro / common sizes) -->
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -37,9 +32,9 @@
 <link rel="canonical" href="https://replytonic.com/">
 
 <!-- Open Graph (for sharing links) -->
-<meta property="og:title"       content="ReplyTonic — AI Message Rewriter in Any Language">
+<meta property="og:title"       content="ReplyTonic — Any Message. Any Occasion. Any Language.">
 <meta property="og:description" content="Paste any message in any language. Get 3 polished AI rewrites in 2 seconds. 20+ languages, 6 tones, Follow-Up AI, and more.">
-<meta property="og:image"       content="https://replytonic.com/icons/icon-512.png">
+<meta property="og:image"       content="https://replytonic.com/brand/og-share-image-1200x630.png">
 <meta property="og:type"        content="website">
 <meta property="og:url"         content="https://replytonic.com/">
 <meta property="og:site_name"   content="ReplyTonic">
@@ -48,9 +43,9 @@
 <!-- Twitter / X Card -->
 <meta name="twitter:card"        content="summary_large_image">
 <meta name="twitter:site"        content="@replytonic">
-<meta name="twitter:title"       content="ReplyTonic — AI Message Rewriter in Any Language">
+<meta name="twitter:title"       content="ReplyTonic — Any Message. Any Occasion. Any Language.">
 <meta name="twitter:description" content="Paste any message in any language. Get 3 polished AI rewrites in 2 seconds. 20+ languages, 6 tones.">
-<meta name="twitter:image"       content="https://replytonic.com/icons/icon-512.png">
+<meta name="twitter:image"       content="https://replytonic.com/brand/og-share-image-1200x630.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -78,7 +73,7 @@ img{max-width:100%} a{color:inherit;text-decoration:none} button{cursor:pointer;
 body::before{content:'';position:fixed;top:-40%;left:-15%;width:55%;height:55%;background:radial-gradient(ellipse,rgba(99,102,241,.1) 0%,transparent 70%);pointer-events:none;z-index:0}
 body::after{content:'';position:fixed;bottom:-30%;right:-15%;width:50%;height:50%;background:radial-gradient(ellipse,rgba(139,92,246,.07) 0%,transparent 70%);pointer-events:none;z-index:0}
 nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(10,10,15,.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
-.logo{font-size:20px;font-weight:800;background:linear-gradient(135deg,#818cf8,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.5px}
+.logo{display:flex;align-items:center;line-height:1}
 .navlinks{display:flex;align-items:center;gap:24px;list-style:none}
 .navlinks a{font-size:14px;font-weight:500;color:var(--t2);transition:color .2s}
 .navlinks a:hover{color:var(--t1)}
@@ -445,7 +440,7 @@ h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1.5px;line-hei
 .foot-wrap{position:relative;z-index:1;background:rgba(0,0,0,.28);border-top:1px solid var(--border)}
 .foot{max-width:1200px;margin:0 auto;padding:52px 24px 34px}
 .foot-top{display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:44px;margin-bottom:40px}
-.foot-logo{font-size:20px;font-weight:800;background:linear-gradient(135deg,#818cf8,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px}
+.foot-logo{margin-bottom:10px}
 .foot-desc{font-size:14px;color:var(--t3);line-height:1.6;max-width:230px}
 .foot-col-t{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t3);margin-bottom:14px}
 .foot-links{list-style:none;display:flex;flex-direction:column;gap:9px}
@@ -906,14 +901,8 @@ input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);bo
 
 <!-- NAV -->
 <nav>
-<div class="logo" style="display:flex;align-items:center;gap:0;line-height:1">
-  <svg width="34" height="34" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;margin-right:9px">
-    <rect width="40" height="40" rx="10" fill="#6366f1"/>
-    <text x="8" y="27" font-family="Arial Black,sans-serif" font-size="22" font-weight="900" fill="white">R</text>
-    <path d="M26 28 Q32 24 29 19" stroke="white" stroke-width="2.2" stroke-linecap="round" fill="none"/>
-    <path d="M27 17 L29 19 L31 17" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-  </svg>
-  <span style="font-size:19px;font-weight:700;letter-spacing:-.3px;background:none;-webkit-text-fill-color:unset"><span style="color:#ffffff">reply</span><span style="color:#818cf8">tonic</span></span>
+<div class="logo">
+  <img src="brand/logo-800x200.png" alt="ReplyTonic" style="height:34px;width:auto;display:block">
 </div>
   <ul class="navlinks">
     <li><a href="#features">Features</a></li>
@@ -2397,16 +2386,10 @@ input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);bo
   <div class="foot">
     <div class="foot-top">
       <div>
-        <div class="foot-logo" style="display:flex;align-items:center;gap:0;background:none;-webkit-text-fill-color:unset">
-  <svg width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;margin-right:8px">
-    <rect width="40" height="40" rx="10" fill="#6366f1"/>
-    <text x="8" y="27" font-family="Arial Black,sans-serif" font-size="22" font-weight="900" fill="white">R</text>
-    <path d="M26 28 Q32 24 29 19" stroke="white" stroke-width="2.2" stroke-linecap="round" fill="none"/>
-    <path d="M27 17 L29 19 L31 17" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-  </svg>
-  <span style="font-size:18px;font-weight:700;letter-spacing:-.3px"><span style="color:#ffffff">reply</span><span style="color:#818cf8">tonic</span></span>
+        <div class="foot-logo">
+  <img src="brand/logo-800x200.png" alt="ReplyTonic" style="height:30px;width:auto;display:block;margin-bottom:8px">
 </div>
-<p style="font-size:12px;font-weight:600;color:#22D3EE;letter-spacing:.3px;margin-bottom:10px;margin-top:4px">Reply Smarter. In Any Language.</p>
+<p style="font-size:12px;font-weight:600;color:#F97316;letter-spacing:.3px;margin-bottom:10px;margin-top:4px">Any message. Any occasion. Any language.</p>
         <p class="foot-desc">AI-powered message rewriting in 20+ languages. 4 modes, 10 features. Used in 90+ countries daily.</p>
       </div>
       <div>
