@@ -35,12 +35,16 @@ switch ($action) {
             $plan = 'free';
         }
 
-        // Today's usage
+        // Today's usage + all-time total
         $today = date('Y-m-d');
         $uSt = $db->prepare('SELECT rewrites_today FROM usage_log WHERE user_id=? AND log_date=?');
         $uSt->execute([$uid, $today]);
         $usageRow = $uSt->fetch(PDO::FETCH_ASSOC);
         $usedToday = $usageRow ? (int)$usageRow['rewrites_today'] : 0;
+
+        $totSt = $db->prepare('SELECT COALESCE(SUM(rewrites_today),0) AS total FROM usage_log WHERE user_id=?');
+        $totSt->execute([$uid]);
+        $totalAll = (int)$totSt->fetchColumn();
 
         json_out([
             'email'            => $u['email'],
@@ -49,6 +53,7 @@ switch ($action) {
             'created_at'       => $u['created_at'] ?? null,
             'used_today'       => $usedToday,
             'daily_limit'      => $plan === 'free' ? FREE_DAILY_LIMIT : null,
+            'total_rewrites'   => $totalAll,
         ]);
     }
 

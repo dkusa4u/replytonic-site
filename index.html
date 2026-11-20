@@ -728,6 +728,34 @@ input[type=range].rt-slider::-moz-range-track{background:rgba(255,255,255,.1);bo
 .danger-btn:hover{background:rgba(239,68,68,.22)}
 .danger-confirm-row{display:none;margin-top:12px}
 .danger-confirm-row.show{display:block}
+/* Settings — avatar */
+.settings-avatar-row{display:flex;align-items:center;gap:14px;padding:12px 0 18px;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:14px}
+.settings-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--i5),var(--o5));display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;flex-shrink:0;letter-spacing:-1px}
+.settings-avatar-info{flex:1;min-width:0}
+.settings-avatar-email{font-size:14px;font-weight:600;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:3px}
+.settings-avatar-copy{font-size:11px;color:var(--i4);cursor:pointer;background:none;border:none;padding:0;font-weight:600;transition:opacity .2s}
+.settings-avatar-copy:hover{opacity:.7}
+/* Settings — password eye toggle */
+.pw-wrap{position:relative}
+.pw-wrap input{padding-right:40px}
+.pw-eye{position:absolute;right:11px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--t3);font-size:16px;line-height:1;padding:3px;transition:color .2s}
+.pw-eye:hover{color:var(--t2)}
+/* Settings — password strength */
+.pw-strength-wrap{margin-top:6px;display:none}
+.pw-strength-wrap.show{display:block}
+.pw-strength-track{height:4px;background:rgba(255,255,255,.08);border-radius:50px;overflow:hidden}
+.pw-strength-bar{height:100%;border-radius:50px;transition:width .3s,background .3s;width:0%}
+.pw-strength-label{font-size:11px;margin-top:4px;font-weight:600}
+/* Settings — plan features list */
+.plan-features-list{list-style:none;padding:0;margin:14px 0 0}
+.plan-features-list li{padding:7px 0;font-size:13px;color:var(--t2);border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:9px}
+.plan-features-list li:last-child{border:none}
+.plan-features-list li .feat-icon{width:20px;text-align:center;flex-shrink:0}
+/* Settings — stat cards */
+.usage-stat-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.usage-stat-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:var(--r12);padding:12px 14px}
+.usage-stat-num{font-size:22px;font-weight:800;color:var(--t1);line-height:1}
+.usage-stat-label{font-size:11px;color:var(--t3);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
 /* Upgrade modal */
 .upgrade-modal-inner{max-width:440px}
 .upgrade-features{list-style:none;padding:0;margin:12px 0 18px}
@@ -3520,16 +3548,28 @@ function loadSettingsInfo(){
     body:JSON.stringify({action:'get_info'})
   }).then(function(r){return r.json();}).then(function(d){
     if(d.error) return;
-    // Account tab
-    var el=document.getElementById('settings-email'); if(el) el.textContent=d.email||'—';
-    var jEl=document.getElementById('settings-joined');
-    if(jEl && d.created_at){
-      var dt=new Date(d.created_at);
-      jEl.textContent=dt.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
-    } else if(jEl){ jEl.textContent='—'; }
-
-    // Plan badges
     var plan=d.plan||'free';
+    var email=d.email||'';
+
+    // ── Account tab ──
+    var emailEl=document.getElementById('settings-email');
+    if(emailEl) emailEl.textContent=email||'—';
+
+    // Avatar initials (first letter of local part of email)
+    var avatarEl=document.getElementById('settingsAvatar');
+    if(avatarEl && email){
+      avatarEl.textContent=email.charAt(0).toUpperCase();
+    }
+
+    var jEl=document.getElementById('settings-joined');
+    if(jEl){
+      if(d.created_at){
+        var dt=new Date(d.created_at);
+        jEl.textContent=dt.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+      } else { jEl.textContent='—'; }
+    }
+
+    // Plan badges (account + plan tabs)
     ['settings-plan-badge','settings-plan-badge2'].forEach(function(id){
       var b=document.getElementById(id);
       if(!b) return;
@@ -3537,29 +3577,35 @@ function loadSettingsInfo(){
       b.className='plan-badge-sm '+plan;
     });
 
-    // Expires row
+    // Total rewrites (account tab)
+    var totEl=document.getElementById('settings-total-rewrites');
+    if(totEl) totEl.textContent=(d.total_rewrites||0).toLocaleString();
+
+    // ── Plan tab ──
     var exRow=document.getElementById('settings-expires-row');
     var exVal=document.getElementById('settings-expires');
     if(d.plan_expires_at && plan!=='free'){
-      var expDt=new Date(d.plan_expires_at);
-      if(exVal) exVal.textContent=expDt.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+      if(exVal){ var expDt=new Date(d.plan_expires_at); exVal.textContent=expDt.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}); }
       if(exRow) exRow.style.display='flex';
     } else {
       if(exRow) exRow.style.display='none';
     }
-
-    // Plan tab buttons
-    var upBtn=document.getElementById('planUpgradeBtn');
-    var manBtn=document.getElementById('planManageBtn');
+    var featFree=document.getElementById('planFeatFree');
+    var featPrem=document.getElementById('planFeatPremium');
     if(plan==='free'){
-      if(upBtn) upBtn.style.display='block';
-      if(manBtn) manBtn.style.display='none';
+      if(featFree) featFree.style.display='block';
+      if(featPrem) featPrem.style.display='none';
     } else {
-      if(upBtn) upBtn.style.display='none';
-      if(manBtn) manBtn.style.display='block';
+      if(featFree) featFree.style.display='none';
+      if(featPrem) featPrem.style.display='block';
     }
 
-    // Usage tab
+    // ── Usage tab ──
+    var todayNum=document.getElementById('usageTodayNum');
+    var allNum=document.getElementById('usageAllTimeNum');
+    if(todayNum) todayNum.textContent=(d.used_today||0).toLocaleString();
+    if(allNum) allNum.textContent=(d.total_rewrites||0).toLocaleString();
+
     var freeSection=document.getElementById('usageFreeSection');
     var premSection=document.getElementById('usagePremiumSection');
     if(plan==='free'){
@@ -3580,6 +3626,56 @@ function loadSettingsInfo(){
       if(premSection) premSection.style.display='block';
     }
   }).catch(function(){});
+}
+
+function copySettingsEmail(){
+  var email=document.getElementById('settings-email').textContent;
+  if(!email||email==='—') return;
+  navigator.clipboard.writeText(email).then(function(){
+    var btn=document.getElementById('copyEmailBtn');
+    if(btn){ btn.textContent='✅ Copied!'; setTimeout(function(){ btn.textContent='📋 Copy email'; },2000); }
+  }).catch(function(){});
+}
+
+function togglePwVis(inputId, btn){
+  var inp=document.getElementById(inputId);
+  if(!inp) return;
+  if(inp.type==='password'){
+    inp.type='text';
+    btn.textContent='🙈';
+    btn.style.opacity='1';
+  } else {
+    inp.type='password';
+    btn.textContent='👁';
+    btn.style.opacity='';
+  }
+}
+
+function checkPwStrength(val){
+  var wrap=document.getElementById('pwStrengthWrap');
+  var bar=document.getElementById('pwStrengthBar');
+  var label=document.getElementById('pwStrengthLabel');
+  if(!wrap||!bar||!label) return;
+  if(!val){ wrap.classList.remove('show'); return; }
+  wrap.classList.add('show');
+  var score=0;
+  if(val.length>=8) score++;
+  if(val.length>=12) score++;
+  if(/[A-Z]/.test(val)) score++;
+  if(/[0-9]/.test(val)) score++;
+  if(/[^A-Za-z0-9]/.test(val)) score++;
+  var levels=[
+    {pct:20,color:'#ef4444',text:'Very weak'},
+    {pct:40,color:'#f97316',text:'Weak'},
+    {pct:60,color:'#eab308',text:'Fair'},
+    {pct:80,color:'#84cc16',text:'Strong'},
+    {pct:100,color:'#22c55e',text:'Very strong'}
+  ];
+  var lvl=levels[Math.min(score,4)];
+  bar.style.width=lvl.pct+'%';
+  bar.style.background=lvl.color;
+  label.textContent=lvl.text;
+  label.style.color=lvl.color;
 }
 
 function doChangePassword(){
@@ -5227,9 +5323,12 @@ function runPlagiarism(){
 
     <!-- Account Tab -->
     <div class="settings-panel active" id="settingsTab-account">
-      <div class="settings-info-row">
-        <span class="settings-info-label">Email</span>
-        <span class="settings-info-value" id="settings-email">—</span>
+      <div class="settings-avatar-row">
+        <div class="settings-avatar" id="settingsAvatar">?</div>
+        <div class="settings-avatar-info">
+          <div class="settings-avatar-email" id="settings-email">—</div>
+          <button class="settings-avatar-copy" onclick="copySettingsEmail()" id="copyEmailBtn">📋 Copy email</button>
+        </div>
       </div>
       <div class="settings-info-row">
         <span class="settings-info-label">Member since</span>
@@ -5239,21 +5338,38 @@ function runPlagiarism(){
         <span class="settings-info-label">Current plan</span>
         <span class="settings-info-value"><span class="plan-badge-sm" id="settings-plan-badge">Free</span></span>
       </div>
+      <div class="settings-info-row">
+        <span class="settings-info-label">Total rewrites</span>
+        <span class="settings-info-value" id="settings-total-rewrites">—</span>
+      </div>
     </div>
 
     <!-- Security Tab -->
     <div class="settings-panel" id="settingsTab-security">
       <div class="rt-field">
         <label>Current Password</label>
-        <input type="password" id="secCurrentPass" placeholder="Enter current password" autocomplete="current-password">
+        <div class="pw-wrap">
+          <input type="password" id="secCurrentPass" placeholder="Enter current password" autocomplete="current-password">
+          <button type="button" class="pw-eye" onclick="togglePwVis('secCurrentPass',this)" tabindex="-1" aria-label="Show/hide password">👁</button>
+        </div>
       </div>
       <div class="rt-field">
         <label>New Password</label>
-        <input type="password" id="secNewPass" placeholder="At least 8 characters" autocomplete="new-password">
+        <div class="pw-wrap">
+          <input type="password" id="secNewPass" placeholder="At least 8 characters" autocomplete="new-password" oninput="checkPwStrength(this.value)">
+          <button type="button" class="pw-eye" onclick="togglePwVis('secNewPass',this)" tabindex="-1" aria-label="Show/hide password">👁</button>
+        </div>
+        <div class="pw-strength-wrap" id="pwStrengthWrap">
+          <div class="pw-strength-track"><div class="pw-strength-bar" id="pwStrengthBar"></div></div>
+          <div class="pw-strength-label" id="pwStrengthLabel"></div>
+        </div>
       </div>
       <div class="rt-field">
         <label>Confirm New Password</label>
-        <input type="password" id="secConfirmPass" placeholder="Repeat new password" autocomplete="new-password">
+        <div class="pw-wrap">
+          <input type="password" id="secConfirmPass" placeholder="Repeat new password" autocomplete="new-password">
+          <button type="button" class="pw-eye" onclick="togglePwVis('secConfirmPass',this)" tabindex="-1" aria-label="Show/hide password">👁</button>
+        </div>
       </div>
       <button class="rt-submit-btn" id="secSaveBtn" onclick="doChangePassword()">Update Password</button>
       <div class="rt-msg" id="secMsg"></div>
@@ -5269,36 +5385,65 @@ function runPlagiarism(){
         <span class="settings-info-label">Renews / Expires</span>
         <span class="settings-info-value" id="settings-expires">—</span>
       </div>
-      <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px">
-        <button class="rt-submit-btn" id="planUpgradeBtn" onclick="closeSettingsModal();openUpgradeModal('settings')">⚡ Upgrade to Premium</button>
-        <button class="rt-submit-btn" id="planManageBtn" style="display:none;background:rgba(255,255,255,.08);color:var(--t2)" onclick="openManageSubscription()">⚙️ Manage Subscription</button>
+      <!-- Free plan features -->
+      <div id="planFeatFree">
+        <ul class="plan-features-list">
+          <li><span class="feat-icon">✅</span> 5 rewrites per day</li>
+          <li><span class="feat-icon">✅</span> All 17 rewrite modes</li>
+          <li><span class="feat-icon">✅</span> Screenshot Reply (OCR)</li>
+          <li><span class="feat-icon">🔒</span> <span style="color:var(--t3)">Human Touch (AI bypass) — Premium</span></li>
+          <li><span class="feat-icon">🔒</span> <span style="color:var(--t3)">My Voice DNA — Premium</span></li>
+          <li><span class="feat-icon">🔒</span> <span style="color:var(--t3)">Bulk Rewrite — Premium</span></li>
+          <li><span class="feat-icon">🔒</span> <span style="color:var(--t3)">Unlimited rewrites — Premium</span></li>
+        </ul>
+        <button class="rt-submit-btn" style="margin-top:14px" id="planUpgradeBtn" onclick="closeSettingsModal();openUpgradeModal('settings')">⚡ Upgrade to Premium</button>
+      </div>
+      <!-- Premium plan features -->
+      <div id="planFeatPremium" style="display:none">
+        <ul class="plan-features-list">
+          <li><span class="feat-icon">✅</span> Unlimited daily rewrites</li>
+          <li><span class="feat-icon">✅</span> All 17 rewrite modes</li>
+          <li><span class="feat-icon">✅</span> Human Touch — bypasses AI detectors</li>
+          <li><span class="feat-icon">✅</span> My Voice DNA — rewrites in your style</li>
+          <li><span class="feat-icon">✅</span> Bulk Rewrite — multiple messages at once</li>
+          <li><span class="feat-icon">✅</span> Screenshot Reply (OCR)</li>
+          <li><span class="feat-icon">✅</span> Priority support</li>
+        </ul>
+        <button class="rt-submit-btn" id="planManageBtn" style="margin-top:14px;background:rgba(255,255,255,.08);color:var(--t2)" onclick="openManageSubscription()">⚙️ Manage Subscription</button>
       </div>
       <div class="rt-msg" id="planMsg"></div>
     </div>
 
     <!-- Usage Tab -->
     <div class="settings-panel" id="settingsTab-usage">
+      <div class="usage-stat-cards">
+        <div class="usage-stat-card">
+          <div class="usage-stat-num" id="usageTodayNum">0</div>
+          <div class="usage-stat-label">Today's rewrites</div>
+        </div>
+        <div class="usage-stat-card">
+          <div class="usage-stat-num" id="usageAllTimeNum">0</div>
+          <div class="usage-stat-label">All-time rewrites</div>
+        </div>
+      </div>
       <div id="usageFreeSection">
         <div class="settings-info-row">
-          <span class="settings-info-label">Today's rewrites</span>
-          <span class="settings-info-value"><span id="usageCount">0</span> / <span id="usageLimit">5</span></span>
+          <span class="settings-info-label">Daily limit</span>
+          <span class="settings-info-value"><span id="usageCount">0</span> / <span id="usageLimit">5</span> used</span>
         </div>
         <div class="usage-bar-wrap">
           <div class="usage-bar-track"><div class="usage-bar-fill" id="usageBarFill" style="width:0%"></div></div>
           <div class="usage-label">Resets at midnight (your local time)</div>
         </div>
-        <div style="margin-top:12px;font-size:12px;color:var(--t3);line-height:1.6">
-          Free accounts get <strong style="color:var(--t2)">5 rewrites/day</strong>. Upgrade to Premium for unlimited rewrites.
-        </div>
         <button class="rt-submit-btn" style="margin-top:14px" onclick="closeSettingsModal();openUpgradeModal('usage')">⚡ Upgrade for Unlimited</button>
       </div>
       <div id="usagePremiumSection" style="display:none">
         <div class="settings-info-row">
-          <span class="settings-info-label">Plan</span>
-          <span class="settings-info-value">Premium — Unlimited rewrites</span>
+          <span class="settings-info-label">Daily limit</span>
+          <span class="settings-info-value" style="color:#4ade80">Unlimited ✓</span>
         </div>
-        <div style="margin-top:16px;font-size:13px;color:var(--t3);line-height:1.6">
-          🎉 You have unlimited rewrites. No daily limits apply to your account.
+        <div style="margin-top:12px;font-size:13px;color:var(--t3);line-height:1.6">
+          🎉 You're on Premium — no daily limits apply to your account.
         </div>
       </div>
     </div>
